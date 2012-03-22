@@ -226,6 +226,7 @@ public final class Options {
     public static final String ALL_STEPS_FISH_CANDIDATES = "111111111";        // 1 for every candidate that should be searched, 0 otherwise
     public static final String ALL_STEPS_KRAKEN_FISH_CANDIDATES = "111111111"; // see above
     public static final int ALL_STEPS_SORT_MODE = 4; // sort by StepType
+    public static final int ALL_STEPS_ALS_CHAIN_LENGTH = 6; // maximum chain length in ALS-Chain search (all steps only)
     private boolean allStepsSearchFish = ALL_STEPS_SEARCH_FISH;
     private int allStepsMaxFishType = ALL_STEPS_MAX_FISH_TYPE;
     private int allStepsMinFishSize = ALL_STEPS_MIN_FISH_SIZE;
@@ -241,6 +242,7 @@ public final class Options {
     private String allStepsFishCandidates = ALL_STEPS_FISH_CANDIDATES;
     private String allStepsKrakenFishCandidates = ALL_STEPS_KRAKEN_FISH_CANDIDATES;
     private int allStepsSortMode = ALL_STEPS_SORT_MODE;
+    private int allStepsAlsChainLength = ALL_STEPS_ALS_CHAIN_LENGTH;
     //SudokuPanel
     // Coloring Solver
     public static final Color[] COLORING_COLORS = {
@@ -287,6 +289,8 @@ public final class Options {
     public static final boolean DELETE_CURSOR_DISPLAY = false; // let the cursor disappear after a while
     public static final int DELETE_CURSOR_DISPLAY_LENGTH = 1000; // time in ms
     public static final boolean USE_OR_INSTEAD_OF_AND_FOR_FILTER = false; // used when filtering more than one candidate
+    public static final boolean USE_DEFAULT_FONT_SIZE = true; // default siz for all fonts in the GUI
+    public static final int CUSTOM_FONT_SIZE = 12;            // custom size for all fonts in the GUI
     public static final int DRAW_MODE = 1;
     //public static final int INITIAL_HEIGHT = 728;           // used to store window layout at shutdown
     public static final int INITIAL_HEIGHT = 844;           // used to store window layout at shutdown
@@ -311,6 +315,8 @@ public final class Options {
     private boolean alternativeMouseMode = ALTERNATIVE_MOUSE_MODE;
     private boolean deleteCursorDisplay = DELETE_CURSOR_DISPLAY;
     private int deleteCursorDisplayLength = DELETE_CURSOR_DISPLAY_LENGTH;
+    private boolean useDefaultFontSize = USE_DEFAULT_FONT_SIZE;
+    private int customFontSize = CUSTOM_FONT_SIZE;
     private boolean useOrInsteadOfAndForFilter = USE_OR_INSTEAD_OF_AND_FOR_FILTER;
     private int drawMode = DRAW_MODE;
     private int initialHeight = INITIAL_HEIGHT;
@@ -440,6 +446,8 @@ public final class Options {
     public static final int GENERATOR_PATTERN_INDEX = -1;
     private ArrayList<GeneratorPattern> generatorPatterns = new ArrayList<GeneratorPattern>();
     private int generatorPatternIndex = GENERATOR_PATTERN_INDEX;
+    // Check for available fonts
+    private static String[] availableFontNames = null;
     //Singleton
     public static Options instance = null;
 
@@ -468,39 +476,45 @@ public final class Options {
 //    public static final Font BIG_FONT = new Font("Arial", Font.BOLD, 16);    // Font für Ausdruck Überschrift
 //    public static final Font SMALL_FONT = new Font("Arial", Font.PLAIN, 10); // Font für Ausdruck Rating
         // allow for different fonts in different OSes
-        String[] fontNames = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-        if (!checkFont(DEFAULT_CANDIDATE_FONT, fontNames)) {
+        if (!checkFont(DEFAULT_CANDIDATE_FONT)) {
             DEFAULT_CANDIDATE_FONT = new Font(Font.SANS_SERIF, DEFAULT_CANDIDATE_FONT.getStyle(), DEFAULT_CANDIDATE_FONT.getSize());
             defaultCandidateFont = new Font(DEFAULT_CANDIDATE_FONT.getName(), DEFAULT_CANDIDATE_FONT.getStyle(), DEFAULT_CANDIDATE_FONT.getSize());
         }
-        if (!checkFont(DEFAULT_VALUE_FONT, fontNames)) {
+        if (!checkFont(DEFAULT_VALUE_FONT)) {
             DEFAULT_VALUE_FONT = new Font(Font.SANS_SERIF, DEFAULT_VALUE_FONT.getStyle(), DEFAULT_VALUE_FONT.getSize());
             defaultValueFont = new Font(DEFAULT_VALUE_FONT.getName(), DEFAULT_VALUE_FONT.getStyle(), DEFAULT_VALUE_FONT.getSize());
         }
-        if (!checkFont(defaultCandidateFont, fontNames)) {
+        if (!checkFont(defaultCandidateFont)) {
             defaultCandidateFont = new Font(DEFAULT_CANDIDATE_FONT.getName(), DEFAULT_CANDIDATE_FONT.getStyle(), DEFAULT_CANDIDATE_FONT.getSize());
         }
-        if (!checkFont(defaultValueFont, fontNames)) {
+        if (!checkFont(defaultValueFont)) {
             defaultValueFont = new Font(DEFAULT_VALUE_FONT.getName(), DEFAULT_VALUE_FONT.getStyle(), DEFAULT_VALUE_FONT.getSize());
         }
-        if (!checkFont(BIG_FONT, fontNames)) {
+        if (!checkFont(BIG_FONT)) {
             BIG_FONT = new Font(Font.SANS_SERIF, BIG_FONT.getStyle(), BIG_FONT.getSize());
             bigFont = new Font(BIG_FONT.getName(), BIG_FONT.getStyle(), BIG_FONT.getSize());
         }
-        if (!checkFont(SMALL_FONT, fontNames)) {
+        if (!checkFont(SMALL_FONT)) {
             SMALL_FONT = new Font(Font.SANS_SERIF, SMALL_FONT.getStyle(), SMALL_FONT.getSize());
             smallFont = new Font(SMALL_FONT.getName(), SMALL_FONT.getStyle(), SMALL_FONT.getSize());
         }
-        if (!checkFont(bigFont, fontNames)) {
+        if (!checkFont(bigFont)) {
             bigFont = new Font(BIG_FONT.getName(), BIG_FONT.getStyle(), BIG_FONT.getSize());
         }
-        if (!checkFont(smallFont, fontNames)) {
+        if (!checkFont(smallFont)) {
             smallFont = new Font(SMALL_FONT.getName(), SMALL_FONT.getStyle(), SMALL_FONT.getSize());
         }
     }
 
-    private boolean checkFont(Font font, String[] fontNames) {
-        if (Arrays.binarySearch(fontNames, font.getName()) >= 0) {
+    public boolean checkFont(Font font) {
+        return checkFont(font.getName());
+    }
+    
+    public boolean checkFont(String fontName) {
+        if (availableFontNames == null) {
+            availableFontNames = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+        }
+        if (Arrays.binarySearch(availableFontNames, fontName) >= 0) {
             return true;
         }
         return false;
@@ -1182,6 +1196,48 @@ public final class Options {
      */
     public void setUseOrInsteadOfAndForFilter(boolean useOrInsteadOfAndForFilter) {
         this.useOrInsteadOfAndForFilter = useOrInsteadOfAndForFilter;
+    }
+
+    /**
+     * @return the useDefaultFontSize
+     */
+    public boolean isUseDefaultFontSize() {
+        return useDefaultFontSize;
+    }
+
+    /**
+     * @param useDefaultFontSize the useDefaultFontSize to set
+     */
+    public void setUseDefaultFontSize(boolean useDefaultFontSize) {
+        this.useDefaultFontSize = useDefaultFontSize;
+    }
+
+    /**
+     * @return the customFontSize
+     */
+    public int getCustomFontSize() {
+        return customFontSize;
+    }
+
+    /**
+     * @param customFontSize the customFontSize to set
+     */
+    public void setCustomFontSize(int customFontSize) {
+        this.customFontSize = customFontSize;
+    }
+
+    /**
+     * @return the allStepsAlsChainLength
+     */
+    public int getAllStepsAlsChainLength() {
+        return allStepsAlsChainLength;
+    }
+
+    /**
+     * @param allStepsAlsChainLength the allStepsAlsChainLength to set
+     */
+    public void setAllStepsAlsChainLength(int allStepsAlsChainLength) {
+        this.allStepsAlsChainLength = allStepsAlsChainLength;
     }
 
     private static class ProgressComparator implements Comparator<StepConfig> {

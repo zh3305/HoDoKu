@@ -18,6 +18,7 @@
  */
 package sudoku;
 
+import java.awt.FontMetrics;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -63,9 +64,13 @@ public final class AllStepsPanel extends javax.swing.JPanel implements TreeSelec
                     eliminationSortToggleButton, typeSortToggleButton
                 };
 
-        resetPanel();
+//        stepsTree.setCellRenderer(new ScalableRenderer());
         stepsTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         stepsTree.addTreeSelectionListener(this);
+        FontMetrics metrics = getFontMetrics(getFont());
+        int rowHeight = (int)(metrics.getHeight() * 1.0);
+        stepsTree.setRowHeight(rowHeight);
+        resetPanel();
     }
 
     /** This method is called from within the constructor to

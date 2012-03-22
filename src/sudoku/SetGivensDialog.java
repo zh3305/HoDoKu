@@ -178,7 +178,7 @@ public class SetGivensDialog extends javax.swing.JDialog {
             }
         }
         givens = output.toString();
-        System.out.println("givens <" + givens + ">");
+//        System.out.println("givens <" + givens + ">");
         if (givens.length() != 81) {
             JOptionPane.showMessageDialog(rootPane, 
                     ResourceBundle.getBundle("intl/SetGivensDialog").getString("SetGivensDialog.error.message"),

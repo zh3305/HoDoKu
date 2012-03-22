@@ -80,7 +80,7 @@ public class ProgressChecker implements Runnable {
         synchronized(thread) {
             // store the contents of the sudoku to check
             passedInSudoku.set(actSudoku);
-//            System.out.println("ProgressChecker: pass in \r\n"+passedInSudoku.getSudoku(ClipboardMode.PM_GRID));
+            System.out.println("ProgressChecker: pass in \r\n"+passedInSudoku.getSudoku(ClipboardMode.PM_GRID));
             // set a flag indicating a newly scheduled check
             passedIn = true;
             // wake up the thread, if it is sleeping

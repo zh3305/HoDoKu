@@ -51,6 +51,8 @@ public class FindAllSteps implements Runnable {
         this();
         
         this.sudoku = sudoku;
+        // sometimes the internal chaching data can become invalid -> better save than sorry
+        sudoku.rebuildInternalData();
         
         this.steps = steps;
         this.dlg = dlg;

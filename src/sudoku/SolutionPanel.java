@@ -21,6 +21,7 @@ package sudoku;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +64,13 @@ public class SolutionPanel extends javax.swing.JPanel {
 
         initComponents();
 
+        int fontSize = 12;
+        if (getFont().getSize() > 12) {
+            fontSize = getFont().getSize();
+        }
+        Font font = titleLabel.getFont();
+        titleLabel.setFont(new Font(font.getName(), Font.BOLD, fontSize));
+        
 //        solutionTabbedPane.add("Lösung 1", solutionScrollPane);
 //        solutionTabbedPane.add("Lösung 2", solutionScrollPane);
 //        solutionTabbedPane.add("Lösung 3", solutionScrollPane);
@@ -177,7 +185,6 @@ public class SolutionPanel extends javax.swing.JPanel {
         setLayout(new java.awt.BorderLayout());
 
         titleLabel.setBackground(new java.awt.Color(0, 51, 255));
-        titleLabel.setFont(new java.awt.Font("Tahoma", 1, 12));
         titleLabel.setForeground(new java.awt.Color(255, 255, 255));
         titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         titleLabel.setText(bundle.getString("SolutionPanel.titleLabel.text")); // NOI18N

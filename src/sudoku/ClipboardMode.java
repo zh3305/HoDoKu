@@ -28,5 +28,7 @@ public enum ClipboardMode {
     VALUES_ONLY,
     PM_GRID,
     PM_GRID_WITH_STEP,
-    LIBRARY
+    LIBRARY,
+    CLUES_ONLY_FORMATTED,
+    VALUES_ONLY_FORMATTED
 }

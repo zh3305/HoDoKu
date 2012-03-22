@@ -80,7 +80,19 @@ import solver.SudokuSolverFactory;
 import solver.SudokuStepFinder;
 
 /**
- *
+ * A specialized JPanel for displaying and manipulating Sudokus.<br>
+ * 
+ * Mouse click detection:<br><br>
+ * 
+ * AWT seems to have problems with mouse click detection: if the mouse moves
+ * a tiny little bit between PRESSED and RELEASED, no CLICKED event is
+ * produced. This means, that when playing HoDoKu with the mouse fast, 
+ * the program often seems to ignore the mouse.<br><br>
+ * 
+ * The solution is simple: Catch the PRESSED and RELEASED events and decide
+ * for yourself, if a CLICKED has happened. For HoDoKu a CLICKED event is
+ * generated, if PRESSED and RELEASED occured on the same candidate.
+ * 
  * @author  hobiwan
  */
 public class SudokuPanel extends javax.swing.JPanel implements Printable {
@@ -172,6 +184,24 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
     private Timer deleteCursorTimer = new Timer(Options.getInstance().getDeleteCursorDisplayLength(), null);
     /** The time of the last cursor movement */
     private long lastCursorChanged = -1;
+    
+    // mouse handling
+    /** The line in which the last mouse PRESSED occured */
+    private int lastPressedLine = -1;
+    /** The column in which the last mouse PRESSED occured */
+    private int lastPressedCol = -1;
+    /** The candidate for which the last mouse PRESSED occured */
+    private int lastPressedCand = -1;
+    /** The line in which the last mouse CLICKED occured */
+    private int lastClickedLine = -1;
+    /** The column in which the last mouse CLICKED occured */
+    private int lastClickedCol = -1;
+    /** The candidate for which the last mouse CLICKED occured */
+    private int lastClickedCand = -1;
+    /** The time in TICKS of the last CLICKED event */
+    private long lastClickedTime = 0;
+    /** The AWT double click speed (depends on system settings) */
+    private long doubleClickSpeed = -1;
 
     /** Creates new form SudokuPanel */
     public SudokuPanel(MainFrame mf) {
@@ -215,6 +245,14 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                 repaint();
             }
         });
+
+        Object cs = Toolkit.getDefaultToolkit().getDesktopProperty("awt.multiClickInterval");
+        if (cs instanceof Integer) {
+            doubleClickSpeed = ((Integer)cs).intValue();
+        }
+        if (doubleClickSpeed == -1) {
+            doubleClickSpeed = 500;
+        }
     }
 
     /** This method is called from within the constructor to
@@ -500,6 +538,12 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 formMouseClicked(evt);
             }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                formMouseReleased(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                formMousePressed(evt);
+            }
         });
         addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -545,6 +589,81 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
         mainFrame.fixFocus();
     }//GEN-LAST:event_formKeyPressed
 
+    private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
+//        handleMouseClicked(evt, evt.getClickCount() == 2);
+    }//GEN-LAST:event_formMouseClicked
+
+    private void make1MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_make1MenuItemActionPerformed
+        popupSetCell((JMenuItem)evt.getSource());
+    }//GEN-LAST:event_make1MenuItemActionPerformed
+
+    private void exclude1MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exclude1MenuItemActionPerformed
+        popupExcludeCandidate((JMenuItem)evt.getSource());
+    }//GEN-LAST:event_exclude1MenuItemActionPerformed
+
+    private void excludeSeveralMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_excludeSeveralMenuItemActionPerformed
+        String input = JOptionPane.showInputDialog(this, ResourceBundle.getBundle("intl/SudokuPanel").getString("SudokuPanel.cmessage"),
+                ResourceBundle.getBundle("intl/SudokuPanel").getString("SudokuPanel.ctitle"), JOptionPane.QUESTION_MESSAGE);
+        if (input != null) {
+            undoStack.push(sudoku.clone());
+            boolean changed = false;
+            for (int i = 0; i < input.length(); i++) {
+                char digit = input.charAt(i);
+                if (Character.isDigit(digit)) {
+                    if (removeCandidateFromActiveCells(Character.getNumericValue(digit))) {
+                        changed = true;
+                    }
+                }
+            }
+            if (changed) {
+                redoStack.clear();
+                checkProgress();
+            } else {
+                undoStack.pop();
+            }
+            updateCellZoomPanel();
+            mainFrame.check();
+            repaint();
+        }
+    }//GEN-LAST:event_excludeSeveralMenuItemActionPerformed
+
+    private void color1aMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_color1aMenuItemActionPerformed
+        popupToggleColor((JMenuItem)evt.getSource());
+    }//GEN-LAST:event_color1aMenuItemActionPerformed
+
+    private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
+        lastPressedLine = getLine(evt.getPoint());
+        lastPressedCol = getCol(evt.getPoint());
+        lastPressedCand = getCandidate(evt.getPoint(), lastPressedLine, lastPressedCol);
+    }//GEN-LAST:event_formMousePressed
+
+    private void formMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseReleased
+        int line = getLine(evt.getPoint());
+        int col = getCol(evt.getPoint());
+        int cand = getCandidate(evt.getPoint(), line, col);
+        if (line == lastPressedLine && col == lastPressedCol && cand == lastPressedCand) {
+            // RELEASED on same candidate as PRESSED -> this is a click
+            // is it a double click?
+            long ticks = System.currentTimeMillis();
+            if (lastClickedTime != -1 && (ticks - lastClickedTime) <= doubleClickSpeed && line == lastClickedLine &&
+                    col == lastClickedCol && cand == lastClickedCand) {
+                // this is a double click
+                handleMouseClicked(evt, true);
+                lastClickedTime = -1;
+            } else {
+                // normal click
+                handleMouseClicked(evt, false);
+                lastClickedTime = ticks;
+            }
+            lastClickedLine = line;
+            lastClickedCol = col;
+            lastClickedCand = cand;
+        }
+        lastPressedLine = -1;
+        lastPressedCol = -1;
+        lastPressedCand = -1;
+    }//GEN-LAST:event_formMouseReleased
+
     /**
      * New mouse control for version 2.0:
      * <ul>
@@ -574,7 +693,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
      * 
      * @param evt
      */
-    private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
+    private void handleMouseClicked(MouseEvent evt, boolean doubleClick) {
         // undo/Redo siehe handleKeys()
         undoStack.push(sudoku.clone());
         boolean changed = false;
@@ -645,7 +764,8 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                     // in normal mode we only react to the left mouse button
                     //System.out.println("BUTTON1/" + evt.getClickCount() + "/" + ctrlPressed + "/" + cand);
                     int index = Sudoku2.getIndex(line, col);
-                    if (evt.getClickCount() == 2) {
+//                    if (evt.getClickCount() == 2) {
+                    if (doubleClick) {
                         if (ctrlPressed) {
                             if (cand != -1) {
                                 // toggle candidate
@@ -679,7 +799,8 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                                 }
                             }
                         }
-                    } else if (evt.getClickCount() == 1) {
+//                    } else if (evt.getClickCount() == 1) {
+                    } else if (! doubleClick) {
                         if (ctrlPressed) {
                             // select additional cell
                             if (selectedCells.size() == 0) {
@@ -781,46 +902,8 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
             mainFrame.check();
             repaint();
         }
-    }//GEN-LAST:event_formMouseClicked
-
-    private void make1MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_make1MenuItemActionPerformed
-        popupSetCell((JMenuItem)evt.getSource());
-    }//GEN-LAST:event_make1MenuItemActionPerformed
-
-    private void exclude1MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exclude1MenuItemActionPerformed
-        popupExcludeCandidate((JMenuItem)evt.getSource());
-    }//GEN-LAST:event_exclude1MenuItemActionPerformed
-
-    private void excludeSeveralMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_excludeSeveralMenuItemActionPerformed
-        String input = JOptionPane.showInputDialog(this, ResourceBundle.getBundle("intl/SudokuPanel").getString("SudokuPanel.cmessage"),
-                ResourceBundle.getBundle("intl/SudokuPanel").getString("SudokuPanel.ctitle"), JOptionPane.QUESTION_MESSAGE);
-        if (input != null) {
-            undoStack.push(sudoku.clone());
-            boolean changed = false;
-            for (int i = 0; i < input.length(); i++) {
-                char digit = input.charAt(i);
-                if (Character.isDigit(digit)) {
-                    if (removeCandidateFromActiveCells(Character.getNumericValue(digit))) {
-                        changed = true;
-                    }
-                }
-            }
-            if (changed) {
-                redoStack.clear();
-                checkProgress();
-            } else {
-                undoStack.pop();
-            }
-            updateCellZoomPanel();
-            mainFrame.check();
-            repaint();
-        }
-    }//GEN-LAST:event_excludeSeveralMenuItemActionPerformed
-
-    private void color1aMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_color1aMenuItemActionPerformed
-        popupToggleColor((JMenuItem)evt.getSource());
-    }//GEN-LAST:event_color1aMenuItemActionPerformed
-
+    }
+    
     /**
      * Moves the cursor. If the cell actually changed, a timer is started,
      * that triggers a repaint after {@link Options#getDeleteCursorDisplayLength() } ms.
@@ -1179,6 +1262,24 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                     clearRegion();
                 }
                 break;
+            case KeyEvent.VK_ENTER: {
+                int index = Sudoku2.getIndex(aktLine, aktCol);
+                if (sudoku.getValue(index) == 0) {
+                    int showHintCellValue = getShowHintCellValue();
+                    if (sudoku.getAnzCandidates(index, !showCandidates) == 1) {
+                        // Naked single -> set it!
+                        int actCand = sudoku.getAllCandidates(index, !showCandidates)[0];
+                        setCell(aktLine, aktCol, actCand);
+                        changed = true;
+                    } else if (showHintCellValue != 0 && isHiddenSingle(showHintCellValue,
+                            aktLine, aktCol)) {
+                        // Hidden Single -> it
+                        setCell(aktLine, aktCol, showHintCellValue);
+                        changed = true;
+                    }
+                }
+            }
+            break;
             case KeyEvent.VK_9:
             case KeyEvent.VK_NUMPAD9:
                 number++;
@@ -1211,6 +1312,14 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                     // Zelle setzen
                     if (selectedCells.isEmpty()) {
                         setCell(aktLine, aktCol, number);
+                        if (mainFrame.isEingabeModus()) {
+                            // automatically advance to the next cell
+                            if (aktCol < 8) {
+                                setAktRowCol(aktLine, aktCol + 1);
+                            } else if (aktLine < 8) {
+                                setAktRowCol(aktLine + 1, 0);
+                            }
+                        }
                     } else {
                         for (int index : selectedCells) {
                             setCell(Sudoku2.getLine(index), Sudoku2.getCol(index), number);
@@ -1236,8 +1345,17 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                 if ((modifiers & KeyEvent.CTRL_DOWN_MASK) == 0) {
                     // Zelle löschen
                     if (sudoku.getValue(aktLine, aktCol) != 0 && !sudoku.isFixed(aktLine, aktCol)) {
+                        System.out.println("clear cell: ");
                         sudoku.setCell(aktLine, aktCol, 0);
                         changed = true;
+                    }
+                    if (mainFrame.isEingabeModus()) {
+                        // automatically advance to the next cell
+                        if (aktCol < 8) {
+                            setAktRowCol(aktLine, aktCol + 1);
+                        } else if (aktLine < 8) {
+                            setAktRowCol(aktLine + 1, 0);
+                        }
                     }
                 }
                 break;
@@ -1320,14 +1438,16 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                 clearColoring();
                 break;
             case KeyEvent.VK_GREATER:
+            case KeyEvent.VK_COMMA:
             case KeyEvent.VK_LESS:
+            case KeyEvent.VK_PERIOD:
             default:
                 // doesnt work on all keyboards :-(
                 // more precisely: doesnt work, if the keyboard layout in the OS
                 // doesnt match the physical layout of the keyboard
                 char ch = evt.getKeyChar();
-                if (ch == '<' || ch == '>') {
-                    boolean isUp = evt.getKeyChar() == '>';
+                if (ch == '<' || ch == '>' || ch == ',' || ch == '.') {
+                    boolean isUp = ch == '>' || ch == '.';
                     if (isShowInvalidOrPossibleCells()) {
                         int cand = 0;
                         for (int i = 1; i < showHintCellValues.length - 1; i++) {
@@ -2573,8 +2693,12 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
         // now check if a candidate was clicked
         int candidate = -1;
         double cs3 = cellSize / 3.0;
-        double dx = cs3 * 2.0 / 3.0;
-        double leftDx = cs3 / 6.0;
+        // dont restrict the area
+//        double dx = cs3 * 2.0 / 3.0;
+//        double leftDx = cs3 / 6.0;
+        // TODO: Should clickable area be smaller?
+        double dx = cs3;
+        double leftDx = 0;
         //System.out.println("p = " + p + ", startX = " + startX + ", startY = " + startY + ", dx = " + dx + ", leftDX = " + leftDx);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -2713,6 +2837,8 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
             sudoku = undoStack.pop();
             updateCellZoomPanel();
             checkProgress();
+            mainFrame.setCurrentLevel(sudoku.getLevel());
+            mainFrame.setCurrentScore(sudoku.getScore());
             mainFrame.check();
             repaint();
         }
@@ -2724,6 +2850,8 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
             sudoku = redoStack.pop();
             updateCellZoomPanel();
             checkProgress();
+            mainFrame.setCurrentLevel(sudoku.getLevel());
+            mainFrame.setCurrentScore(sudoku.getScore());
             mainFrame.check();
             repaint();
         }
@@ -3492,6 +3620,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
      */
     public void checkProgress() {
         int anz = sudoku.getSolvedCellsAnz();
+        System.out.println("  checkProgress() - anz: " + anz);
         if (anz == 0) {
             sudoku.setStatus(SudokuStatus.EMPTY);
             sudoku.setStatusGivens(SudokuStatus.EMPTY);
@@ -3501,6 +3630,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
         } else {
             // we have to check!
             int anzSol = generator.getNumberOfSolutions(sudoku);
+            System.out.println("  checkProgress() - anzSol: " + anzSol);
             sudoku.setStatus(anzSol);
             // the status of the givens is not changed here; it only changes
             // when the givens themselved are changed

@@ -176,7 +176,21 @@ public enum SolutionType {
                 // same category -> type.ordinal can be used
                 // unfortunately not!
                 //return ordinal() - t.ordinal();
-                return getFishSize() - t.getFishSize();
+                int size = getFishSize() - t.getFishSize();
+                if (size != 0) {
+                    return size;
+                }
+                // same category and same size: check for Finned/Sashimi
+                boolean sl = isSashimiFish();
+                boolean sr = t.isSashimiFish();
+                if (sl && sr || ! sl && ! sr) {
+                    // both are sashimi or both are not sashimi -> equal
+                    return 0;
+                } else if (sl) {
+                    return 1;
+                } else {
+                    return -1;
+                }
             }
         }
         // for non-fishes use the sort order of the solver

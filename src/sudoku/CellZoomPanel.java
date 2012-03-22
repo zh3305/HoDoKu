@@ -122,11 +122,24 @@ public class CellZoomPanel extends javax.swing.JPanel {
 
         jFontButton.setVisible(false);
         buttonFont = jFontButton.getFont();
-        buttonFontSize = buttonFont.getSize();
+//        buttonFontSize = buttonFont.getSize();
+        buttonFontSize = 11;
         defaultButtonFontSize = buttonFontSize;
-        defaultButtonHeight = jFontButton.getHeight();
+        // the height of the button is not adjusted when the font changes
+        // -> calculate the height from the font height
+//        FontMetrics metrics = getFontMetrics(buttonFont);
+//        defaultButtonHeight = jFontButton.getHeight();
+        defaultButtonHeight = 23;
         iconFont = new Font(buttonFont.getName(), buttonFont.getStyle(), defaultButtonFontSize - DIFF_SIZE);
+//        System.out.println("jFOntButton: " + defaultButtonHeight + "/" + metrics.getHeight() + "/" + buttonFontSize + "/" + buttonFont + "/" + iconFont);
 
+        int fontSize = 12;
+        if (getFont().getSize() > 12) {
+            fontSize = getFont().getSize();
+        }
+        Font font = titleLabel.getFont();
+        titleLabel.setFont(new Font(font.getName(), Font.BOLD, fontSize));
+        
         calculateLayout();
     }
 
@@ -987,13 +1000,18 @@ public class CellZoomPanel extends javax.swing.JPanel {
         int width = getWidth();
         int height = getHeight();
         int y = Y_OFFSET;
+        
+        // adjust height and width for the labels
+        FontMetrics metrics = getFontMetrics(getFont());
+        int textHeight = metrics.getHeight();
 
         // calculate widths and height of components
         // how much vertical space is actually available?
-        int labelHeight = setValueLabel.getHeight();
-        labelHeight += toggleCandidatesLabel.getHeight();
-        labelHeight += cellColorLabel.getHeight();
-        labelHeight += chooseCandidateColorLabel.getHeight();
+//        int labelHeight = setValueLabel.getHeight();
+//        labelHeight += toggleCandidatesLabel.getHeight();
+//        labelHeight += cellColorLabel.getHeight();
+//        labelHeight += chooseCandidateColorLabel.getHeight();
+        int labelHeight = 4 * textHeight;
         int availableVert = height - Y_OFFSET - 4 * (SMALL_GAP + LARGE_GAP) - labelHeight;
 
         // try default sizes
@@ -1018,30 +1036,39 @@ public class CellZoomPanel extends javax.swing.JPanel {
         colorImageHeight = colorPanelHeight * 2 / 3;
 
         // ok, do the layout
-        titleLabel.setSize(width, titleLabel.getHeight());
-        setValueLabel.setSize(width - 2 * X_OFFSET, setValueLabel.getHeight());
+//        titleLabel.setSize(width, titleLabel.getHeight());
+        titleLabel.setSize(width, textHeight);
+//        setValueLabel.setSize(width - 2 * X_OFFSET, setValueLabel.getHeight());
+        setValueLabel.setSize(width - 2 * X_OFFSET, textHeight);
         setValueLabel.setLocation(X_OFFSET, y);
-        y += setValueLabel.getHeight();
+//        y += setValueLabel.getHeight();
+        y += textHeight;
         y += SMALL_GAP;
         setValuePanel.setSize(buttonPanelHeight, buttonPanelHeight);
         setValuePanel.setLocation((width - buttonPanelHeight) / 2, y);
         setValuePanel.doLayout();
         y += buttonPanelHeight;
         y += LARGE_GAP;
-        toggleCandidatesLabel.setSize(width - 2 * X_OFFSET, toggleCandidatesLabel.getHeight());
+//        toggleCandidatesLabel.setSize(width - 2 * X_OFFSET, toggleCandidatesLabel.getHeight());
+        toggleCandidatesLabel.setSize(width - 2 * X_OFFSET, textHeight);
         toggleCandidatesLabel.setLocation(X_OFFSET, y);
-        y += toggleCandidatesLabel.getHeight();
+//        y += toggleCandidatesLabel.getHeight();
+        y += textHeight;
         y += SMALL_GAP;
         toggleCandidatesPanel.setSize(buttonPanelHeight, buttonPanelHeight);
         toggleCandidatesPanel.setLocation((width - buttonPanelHeight) / 2, y);
         toggleCandidatesPanel.doLayout();
 
         int cpx = (width - colorPanelGesWidth) / 2;
-        y = height - 2 * (SMALL_GAP + LARGE_GAP) - cellColorLabel.getHeight() -
-                chooseCandidateColorLabel.getHeight() - 2 * colorPanelHeight;
-        cellColorLabel.setSize(width - 2 * X_OFFSET, cellColorLabel.getHeight());
+//        y = height - 2 * (SMALL_GAP + LARGE_GAP) - cellColorLabel.getHeight() -
+//                chooseCandidateColorLabel.getHeight() - 2 * colorPanelHeight;
+        y = height - 2 * (SMALL_GAP + LARGE_GAP) - textHeight -
+                textHeight - 2 * colorPanelHeight;
+//        cellColorLabel.setSize(width - 2 * X_OFFSET, cellColorLabel.getHeight());
+        cellColorLabel.setSize(width - 2 * X_OFFSET, textHeight);
         cellColorLabel.setLocation(X_OFFSET, y);
-        y += cellColorLabel.getHeight();
+//        y += cellColorLabel.getHeight();
+        y += textHeight;
         y += SMALL_GAP;
         cellColorPanel.setSize(colorPanelHeight * 2 / 3, colorPanelHeight * 2 / 3);
         cellColorPanel.setLocation(cpx, y + colorPanelHeight / 6);
@@ -1051,9 +1078,11 @@ public class CellZoomPanel extends javax.swing.JPanel {
         chooseCellColorPanel.doLayout();
         y += colorPanelHeight;
         y += LARGE_GAP;
-        chooseCandidateColorLabel.setSize(width - 2 * X_OFFSET, chooseCandidateColorLabel.getHeight());
+//        chooseCandidateColorLabel.setSize(width - 2 * X_OFFSET, chooseCandidateColorLabel.getHeight());
+        chooseCandidateColorLabel.setSize(width - 2 * X_OFFSET, textHeight);
         chooseCandidateColorLabel.setLocation(X_OFFSET, y);
-        y += chooseCandidateColorLabel.getHeight();
+//        y += chooseCandidateColorLabel.getHeight();
+        y += textHeight;
         y += SMALL_GAP;
         candidateColorPanel.setSize(colorPanelHeight * 2 / 3, colorPanelHeight * 2 / 3);
         candidateColorPanel.setLocation(cpx, y + colorPanelHeight / 6);
