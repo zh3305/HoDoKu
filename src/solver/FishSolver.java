@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-11  Bernhard Hobiger
+ * Copyright (C) 2008-12  Bernhard Hobiger
  *
  * This file is part of HoDoKu.
  *
@@ -19,11 +19,8 @@
 package solver;
 
 import java.beans.XMLDecoder;
-import java.beans.XMLEncoder;
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import sudoku.Chain;
 import java.util.ArrayList;
 import java.util.Arrays;
