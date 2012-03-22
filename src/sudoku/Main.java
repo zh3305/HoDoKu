@@ -47,8 +47,9 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.plaf.FontUIResource;
 import solver.SudokuSolver;
 import solver.SudokuSolverFactory;
 
@@ -345,25 +346,6 @@ public class Main {
             OS_NAME = OS_NAME.toLowerCase();
         }
 
-        //System.setProperty("awt.useSystemAAFontSettings", "on");
-        //System.setProperty("swing.aatext", "true");
-
-//        System.out.println("Properties:");
-//        Properties props = System.getProperties();
-//        Enumeration propEnum = props.propertyNames();
-//        while (propEnum.hasMoreElements()) {
-//            Object element = propEnum.nextElement();
-//            String key = element.toString();
-//            String value = props.getProperty(key);
-//            System.out.println("  " + key + ": " + value);
-//        }
-
-//        boolean prematureExit = true;
-//        TablingSolver.main(null);
-//        if (prematureExit) {
-//            return;
-//        }
-
         // Optionen lesen (macht getInstance())
         // if a file hodoku.hcfg exists in the directory from where the program
         // was started, it is loaded automatically
@@ -372,40 +354,46 @@ public class Main {
         if (path == null) {
             URL startURL = Main.class.getResource("/sudoku/Main.class");
             path = startURL.getPath();
-//            Logger.getLogger(Main.class.getName()).log(Level.CONFIG, "Startup path: {0}", path);
+            Logger.getLogger(Main.class.getName()).log(Level.CONFIG, "Startup path: {0}", path);
             // 20120116: CAUTION - jar file might be renamed, dont rely on "hodoku.jar"!
             if (path.contains(".jar!")) {
                 // started from jar file: find path only
                 // format is: file:/C:/Sudoku/hodoku.jar!/sudoku/Main.class
-                String tmp = path.substring(6, path.indexOf(".jar!"));
+                // format on Ubuntu: file:/home/ubuntu/Desktop/hodoku.jar!/sudoku/Main.class
+                int startIndex = 5;
+                if (OS_NAME.startsWith("windows")) {
+                    startIndex = 6;
+                }
+                String tmp = path.substring(startIndex, path.indexOf(".jar!"));
                 int index = tmp.lastIndexOf('/');
                 if (index > 0) {
                     path = tmp.substring(0, index);
                 }
             } else if (path.contains("/build/classes")) {
                 // format is (Netbeans only): /C:/Sudoku/Alles%20rund%20um%20HoDoKu/HoDoKu/build/classes/sudoku/Main.class
-                path = path.substring(1, path.indexOf("/build/classes"));
+                int startIndex = 0;
+                if (OS_NAME.startsWith("windows")) {
+                    startIndex = 1;
+                }
+                path = path.substring(startIndex, path.indexOf("/build/classes"));
+            } else if (path.contains("/bin/sudoku/Main")) {
+                // format (Eclipse. Ubuntu): /home/ubuntu/HoDoKuEclipse/bin/sudoku/Main.class
+                int startIndex = 0;
+                if (OS_NAME.startsWith("windows")) {
+                    startIndex = 1;
+                }
+                path = path.substring(startIndex, path.indexOf("/bin/sudoku/Main"));
             }
-//            if (path.contains("hodoku.jar")) {
-//                // format is: file:/C:/Sudoku/hodoku.jar!/sudoku/Main.class
-//                path = path.substring(6, path.indexOf("/hodoku.jar"));
-//            } else if (path.contains("HoDoKu.jar")) {
-//                // format is: file:/C:/Sudoku/hodoku.jar!/sudoku/Main.class
-//                path = path.substring(6, path.indexOf("/HoDoKu.jar"));
-//            } else {
-//                // format is (Netbeans only): /C:/Sudoku/Alles%20rund%20um%20HoDoKu/HoDoKu/build/classes/sudoku/Main.class
-//                path = path.substring(1, path.indexOf("/build/classes"));
-//            }
             path = path.replaceAll("%20", " ");
         }
-        File configFile = new File(path + "\\" + Options.FILE_NAME);
+        File configFile = new File(path + File.separator + Options.FILE_NAME);
         boolean needToResetPuzzles = false;
         if (configFile.exists()) {
             Logger.getLogger(Main.class.getName()).log(Level.CONFIG, "Reading options from {0}", configFile.getPath());
             Options.readOptions(configFile.getPath());
             needToResetPuzzles = true;
         } else {
-            Logger.getLogger(Main.class.getName()).log(Level.CONFIG, "No config file found in <{0}>", path);
+            Logger.getLogger(Main.class.getName()).log(Level.CONFIG, "No config file found: <{0}>", configFile.getPath());
         }
 
         // set locale
@@ -416,27 +404,12 @@ public class Main {
         Options.getInstance().resetDifficultyLevelStrings();
 
         // set laf; if a laf is set in options, check if it exists
-        LookAndFeelInfo[] lafs = UIManager.getInstalledLookAndFeels();
-        boolean found = false;
-        for (int i = 0; i < lafs.length; i++) {
-            if (lafs[i].getClassName().equals(Options.getInstance().getLaf())) {
-                found = true;
-                break;
-            }
-        }
-        if (!found && !Options.getInstance().getLaf().equals("")) {
-            Options.getInstance().setLaf("");
-        }
-        try {
-            if (!Options.getInstance().getLaf().equals("")) {
-                UIManager.setLookAndFeel(Options.getInstance().getLaf());
-            } else {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            }
-            Logger.getLogger(Main.class.getName()).log(Level.CONFIG, "laf={0}", UIManager.getLookAndFeel().getName());
-        } catch (Exception ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "Error changing LaF", ex);
-        }
+        // change font sizes if needed
+        // the LaF is set here because the console window of the
+        // exe version should use the correct laF too
+//        SudokuUtil.printFontDefaults();
+        SudokuUtil.setLookAndFeel();
+//        SudokuUtil.printFontDefaults();
 
         // to detect whether launch4j is used, a constant command line parameter
         // "/launch4j" is used for the exe version; detect it
@@ -473,7 +446,7 @@ public class Main {
 //            System.out.println(path);
             // copyright notice
             System.out.println(MainFrame.VERSION + " - " + MainFrame.BUILD);
-            System.out.println("Copyright (C) 2008-11  Bernhard Hobiger\r\n"
+            System.out.println("Copyright (C) 2008-12  Bernhard Hobiger\r\n"
                     + "\r\n"
                     + "HoDoKu is free software: you can redistribute it and/or modify\r\n"
                     + "it under the terms of the GNU General Public License as published by\r\n"
@@ -682,8 +655,8 @@ public class Main {
                     // greater or equal the most difficult step in the list
                     for (StepType type : typeList) {
                         if (type.type.getStepConfig().getLevel() > (levelOrd + 1)) {
-                            System.out.println("Invalid argument for option /sl: " + type.type.getStepName() +
-                                    " requires at least difficulty level " + (levelOrd + 1));
+                            System.out.println("Invalid argument for option /sl: " + type.type.getStepName()
+                                    + " requires at least difficulty level " + (levelOrd + 1));
                             if (consoleFrame == null) {
                                 System.exit(0);
                             }
@@ -901,6 +874,38 @@ public class Main {
                 new MainFrame(lf).setVisible(true);
             }
         });
+    }
+
+    /**
+     * Dynamically loads the Nimbus LaF and resets the default font to a 
+     * larger size. This is necessary for two reasons:
+     * <ul>
+     * <li>The Nimbus LaF is initialized dynamically, so setting it in
+     *      UIManager and changing the defaults wont work (instance has not
+     *      yet been created, so the changes wont work)</li>
+     * <li>The package of the Nimbus LaF changed from Java 1.6 to 1.7. Simply
+     *      subclassing NimusLookAndFeel and overriding getDefaults()
+     *      throws an ClassLoaderException on some Java versions.</li>
+     * </ul>
+     * @param className
+     * @param fontName
+     * @param fontStyle
+     * @param fontSize
+     * @return 
+     */
+    private static boolean initializeNimbusLaF(String className, String fontName, int fontStyle, int fontSize) {
+        ClassLoader classLoader = Main.class.getClassLoader();
+
+        try {
+            Class aClass = classLoader.loadClass(className);
+            LookAndFeel laf = (LookAndFeel) aClass.newInstance();
+            UIManager.setLookAndFeel(laf);
+            laf.getDefaults().put("defaultFont",
+                    new FontUIResource(fontName, fontStyle, fontSize)); // supersize me
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
     }
 
     /**
@@ -1151,9 +1156,9 @@ class SearchForTypeThread extends Thread {
                 solver.solve();
                 //System.out.println("result: " + clonedSudoku.isSolved() + "/" + clonedSudoku.getLevel().getName());
                 if (level != null) {
-                    if (! clonedSudoku.isSolved()) {
+                    if (!clonedSudoku.isSolved()) {
                         // invalid: if a level is set, the sudoku must be solved
-                        System.out.println("INVALID: Sudoku not solved");
+                        //System.out.println("INVALID: Sudoku not solved");
                         continue;
                     }
                     if (clonedSudoku.getLevel().getOrdinal() != level.getOrdinal()) {

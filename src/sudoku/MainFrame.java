@@ -21,6 +21,7 @@ package sudoku;
 import generator.BackgroundGeneratorThread;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -42,10 +43,16 @@ import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -85,8 +92,8 @@ import solver.SudokuSolverFactory;
  */
 public class MainFrame extends javax.swing.JFrame implements FlavorListener {
 
-    public static final String VERSION = "HoDoKu - v2.1.3";
-    public static final String BUILD = "Build 51";
+    public static final String VERSION = "HoDoKu - v2.2.0 beta";
+    public static final String BUILD = "Build 15";
     private SudokuPanel sudokuPanel;
     //private DifficultyLevel level = Options.getInstance().getDifficultyLevels()[DifficultyType.EASY.ordinal()];
     private JToggleButton[] toggleButtons = new JToggleButton[10];
@@ -95,6 +102,8 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
     private boolean oldShowDeviations = true;
     /** only set, when the givens are changed */
     private boolean oldShowDeviationsValid = false;
+    /** true if new givens are being entered */
+    private boolean eingabeModus = false;
     private SplitPanel splitPanel = new SplitPanel();
     private SummaryPanel summaryPanel = new SummaryPanel(this);
     private SolutionPanel solutionPanel = new SolutionPanel(this);
@@ -108,8 +117,20 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
     private double bildSize = 400;
     private int bildAuflösung = 96;
     private int bildEinheit = 2;    // File/IO
-    private MyFileFilter[] puzzleFileFilters = new MyFileFilter[]{
-        new MyFileFilter(1)
+    private MyFileFilter[] puzzleFileSaveFilters = new MyFileFilter[]{
+        new MyFileFilter(1),
+        new MyFileFilter(2),
+        new MyFileFilter(3),
+        new MyFileFilter(4),
+        new MyFileFilter(5),
+        new MyFileFilter(6),
+        new MyFileFilter(7),
+        new MyFileFilter(9)
+    };
+    private MyFileFilter[] puzzleFileLoadFilters = new MyFileFilter[]{
+        new MyFileFilter(1),
+        new MyFileFilter(8),
+        new MyFileFilter(9)
     };
     private MyFileFilter[] configFileFilters = new MyFileFilter[]{
         new MyFileFilter(0)
@@ -121,6 +142,8 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
     private long resetHDivLocTicks = 0;     // only adjust within a second or so
     private String configFileExt = java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.config_file_ext");
     private String solutionFileExt = java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.solution_file_ext");
+    private String textFileExt = java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.text_file_ext");
+    private String ssFileExt = java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.ss_file_ext");
     private MessageFormat formatter = new MessageFormat("");
     private List<GuiState> savePoints = new ArrayList<GuiState>(); // container for savepoints
     //private GameMode mode = GameMode.PLAYING;
@@ -147,6 +170,10 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
      * querying for DataFlavors, it is started an we try again when it expires.
      */
     private Timer clipTimer = new Timer(100, null);
+    /** The file name of the last loded sudoku file */
+    private String sudokuFileName = null;
+    /** The file type of the last loaded sudoku file: 1 .. hsol, 8 .. txt or 9 .. ss */
+    private int sudokuFileType = -1;
 
     /** Creates new form MainFrame */
     @SuppressWarnings("LeakingThisInConstructor")
@@ -159,10 +186,38 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         }
 
         initComponents();
-        setTitle(VERSION);
+        setTitleWithFile();
         outerSplitPane.getActionMap().getParent().remove("startResize");
         outerSplitPane.getActionMap().getParent().remove("toggleFocus");
-
+        
+        // change hintTextArea font to a proportional font
+        String fontName = "Arial";
+        if (! Options.getInstance().checkFont(fontName)) {
+            fontName = Font.SANS_SERIF;
+        }
+        Font font = hinweisTextArea.getFont();
+//        System.out.println("fontSize: " + font.getSize() + "/" + getFont().getSize() + "/" + bearbeitenMenu.getFont().getSize());
+//        font = new Font(fontName, font.getStyle(), font.getSize());
+        font = new Font(fontName, font.getStyle(), bearbeitenMenu.getFont().getSize());
+        hinweisTextArea.setFont(font);
+        
+        // status line fonts are a bit larger than default in Windows LAF
+        // allow adjustments
+        font = statusLinePanel.getFont();
+        fontName = "Tahoma";
+        if (! Options.getInstance().checkFont(fontName)) {
+            fontName = font.getName();
+        }
+        int fontSize = 12;
+        if (font.getSize() > fontSize) {
+            fontSize = font.getSize();
+        }
+        font = new Font(fontName, getFont().getStyle(), fontSize);
+        statusLabelCellCandidate.setFont(font);
+        statusLabelLevel.setFont(font);
+        statusLabelModus.setFont(font);
+        progressLabel.setFont(font);
+        
         // get the current difficulty level (is overriden when levels are added
         //to the combo box)
         int actLevel = Options.getInstance().getActLevel();
@@ -309,7 +364,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             levelComboBox.setMinimumSize(newLevelSize);
             levelComboBox.setPreferredSize(newLevelSize);
             levelComboBox.setSize(newLevelSize);
-            System.out.println("Size changed to: " + newLevelSize);
+            //System.out.println("Size changed to: " + newLevelSize);
             //jToolBar1.doLayout();
             //repaint();
         }
@@ -349,7 +404,10 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
 
         // if a puzzle file is given at the command line, load it
         if (launchFile != null && launchFile.endsWith("." + solutionFileExt)) {
-            loadFromFile(launchFile);
+            loadFromFile(launchFile, 1);
+        }
+        if (launchFile != null && launchFile.endsWith("." + textFileExt)) {
+            loadFromFile(launchFile, 8);
         }
 
         fixFocus();
@@ -433,6 +491,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         neuMenuItem = new javax.swing.JMenuItem();
         jSeparator14 = new javax.swing.JSeparator();
         loadPuzzleMenuItem = new javax.swing.JMenuItem();
+        savePuzzleMenuItem = new javax.swing.JMenuItem();
         savePuzzleAsMenuItem = new javax.swing.JMenuItem();
         loadConfigMenuItem = new javax.swing.JMenuItem();
         saveConfigAsMenuItem = new javax.swing.JMenuItem();
@@ -456,6 +515,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         copyPmGridMenuItem = new javax.swing.JMenuItem();
         copyPmGridWithStepMenuItem = new javax.swing.JMenuItem();
         copyLibraryMenuItem = new javax.swing.JMenuItem();
+        copySSMenuItem = new javax.swing.JMenuItem();
         pasteMenuItem = new javax.swing.JMenuItem();
         jSeparator17 = new javax.swing.JSeparator();
         restartSpielMenuItem = new javax.swing.JMenuItem();
@@ -692,7 +752,6 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
 
         statusLinePanel.add(jPanel1);
 
-        statusLabelCellCandidate.setFont(new java.awt.Font("Tahoma", 0, 12));
         statusLabelCellCandidate.setText(bundle.getString("MainFrame.statusLabelCellCandidate.text.cell")); // NOI18N
         statusLabelCellCandidate.setToolTipText(bundle.getString("MainFrame.statusLabelCellCandidate.toolTipText")); // NOI18N
         statusLabelCellCandidate.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -706,7 +765,6 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         jSeparator1.setPreferredSize(new java.awt.Dimension(2, 17));
         statusLinePanel.add(jSeparator1);
 
-        statusLabelLevel.setFont(new java.awt.Font("Tahoma", 0, 12));
         statusLabelLevel.setText(bundle.getString("MainFrame.statusLabelLevel.text")); // NOI18N
         statusLabelLevel.setToolTipText(bundle.getString("MainFrame.statusLabelLevel.toolTipText")); // NOI18N
         statusLinePanel.add(statusLabelLevel);
@@ -715,7 +773,6 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         jSeparator8.setPreferredSize(new java.awt.Dimension(2, 17));
         statusLinePanel.add(jSeparator8);
 
-        progressLabel.setFont(new java.awt.Font("Tahoma", 0, 12));
         progressLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/invalid20.png"))); // NOI18N
         progressLabel.setText("null");
         progressLabel.setToolTipText(bundle.getString("MainFrame.progressLabel.toolTipText")); // NOI18N
@@ -725,7 +782,6 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         jSeparator24.setPreferredSize(new java.awt.Dimension(2, 17));
         statusLinePanel.add(jSeparator24);
 
-        statusLabelModus.setFont(new java.awt.Font("Tahoma", 0, 12));
         statusLabelModus.setText(bundle.getString("MainFrame.statusLabelModus.textPlay")); // NOI18N
         statusLabelModus.setToolTipText(bundle.getString("MainFrame.statusLabelModus.toolTipText")); // NOI18N
         statusLinePanel.add(statusLabelModus);
@@ -951,7 +1007,6 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
 
         hinweisTextArea.setColumns(20);
         hinweisTextArea.setEditable(false);
-        hinweisTextArea.setFont(new java.awt.Font("Arial", 0, 10));
         hinweisTextArea.setLineWrap(true);
         hinweisTextArea.setRows(5);
         hinweisTextArea.setWrapStyleWord(true);
@@ -1018,7 +1073,18 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         });
         dateiMenu.add(loadPuzzleMenuItem);
 
-        savePuzzleAsMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        savePuzzleMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        savePuzzleMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.savePuzzleMenuItem.mnemonic").charAt(0));
+        savePuzzleMenuItem.setText(bundle.getString("MainFrame.savePuzzleMenuItem.text")); // NOI18N
+        savePuzzleMenuItem.setEnabled(false);
+        savePuzzleMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                savePuzzleMenuItemActionPerformed(evt);
+            }
+        });
+        dateiMenu.add(savePuzzleMenuItem);
+
+        savePuzzleAsMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.SHIFT_MASK));
         savePuzzleAsMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.saveAsMenuItemMnemonic").charAt(0));
         savePuzzleAsMenuItem.setText(bundle.getString("MainFrame.savePuzzleAsMenuItem.text")); // NOI18N
         savePuzzleAsMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -1198,6 +1264,15 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             }
         });
         bearbeitenMenu.add(copyLibraryMenuItem);
+
+        copySSMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.copySSMenuItem.mnemonic").charAt(0));
+        copySSMenuItem.setText(bundle.getString("MainFrame.copySSMenuItem.text")); // NOI18N
+        copySSMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                copySSMenuItemActionPerformed(evt);
+            }
+        });
+        bearbeitenMenu.add(copySSMenuItem);
 
         pasteMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.CTRL_MASK));
         pasteMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.pasteMenuItemMnemonic").charAt(0));
@@ -1774,7 +1849,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
     }//GEN-LAST:event_beendenMenuItemActionPerformed
 
     private void copyLibraryMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyLibraryMenuItemActionPerformed
-        copyToClipboard(ClipboardMode.LIBRARY);
+        copyToClipboard(ClipboardMode.LIBRARY, false);
     }//GEN-LAST:event_copyLibraryMenuItemActionPerformed
 
     private void copyPmGridWithStepMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyPmGridWithStepMenuItemActionPerformed
@@ -1784,15 +1859,15 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
                     java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.error"), JOptionPane.ERROR_MESSAGE);
             return;
         }
-        copyToClipboard(ClipboardMode.PM_GRID_WITH_STEP);
+        copyToClipboard(ClipboardMode.PM_GRID_WITH_STEP, false);
     }//GEN-LAST:event_copyPmGridWithStepMenuItemActionPerformed
 
     private void copyPmGridMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyPmGridMenuItemActionPerformed
-        copyToClipboard(ClipboardMode.PM_GRID);
+        copyToClipboard(ClipboardMode.PM_GRID, false);
     }//GEN-LAST:event_copyPmGridMenuItemActionPerformed
 
     private void copyFilledMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyFilledMenuItemActionPerformed
-        copyToClipboard(ClipboardMode.VALUES_ONLY);
+        copyToClipboard(ClipboardMode.VALUES_ONLY, false);
     }//GEN-LAST:event_copyFilledMenuItemActionPerformed
 
     private void showDeviationsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showDeviationsMenuItemActionPerformed
@@ -1848,6 +1923,8 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
                 }
             }
             clearSavePoints();
+            sudokuFileName = null;
+            setTitleWithFile();
             check();
         }
         setSpielen(true);
@@ -2041,7 +2118,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
     }//GEN-LAST:event_neuMenuItemActionPerformed
 
     private void copyCluesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyCluesMenuItemActionPerformed
-        copyToClipboard(ClipboardMode.CLUES_ONLY);
+        copyToClipboard(ClipboardMode.CLUES_ONLY, false);
     }//GEN-LAST:event_copyCluesMenuItemActionPerformed
 
     private void showWrongValuesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showWrongValuesMenuItemActionPerformed
@@ -2058,24 +2135,32 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
 
     private void redoToolButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_redoToolButtonActionPerformed
         sudokuPanel.redo();
+        allStepsPanel.setSudoku(sudokuPanel.getSudoku());
+        allStepsPanel.resetPanel();
         check();
         fixFocus();
     }//GEN-LAST:event_redoToolButtonActionPerformed
 
     private void redoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_redoMenuItemActionPerformed
         sudokuPanel.redo();
+        allStepsPanel.setSudoku(sudokuPanel.getSudoku());
+        allStepsPanel.resetPanel();
         check();
         fixFocus();
     }//GEN-LAST:event_redoMenuItemActionPerformed
 
     private void undoToolButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoToolButtonActionPerformed
         sudokuPanel.undo();
+        allStepsPanel.setSudoku(sudokuPanel.getSudoku());
+        allStepsPanel.resetPanel();
         check();
         fixFocus();
     }//GEN-LAST:event_undoToolButtonActionPerformed
 
     private void undoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoMenuItemActionPerformed
         sudokuPanel.undo();
+        allStepsPanel.setSudoku(sudokuPanel.getSudoku());
+        allStepsPanel.resetPanel();
         check();
         fixFocus();
     }//GEN-LAST:event_undoMenuItemActionPerformed
@@ -2426,8 +2511,22 @@ private void showHintButtonsCheckBoxMenuItemActionPerformed(java.awt.event.Actio
 
 private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_extendedPrintMenuItemActionPerformed
     new ExtendedPrintDialog(this, true).setVisible(true);
-    // TODO add your handling code here:
 }//GEN-LAST:event_extendedPrintMenuItemActionPerformed
+
+    private void copySSMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copySSMenuItemActionPerformed
+        copyToClipboard(null, true);
+    }//GEN-LAST:event_copySSMenuItemActionPerformed
+
+    private void savePuzzleMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_savePuzzleMenuItemActionPerformed
+        if (sudokuFileName != null) {
+            try {
+                saveToFile(true, sudokuFileName, sudokuFileType);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, ex.toString(), java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.error"), JOptionPane.ERROR_MESSAGE);
+                sudokuFileName = null;
+            }
+        }
+    }//GEN-LAST:event_savePuzzleMenuItemActionPerformed
 
     /**
      * Sets a new mode ({@link GameMode#LEARNING}, {@link GameMode#PLAYING} or
@@ -2486,7 +2585,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
         check();
         repaint();
     }
-
+    
     /**
      * Restores a complete GUI state including puzzle (optionally with coloring
      * and selected step), solutions and summary. Used by {@link #loadFromFile(boolean)} and
@@ -2498,6 +2597,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
         state.set();
         summaryPanel.initialize(SudokuSolverFactory.getDefaultSolverInstance());
         allStepsPanel.setSudoku(sudokuPanel.getSudoku());
+        allStepsPanel.resetPanel();
         setSolutionStep(state.getStep(), true);
         setSpielen(true);
         check();
@@ -2717,6 +2817,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
     }
 
     private void setSpielen(boolean isSpielen) {
+        eingabeModus = ! isSpielen;
         if (isSpielen) {
             if (oldShowDeviationsValid) {
                 showDeviationsMenuItem.setSelected(oldShowDeviations);
@@ -2773,8 +2874,30 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
         fixFocus();
     }
 
-    private void copyToClipboard(ClipboardMode mode) {
-        String clipStr = sudokuPanel.getSudokuString(mode);
+    /**
+     * Copy the current sudoku to the clipboard. If <code>simpleSudoku</code>
+     * is set to <code>true</code>, the givensm the currently set cells and
+     * a PM grid are copied.
+     * 
+     * @param mode
+     * @param simpleSudoku 
+     */
+    private void copyToClipboard(ClipboardMode mode, boolean simpleSudoku) {
+        String clipStr = "";
+        if (simpleSudoku) {
+            String dummy = sudokuPanel.getSudokuString(ClipboardMode.CLUES_ONLY);
+            clipStr = SudokuUtil.getSSFormatted(dummy);
+            clipStr += SudokuUtil.NEW_LINE;
+            clipStr += SudokuUtil.NEW_LINE;
+            dummy = sudokuPanel.getSudokuString(ClipboardMode.VALUES_ONLY);
+            clipStr += SudokuUtil.getSSFormatted(dummy);
+            clipStr += SudokuUtil.NEW_LINE;
+            clipStr += SudokuUtil.NEW_LINE;
+            dummy = sudokuPanel.getSudokuString(ClipboardMode.PM_GRID);
+            clipStr += SudokuUtil.getSSPMGrid(dummy);
+        } else {
+            clipStr = sudokuPanel.getSudokuString(mode);
+        }
         try {
             Clipboard clip = Toolkit.getDefaultToolkit().getSystemClipboard();
             StringSelection content = new StringSelection(clipStr);
@@ -2831,7 +2954,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
     private void saveToFile(boolean puzzle) {
         JFileChooser chooser = new JFileChooser(Options.getInstance().getDefaultFileDir());
         chooser.setAcceptAllFileFilterUsed(false);
-        MyFileFilter[] filters = puzzleFileFilters;
+        MyFileFilter[] filters = puzzleFileSaveFilters;
         if (!puzzle) {
             filters = configFileFilters;
         }
@@ -2845,46 +2968,150 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
                 path = path.substring(0, path.lastIndexOf(File.separatorChar));
                 Options.getInstance().setDefaultFileDir(path);
                 MyFileFilter actFilter = (MyFileFilter) chooser.getFileFilter();
+                int filterType = actFilter.getType();
                 path = chooser.getSelectedFile().getAbsolutePath();
                 if (!puzzle) {
                     // Options
                     if (!path.endsWith("." + configFileExt)) {
                         path += "." + configFileExt;
                     }
-                    //Options.getInstance().writeOptions(path);
-                    writeOptionsWithWindowState(path);
                 } else {
-                    // Sudoku2 und Lösung
-                    if (!path.endsWith("." + solutionFileExt)) {
-                        path += "." + solutionFileExt;
+                    if (filterType == 1) {
+                        if (!path.endsWith("." + solutionFileExt)) {
+                            path += "." + solutionFileExt;
+                        }
+                    } else if (filterType == 9) {
+                        if (!path.endsWith("." + ssFileExt)) {
+                            path += "." + ssFileExt;
+                        }
+                    } else {
+                        if (!path.endsWith("." + textFileExt)) {
+                            path += "." + textFileExt;
+                        }
                     }
-                    ZipOutputStream zOut = new ZipOutputStream(new FileOutputStream(path));
-                    zOut.putNextEntry(new ZipEntry("SudokuData"));
-                    XMLEncoder out = new XMLEncoder(zOut);
-//                    out.writeObject(sudokuPanel.getSudoku());
-//                    out.writeObject(sudokuPanel.getSolvedSudoku());
-//                    SudokuSolver s = SudokuSolver.getInstance();
-//                    out.writeObject(s.getAnzSteps());
-//                    for (int i = 0; i < s.getSteps().size(); i++) {
-//                        out.writeObject(s.getSteps().get(i));
-//                    }
-                    out.writeObject(sudokuPanel.getSudoku());
-                    out.writeObject(SudokuSolverFactory.getDefaultSolverInstance().getAnzSteps());
-                    out.writeObject(SudokuSolverFactory.getDefaultSolverInstance().getSteps());
-                    out.writeObject(solutionPanel.getTitels());
-                    out.writeObject(solutionPanel.getTabSteps());
-                    out.writeObject(savePoints);
-                    out.close();
-                    zOut.flush();
-                    zOut.close();
+                }
+                File checkFile = new File(path);
+                if (checkFile.exists()) {
+                    // Override warning!
+                    MessageFormat msgf = new MessageFormat("");
+                    Object[] args = new Object[] { checkFile.getName() };
+                    msgf.applyPattern(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.file_exists"));
+                    String warning = msgf.format(args);
+                    String title = java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.hint");
+                    if (JOptionPane.showConfirmDialog(null, warning, title, JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
+                        return;
+                    }
+                }
+                saveToFile(puzzle, path, filterType);
 //                } else {
 //                    formatter.applyPattern(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.invalid_filename"));
 //                    String msg = formatter.format(new Object[]{path});
 //                    JOptionPane.showMessageDialog(this, msg,
 //                            java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.error"), JOptionPane.ERROR_MESSAGE);
-                }
             } catch (Exception ex2) {
                 JOptionPane.showMessageDialog(this, ex2.toString(), java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.error"), JOptionPane.ERROR_MESSAGE);
+                sudokuFileName = null;
+            }
+            setTitleWithFile();
+        }
+    }
+    
+    /**
+     * Actually writes configurations and sudoku files. If <code>puzzle</code>
+     * is <code>false</code>, a configuration is written. <code>filterType</code>
+     * is one of the file types defined by {@link MyFileFilter}. If the method
+     * is called via the "Save puzzle" menu item, <code>filterType</code> can be
+     * 8 (generic text file). In this case a PM grid is written.
+     * 
+     * @param puzzle
+     * @param path
+     * @param filterType
+     * @throws FileNotFoundException
+     * @throws IOException 
+     */
+    private void saveToFile(boolean puzzle, String path, int filterType) throws FileNotFoundException, IOException {
+        sudokuFileName = path;
+        if (!puzzle) {
+            // Options
+            writeOptionsWithWindowState(path);
+        } else {
+            // Sudoku2 und Lösung
+            String newLine = System.getProperty("line.separator");
+            if (filterType == 1) {
+                sudokuFileType = 1;
+                ZipOutputStream zOut = new ZipOutputStream(new FileOutputStream(path));
+                zOut.putNextEntry(new ZipEntry("SudokuData"));
+                XMLEncoder out = new XMLEncoder(zOut);
+                out.writeObject(sudokuPanel.getSudoku());
+                out.writeObject(SudokuSolverFactory.getDefaultSolverInstance().getAnzSteps());
+                out.writeObject(SudokuSolverFactory.getDefaultSolverInstance().getSteps());
+                out.writeObject(solutionPanel.getTitels());
+                out.writeObject(solutionPanel.getTabSteps());
+                out.writeObject(savePoints);
+                out.close();
+                zOut.flush();
+                zOut.close();
+            } else if (filterType == 9) {
+                sudokuFileType = 9;
+                // SimpleSudoku format (see comment in loadFromFile())
+                PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(path)));
+                String clues = sudokuPanel.getSudokuString(ClipboardMode.CLUES_ONLY);
+                out.println(SudokuUtil.getSSFormatted(clues));
+                out.println();
+                // additionally set cells
+                Sudoku2 tmpSudoku = sudokuPanel.getSudoku();
+                for (int i = 0; i < Sudoku2.LENGTH; i++) {
+                    if (tmpSudoku.getValue(i) != 0 && !tmpSudoku.isFixed(i)) {
+                        out.printf("I%02d%d%n", i, tmpSudoku.getValue(i));
+                    }
+                }
+                // eliminated candidates
+                for (int i = 0; i < Sudoku2.LENGTH; i++) {
+                    if (tmpSudoku.getValue(i) == 0) {
+                        for (int j = 1; j <= 9; j++) {
+                            if (tmpSudoku.isValidValue(i, j) && !tmpSudoku.isCandidate(i, j)) {
+                                out.printf("E%02d%03d%n", i, j);
+                            }
+                        }
+                    }
+                }
+                out.close();
+            } else {
+                sudokuFileType = 8;
+                if (filterType == 8) {
+                    // generic text file: can occur when save is executed
+                    filterType = 6;
+                }
+                BufferedWriter out = new BufferedWriter(new FileWriter(path));
+                String line = "";
+                switch (filterType) {
+                    case 2:
+                        line = sudokuPanel.getSudokuString(ClipboardMode.CLUES_ONLY);
+                        break;
+                    case 3:
+                        line = sudokuPanel.getSudokuString(ClipboardMode.CLUES_ONLY_FORMATTED);
+                        break;
+                    case 4:
+                        line = sudokuPanel.getSudokuString(ClipboardMode.PM_GRID);
+                        break;
+                    case 5:
+                        line = sudokuPanel.getSudokuString(ClipboardMode.PM_GRID_WITH_STEP);
+                        break;
+                    case 6:
+                        line = sudokuPanel.getSudokuString(ClipboardMode.CLUES_ONLY_FORMATTED);
+                        line += newLine;
+                        line += newLine;
+                        line += sudokuPanel.getSudokuString(ClipboardMode.VALUES_ONLY_FORMATTED);
+                        line += newLine;
+                        line += newLine;
+                        line += sudokuPanel.getSudokuString(ClipboardMode.PM_GRID);
+                        break;
+                    case 7:
+                        line = sudokuPanel.getSudokuString(ClipboardMode.LIBRARY);
+                        break;
+                }
+                out.write(line);
+                out.close();
             }
         }
     }
@@ -2897,7 +3124,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
     private void loadFromFile(boolean puzzle) {
         JFileChooser chooser = new JFileChooser(Options.getInstance().getDefaultFileDir());
         chooser.setAcceptAllFileFilterUsed(false);
-        MyFileFilter[] filters = puzzleFileFilters;
+        MyFileFilter[] filters = puzzleFileLoadFilters;
         if (!puzzle) {
             filters = configFileFilters;
         }
@@ -2910,21 +3137,26 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
             path = path.substring(0, path.lastIndexOf(File.separatorChar));
             Options.getInstance().setDefaultFileDir(path);
             path = chooser.getSelectedFile().getAbsolutePath();
-            loadFromFile(path);
+            MyFileFilter filter = (MyFileFilter) chooser.getFileFilter();
+            loadFromFile(path, filter.getType());
         }
     }
 
     /**
      * Loads a file
      * @param path
+     * @param fileType 0 .. options, 1 .. sudoku from hsol, 8 .. sudoku from text file
      */
-    private void loadFromFile(String path) {
+    private void loadFromFile(String path, int fileType) {
         try {
-            if (path.endsWith("." + configFileExt)) {
+            sudokuFileName = path;
+            sudokuFileType = fileType;
+            if (fileType == 0) {
                 // Options
                 Options.readOptions(path);
                 BackgroundGeneratorThread.getInstance().resetAll();
-            } else if (path.endsWith("." + solutionFileExt)) {
+                sudokuFileName = null;
+            } else if (fileType == 1) {
                 // Puzzle
                 ZipInputStream zIn = new ZipInputStream(new FileInputStream(path));
                 zIn.getNextEntry();
@@ -2965,16 +3197,93 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
                 in.close();
                 setState(state);
                 setMode(GameMode.PLAYING, true);
+            } else if (fileType == 8) {
+                // load from text file
+                BufferedReader in = new BufferedReader(new FileReader(path));
+                StringBuilder tmp = new StringBuilder();
+                String line = null;
+                while ((line = in.readLine()) != null) {
+                    tmp.append(line);
+                    tmp.append("\r\n");
+                }
+                in.close();
+                setPuzzle(tmp.toString());
+                clearSavePoints();
+            } else if (fileType == 9) {
+                // SimpleSudoku format: The givens followed by set cells and eliminated candidates
+                // example:
+//                     *-----------*
+//                     |38.|...|5.6|
+//                     |...|9..|...|
+//                     |...|.4.|89.|
+//                     |---+---+---|
+//                     |.4.|6..|.3.|
+//                     |9..|7.1|..4|
+//                     |.7.|..8|.1.|
+//                     |---+---+---|
+//                     |.13|.6.|...|
+//                     |...|..4|...|
+//                     |2.5|...|.83|
+//                     *-----------*
+//
+//                    I388
+//                    I074
+//                    I029
+//                    I153
+//                    I358
+//                    I751
+//                    E78007
+//                    E78009
+//                    E73009
+                // Innc: nn - index of the cell, c - candidate
+                // Ennccc: nn - index of the cell, ccc - candidate
+                BufferedReader in = new BufferedReader(new FileReader(path));
+                StringBuilder tmp = new StringBuilder();
+                String line = null;
+                while ((line = in.readLine()) != null) {
+                    if (line.trim().isEmpty()) {
+                        // all the givens are read -> abort reading
+                        break;
+                    }
+                    tmp.append(line);
+                    tmp.append("\r\n");
+                }
+                // first set the givens
+                Sudoku2 tmpSudoku = new Sudoku2();
+                tmpSudoku.setSudoku(tmp.toString());
+                // now read set cells and eliminations
+                while ((line = in.readLine()) != null) {
+                    if (line.trim().isEmpty()) {
+                        continue;
+                    }
+                    char recordType = line.charAt(0);
+                    if (recordType == 'I') {
+                        int index = Integer.parseInt(line.substring(1, 3));
+                        int candidate = Character.digit(line.charAt(3), 10);
+                        tmpSudoku.setCell(index, candidate);
+                    } else if (recordType == 'E') {
+                        int index = Integer.parseInt(line.substring(1, 3));
+                        int candidate = Integer.parseInt(line.substring(3, 6));
+                        tmpSudoku.delCandidate(index, candidate);
+                    }
+                }
+                in.close();
+                // everything read and decoded -> set the sudoku
+                setPuzzle(tmpSudoku.getSudoku(ClipboardMode.LIBRARY));
+                clearSavePoints();
             } else {
                 formatter.applyPattern(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.invalid_filename"));
                 String msg = formatter.format(new Object[]{path});
                 JOptionPane.showMessageDialog(this, msg,
                         java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.error"), JOptionPane.ERROR_MESSAGE);
+                sudokuFileName = null;
             }
         } catch (Exception ex2) {
             JOptionPane.showMessageDialog(this, ex2.toString(), java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.error"), JOptionPane.ERROR_MESSAGE);
             ex2.printStackTrace();
+            sudokuFileName = null;
         }
+        setTitleWithFile();
     }
 
     /**
@@ -2993,6 +3302,21 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
                 new MainFrame(null).setVisible(true);
             }
         });
+    }
+    
+    private void setTitleWithFile() {
+        savePuzzleMenuItem.setEnabled(sudokuFileName != null);
+        if (sudokuFileName == null) {
+            setTitle(VERSION);
+        } else {
+            int index = sudokuFileName.lastIndexOf('\\') + 1;
+            int index2 = sudokuFileName.lastIndexOf('/') + 1;
+            if (index2 > index) {
+                index = index2;
+            }
+            String fileName = sudokuFileName.substring(index);
+            setTitle(VERSION + "  (" + fileName + ")");
+        }
     }
 
     private void setLevelFromMenu() {
@@ -3053,8 +3377,13 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
                 DifficultyLevel tmpLevel = sudoku.getLevel();
                 if (tmpLevel != null) {
                     statusLabelLevel.setText(StepConfig.getLevelName(tmpLevel) + " (" + sudoku.getScore() + ")");
+                } else {
+                    statusLabelLevel.setText("-");
                 }
                 setProgressLabel();
+            } else {
+                // no puzzle loaded
+                statusLabelLevel.setText(ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.statusLabelLevel.text"));
             }
             if (sudokuPanel.isColorCells()) {
                 colorCellsMenuItem.setSelected(true);
@@ -3193,7 +3522,6 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
         if (sudoku.getStatus() != SudokuStatus.VALID) {
             progressLabel.setIcon(progressImages[0]);
             progressLabel.setText("-");
-            //TODO set hint according to status
             return;
         }
         //ok valid sudoku, currentLevel and currentScore must have been set
@@ -3213,7 +3541,6 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
             }
             progressLabel.setText(intProc + "%");
         }
-        //TODO set hint with score!
     }
 
     /**
@@ -3352,6 +3679,10 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
             mediumHintMenuItemActionPerformed(null);
         }
     }
+    
+    public boolean isEingabeModus() {
+        return eingabeModus;
+    }
 
 
     class MyFileFilter extends FileFilter {
@@ -3376,11 +3707,31 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
                         if (ext.equalsIgnoreCase(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.config_file_ext"))) {
                             return true;
                         }
+                        break;
                     case 1:
                         // Puzzles with Solutions
                         if (ext.equalsIgnoreCase(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.solution_file_ext"))) {
                             return true;
                         }
+                        break;
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                    case 8:
+                        // Any kind of text file
+                        if (ext.equalsIgnoreCase(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.text_file_ext"))) {
+                            return true;
+                        }
+                        break;
+                    case 9:
+                        // SimpleSudoku files
+                        if (ext.equalsIgnoreCase(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.ss_file_ext"))) {
+                            return true;
+                        }
+                        break;
                     default:
                         return false;
                 }
@@ -3395,9 +3746,29 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
                     return java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.config_file_descr");
                 case 1:
                     return java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.solution_file_descr");
+                case 2:
+                    return java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.solution_file_descr_gal");
+                case 3:
+                    return java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.solution_file_descr_gf");
+                case 4:
+                    return java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.solution_file_descr_pm");
+                case 5:
+                    return java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.solution_file_descr_pms");
+                case 6:
+                    return java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.solution_file_descr_pmg");
+                case 7:
+                    return java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.solution_file_descr_l");
+                case 8:
+                    return java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.solution_file_descr_text");
+                case 9:
+                    return java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.solution_file_descr_ss");
                 default:
                     return java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.unknown_file_type");
             }
+        }
+        
+        public int getType() {
+            return type;
         }
     }
 
@@ -3474,6 +3845,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
     private javax.swing.JMenuItem copyLibraryMenuItem;
     private javax.swing.JMenuItem copyPmGridMenuItem;
     private javax.swing.JMenuItem copyPmGridWithStepMenuItem;
+    private javax.swing.JMenuItem copySSMenuItem;
     private javax.swing.JMenuItem createSavePointMenuItem;
     private javax.swing.JMenu dateiMenu;
     private javax.swing.JMenuItem druckenMenuItem;
@@ -3559,6 +3931,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
     private javax.swing.JMenu rätselMenu;
     private javax.swing.JMenuItem saveConfigAsMenuItem;
     private javax.swing.JMenuItem savePuzzleAsMenuItem;
+    private javax.swing.JMenuItem savePuzzleMenuItem;
     private javax.swing.JMenuItem seiteEinrichtenMenuItem;
     private javax.swing.JMenuItem setGivensMenuItem;
     private javax.swing.JCheckBoxMenuItem showCandidatesMenuItem;
