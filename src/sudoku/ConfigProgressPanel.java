@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-11  Bernhard Hobiger
+ * Copyright (C) 2008-12  Bernhard Hobiger
  *
  * This file is part of HoDoKu.
  *
@@ -449,7 +449,7 @@ implements ListDragAndDropChange {
      */
     private void checkSteps() {
         if (invalidTypes.size() > 0) {
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
             for (int i = 0; i < invalidTypes.size(); i++) {
                 if (i != 0) {
                     buffer.append(", ");
