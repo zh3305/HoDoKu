@@ -40,7 +40,11 @@ import sudoku.SudokuSet;
 public class AlsSolver extends AbstractSolver {
 
     /** Enable additional trace output */
-    private static boolean DEBUG = true;
+    private static final boolean DEBUG = false;
+    /** Enable additional timing */
+    private static final boolean TIMING = false;
+    /** Maximum number of RCs in an ALS-Chain (forward search only!) */
+    private static final int MAX_RC = 50;
     /** A list holding all ALS present in the curent state of the gid. */
     private List<Als> alses = new ArrayList<Als>(500);
     /** A list with all restricted commons in the present grid. */
@@ -58,7 +62,7 @@ public class AlsSolver extends AbstractSolver {
     /** One step instance for optimization. */
     private SolutionStep globalStep = new SolutionStep(SolutionType.HIDDEN_SINGLE);
     /** The current ALS Chain: The chain consists only of its RCs. A chain cannot be longer than <code>chain.length</code>.*/
-    private RestrictedCommon[] chain = new RestrictedCommon[100];
+    private RestrictedCommon[] chain = new RestrictedCommon[MAX_RC];
     /** The index into {@link #chain} for the current search. */
     private int chainIndex = -1;
     /** The first RC in the current chain (always is {@link #chain}[0]; needed for test for eliminations, cached for performance reasons). */
@@ -118,6 +122,8 @@ public class AlsSolver extends AbstractSolver {
     protected SolutionStep getStep(SolutionType type) {
         SolutionStep result = null;
         sudoku = finder.getSudoku();
+        // normal search: only forward references
+        finder.setRcOnlyForward(true);
         switch (type) {
             case ALS_XZ:
                 result = getAlsXZ(true);
@@ -126,6 +132,9 @@ public class AlsSolver extends AbstractSolver {
                 result = getAlsXYWing(true);
                 break;
             case ALS_XY_CHAIN:
+                if (chain.length != MAX_RC) {
+                    chain = new RestrictedCommon[MAX_RC];
+                }
                 result = getAlsXYChain();
                 break;
             case DEATH_BLOSSOM:
@@ -162,8 +171,12 @@ public class AlsSolver extends AbstractSolver {
         sudoku = finder.getSudoku();
         List<SolutionStep> oldSteps = steps;
         List<SolutionStep> resultSteps = new ArrayList<SolutionStep>();
+        finder.setRcOnlyForward(false);
+        if (chain.length == MAX_RC) {
+            chain = new RestrictedCommon[Options.getInstance().getAllStepsAlsChainLength()];
+        }
         long millis1 = 0;
-        if (DEBUG) {
+        if (TIMING) {
             millis1 = System.nanoTime();
         }
         collectAllAlses();
@@ -180,7 +193,7 @@ public class AlsSolver extends AbstractSolver {
         getAlsXYChainInt();
         Collections.sort(steps, alsComparator);
         resultSteps.addAll(steps);
-        if (DEBUG) {
+        if (TIMING) {
             millis1 = System.nanoTime() - millis1;
 //            System.out.println("getAllAlses() total: " + (millis1 / 1000000.0) + "ms");
         }
@@ -198,7 +211,7 @@ public class AlsSolver extends AbstractSolver {
         List<SolutionStep> oldSteps = steps;
         List<SolutionStep> resultSteps = new ArrayList<SolutionStep>();
         long millis1 = 0;
-        if (DEBUG) {
+        if (TIMING) {
             millis1 = System.nanoTime();
         }
         collectAllAlses();
@@ -207,7 +220,7 @@ public class AlsSolver extends AbstractSolver {
         getAlsDeathBlossomInt(false);
         Collections.sort(steps, alsComparator);
         resultSteps.addAll(steps);
-        if (DEBUG) {
+        if (TIMING) {
             millis1 = System.nanoTime() - millis1;
 //            System.out.println("getAllDeathBlossoms() total: " + millis1 + "ms");
         }
@@ -279,7 +292,10 @@ public class AlsSolver extends AbstractSolver {
      * @return Next step or <code>null</code> if no step could be found.
      */
     private SolutionStep getAlsXZ(boolean onlyOne) {
-        long nanos = System.nanoTime();
+        long nanos = 0;
+        if (TIMING) {
+            nanos = System.nanoTime();
+        }
         anzCalls++;
         steps.clear();
         collectAllAlses();
@@ -289,8 +305,10 @@ public class AlsSolver extends AbstractSolver {
             Collections.sort(steps, alsComparator);
             step = steps.get(0);
         }
-        nanos = System.nanoTime() - nanos;
-        allNanos += nanos;
+        if (TIMING) {
+            nanos = System.nanoTime() - nanos;
+            allNanos += nanos;
+        }
         return step;
     }
 
@@ -491,10 +509,16 @@ public class AlsSolver extends AbstractSolver {
             }
             alsInChain[i] = true;
             firstRC = null;
+            if (DEBUG) {
+                System.out.println("============== Start search: " + i + " " + startAls);
+            }
             getAlsXYChainRecursive(i, null);
+            if (DEBUG) {
+                System.out.println("               End search: " + alses.get(i));
+            }
         }
         if (DEBUG) {
-//            System.out.println(steps.size() + " (maxRecDepth: " + maxRecDepth + ")");
+            System.out.println(steps.size() + " (maxRecDepth: " + maxRecDepth + ")");
         }
     }
 
@@ -512,8 +536,13 @@ public class AlsSolver extends AbstractSolver {
      */
     private void getAlsXYChainRecursive(int alsIndex, RestrictedCommon lastRC) {
         // check for end of recursion
-        if (alsIndex >= alses.size()) {
-            // nothing left to do
+        // wrong condition: the chain ends, when it becomes too long!
+//        if (alsIndex >= alses.size()) {
+//            // nothing left to do
+//            return;
+//        }
+        if (chainIndex >= chain.length) {
+            // no space left -> stop it!
             return;
         }
         recDepth++;
@@ -545,6 +574,9 @@ public class AlsSolver extends AbstractSolver {
             }
             chain[chainIndex++] = rc;
             alsInChain[rc.getAls2()] = true;
+            if (DEBUG) {
+//                showActAlsChain(recDepth);
+            }
             // if the chain length has reached at least 4 RCs check for candidates to eliminate
             if (chainIndex >= 3) {
                 globalStep.getCandidatesToDelete().clear();
@@ -638,6 +670,39 @@ public class AlsSolver extends AbstractSolver {
             }
         }
         recDepth--;
+    }
+    
+    /**
+     * For debugging only: show the current state of {@link #chain}.
+     * 
+     * @param recDepth 
+     */
+    private void showActAlsChain(int recDepth) {
+        if (DEBUG) {
+            globalStep.reset();
+            globalStep.setType(SolutionType.ALS_XY_CHAIN);
+            globalStep.addAls(startAls.indices, startAls.candidates);
+            Als tmpAls = startAls;
+            for (int j = 0; j < chainIndex; j++) {
+                Als tmp = alses.get(chain[j].getAls2());
+                globalStep.addAls(tmp.indices, tmp.candidates);
+                globalStep.addRestrictedCommon((RestrictedCommon) chain[j].clone());
+
+                // write all RCs for this chain (nothing has been done yet)
+                //if (DEBUG) System.out.println("chain[" + j + "]: " + chain[j] + " (" + tmpAls + "/" + tmp + ")");
+                if (chain[j].getActualRC() == 1 || chain[j].getActualRC() == 3) {
+                    addRestrictedCommonToStep(tmpAls, tmp, chain[j].getCand1(), true);
+                }
+                if (chain[j].getActualRC() == 2 || chain[j].getActualRC() == 3) {
+                    addRestrictedCommonToStep(tmpAls, tmp, chain[j].getCand2(), true);
+                }
+                tmpAls = tmp;
+            }
+            for (int i = 0; i < recDepth; i++) {
+                System.out.print(" ");
+            }
+            System.out.println(globalStep.toString(2));
+        }
     }
 
     /**
@@ -1032,17 +1097,20 @@ public class AlsSolver extends AbstractSolver {
      */
     private void collectAllRestrictedCommons(boolean withOverlap) {
         long ticks = 0;
-        if (DEBUG) {
+        if (TIMING) {
 //                System.out.println("Entering collectAllRestrictedCommons");
             ticks = System.nanoTime();
         }
         restrictedCommons = finder.getRestrictedCommons(alses, withOverlap);
         startIndices = finder.getStartIndices();
         endIndices = finder.getEndIndices();
-        if (DEBUG) {
+        if (TIMING) {
             ticks = System.nanoTime() - ticks;
             allRcsNanos += ticks;
 //                System.out.println("collectAllRestrictedCommons(): " + ticks + "ms; restrictedCommon size: " + restrictedCommons.size());
+        }
+        if (DEBUG) {
+            System.out.println("collectAllRestrictedCommons(): " + (ticks / 1000000.0) + "ms; restrictedCommon size: " + restrictedCommons.size());
         }
     }
 
@@ -1053,13 +1121,16 @@ public class AlsSolver extends AbstractSolver {
      */
     private void collectAllAlses() {
         long ticks = 0;
-        if (DEBUG) {
+        if (TIMING) {
             ticks = System.nanoTime();
         }
         alses = finder.getAlses();
-        if (DEBUG) {
+        if (TIMING) {
             ticks = System.nanoTime() - ticks;
             allAlsesNanos += ticks;
+        }
+        if (DEBUG) {
+            System.out.println("collectAllAlses(): " + (ticks / 1000000.0) + "ms; alses size: " + alses.size());
         }
     }
 
@@ -1075,7 +1146,7 @@ public class AlsSolver extends AbstractSolver {
      */
     private void collectAllRCsForDeathBlossom() {
         long ticks = 0;
-        if (DEBUG) {
+        if (TIMING) {
             ticks = System.nanoTime();
         }
         // initialize rcdb
@@ -1100,7 +1171,7 @@ public class AlsSolver extends AbstractSolver {
                 }
             }
         }
-        if (DEBUG) {
+        if (TIMING) {
             ticks = System.nanoTime() - ticks;
 //            System.out.println("collectAllRCsForDeathBlossom(): " + ticks + "ms");
         }
@@ -1166,7 +1237,7 @@ public class AlsSolver extends AbstractSolver {
     }
 
     public static void main(String[] args) {
-        DEBUG = true;
+        //DEBUG = true;
         //Sudoku2 sudoku = new Sudoku2(true);
         Sudoku2 sudoku = new Sudoku2();
         //sudoku.setSudoku(":0361:4:..5.132673268..14917...2835..8..1.262.1.96758.6..283...12....83693184572..723.6..:434 441 442 461 961 464 974:411:r7c39 r6c1b9 fr3c3");
@@ -1194,7 +1265,7 @@ public class AlsSolver extends AbstractSolver {
         // doubly linked ALS not found
 //        sudoku.setSudoku(":0901-2:12357:9..17....4.1....7..7...31..14...6.98.9248173.38.5.......48...2.......6.7....6...3:793:172 244 385 571 572 796::");
         // ALS-Chain not found: 127- r1c156789 {1234679} -9- r3c4 {49} -4- r9c4 {49} -9- r2359c3 {12679} -127 => r1c3<>1, r1c3<>2, r1c3<>7
-        sudoku.setSudoku(":0903:127:...+8......3.+57.8.98....315.9.8142......+3+5....5.+36...4.1.42+3....+3..7....6.8...531.:412 612 712 613 916 933 572 986 587 987:113 213 713::");
+//        sudoku.setSudoku(":0903:127:...+8......3.+57.8.98....315.9.8142......+3+5....5.+36...4.1.42+3....+3..7....6.8...531.:412 612 712 613 916 933 572 986 587 987:113 213 713::");
         SudokuSolver solver = SudokuSolverFactory.getDefaultSolverInstance();
 //        AlsSolver as = new AlsSolver(null);
         long millis = System.nanoTime();

@@ -447,6 +447,20 @@ public class UniquenessSolver extends AbstractSolver {
         // collects all cells that contain only cand1 and/or cand2 in twoCandidates
         // and all canddiates in the UR except cand1 and cand2 in additionalCandidates
         initCheck(indexe);
+        
+        // TODO: Delete code before making a release
+        // ignore all steps, where not all cells hold both candidates
+//        boolean missing = false;
+//        for (int i = 0; i < indexe.length; i++) {
+//            if (! sudoku.isCandidate(indexe[i], cand1) || ! sudoku.isCandidate(indexe[i], cand2)) {
+//                // UR has missing candidates
+//                missing = true;
+//            }
+//        }
+//        if(! missing) {
+//            return null;
+//        }
+        // END TODO
 
         SolutionStep step = null;
         int twoSize = twoCandidates.size();

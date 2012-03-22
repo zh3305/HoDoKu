@@ -137,6 +137,10 @@ public class SudokuStepFinder {
     private int lastRcStepNumber = -1;
     /** ALS list for which RCs were calculated. */
     private List<Als> lastRcAlsList = null;
+    /** Was last RC search only for forward references? */
+    private boolean lastRcOnlyForward = true;
+    /** Collect RCs for forward search only */
+    private boolean rcOnlyForward = true;
 
     // temporary varibles for calculating ALS and RC
     /** Temporary set for recursion: all cells of each try */
@@ -1093,7 +1097,7 @@ public class SudokuStepFinder {
      */
     public List<RestrictedCommon> getRestrictedCommons(List<Als> alses, boolean allowOverlap) {
         if (lastRcStepNumber != stepNumber || lastRcAllowOverlap != allowOverlap ||
-                lastRcAlsList != alses) {
+                lastRcAlsList != alses || lastRcOnlyForward != rcOnlyForward) {
             // recompute
             if (startIndices == null || startIndices.length < alses.size()) {
                 startIndices = new int[(int)(alses.size() * 1.5)];
@@ -1103,6 +1107,7 @@ public class SudokuStepFinder {
             // store caching flags
             lastRcStepNumber = stepNumber;
             lastRcAllowOverlap = allowOverlap;
+            lastRcOnlyForward = rcOnlyForward;
             lastRcAlsList = alses;
         }
         return restrictedCommons;
@@ -1123,6 +1128,22 @@ public class SudokuStepFinder {
     public int[] getEndIndices() {
         return endIndices;
     }
+    
+    /**
+     * Setter for {@link #rcOnlyForward}.
+     * @param rof
+     */
+    public void setRcOnlyForward(boolean rof) {
+        rcOnlyForward = rof;
+    }
+    
+    /**
+     * Getter for {@link #rcOnlyForward}.
+     * @return
+     */
+    public boolean isRcOnlyForward() {
+        return rcOnlyForward;
+    }
 
     /**
      * For all combinations of two ALS check whether they have one or two RC(s). An
@@ -1131,7 +1152,13 @@ public class SudokuStepFinder {
      * ALS with RC(s) may overlap as long as the overlapping area doesnt contain an RC.<br>
      * Two ALS can have a maximum of two RCs.<br>
      * The index of the first RC for {@link #alses}[i] is written to {@link #startIndices}[i],
-     * the index of the last RC is written to {@link #endIndices}[i] (needed for chain search).
+     * the index of the last RC + 1 is written to {@link #endIndices}[i] (needed for chain search).<br><br>
+     * 
+     * If {@link #rcOnlyForward} is set to <code>true</code>, only RCs with references to ALS with a greater
+     * index are collected. For ALS-XZ und ALS-XY-Wing this is irrelevant. For ALS-Chains
+     * it greatly improves performance, but not all chains are found. This is the default
+     * when solving puzzles, {@link #rcOnlyForward} <code>false</code> is the default for
+     * search for all steps.
      *
      * @param withOverlap If <code>false</code> overlapping ALS are not allowed
      */
@@ -1139,6 +1166,8 @@ public class SudokuStepFinder {
         rcAnzCalls++;
         long actNanos = 0;
         actNanos = System.nanoTime();
+        // store the calculation mode
+        lastRcOnlyForward = rcOnlyForward;
         // delete all RCs from the last run
         List<RestrictedCommon> rcs = new ArrayList<RestrictedCommon>(2000);
         // Try all combinations of alses
@@ -1146,11 +1175,14 @@ public class SudokuStepFinder {
             Als als1 = alses.get(i);
             startIndices[i] = rcs.size();
             //if (DEBUG) System.out.println("als1: " + SolutionStep.getAls(als1));
-            for (int j = i + 1; j < alses.size(); j++) {
-//            for (int j = 0; j < alses.size(); j++) {
-//                if (i == j) {
-//                    continue;
-//                }
+            int start = 0;
+            if (rcOnlyForward) {
+                start = i + 1;
+            }
+            for (int j = start; j < alses.size(); j++) {
+                if (i == j) {
+                    continue;
+                }
                 Als als2 = alses.get(j);
                 // check whether the ALS overlap (intersectionSet is needed later on anyway)
                 intersectionSet.set(als1.indices);
