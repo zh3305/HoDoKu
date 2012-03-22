@@ -94,7 +94,8 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
 
     public static final String VERSION = "HoDoKu - v2.2.0 beta";
 //    public static final String BUILD = "Build 16";
-    public static final String BUILD = "$LastChangedRevision$";
+    public static final String BUILD;
+    public static final String REV =  "$LastChangedRevision$";
     private SudokuPanel sudokuPanel;
     //private DifficultyLevel level = Options.getInstance().getDifficultyLevels()[DifficultyType.EASY.ordinal()];
     private JToggleButton[] toggleButtons = new JToggleButton[10];
@@ -176,6 +177,17 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
     /** The file type of the last loaded sudoku file: 1 .. hsol, 8 .. txt or 9 .. ss */
     private int sudokuFileType = -1;
 
+    /** Incorporates the last subversion revision of this file into
+     *  the version string.<br><br>
+     * 
+     * CAUTION: MainFrame.java must be changed and committed to change
+     * the build number.
+     */
+    static {
+        String[] dummy = REV.split(" ");
+        BUILD = "Build " + dummy[1];
+    }
+    
     /** Creates new form MainFrame */
     @SuppressWarnings("LeakingThisInConstructor")
     public MainFrame(String launchFile) {
