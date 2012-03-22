@@ -26,6 +26,38 @@ heap size at startup.
 Change log
 ==========
 
+Version 2.2 (2012-??-??)
+--------------------------
+
+Features added:
+
+  - #3486780: Complete ALS-Chain search in "find all steps"
+  - #3476006: Improve keyboard handling
+  - #3387327: Add mouse click detection
+  - #3480600: Larger fonts for the visually challenged
+  - #3463520: "Auto Tab" feature implemented
+  - #3489431: Improve interoperability with SimpleSudoku
+  - #3489725: Remove BrowserLauncher2 library
+  - #3454460: Add a save command
+
+Bugs fixed:
+
+  - #3476976: Debug message written to console window in batch
+  - #3492680: Inconsisten fish sorting (Finned/Sashimi)
+
+
+Version 2.1.3 (2012-01-19)
+--------------------------
+
+Features added:
+
+  no features added
+
+Bugs fixed:
+
+  - #3475960: HoDoKu doesnt start when no default config file exists
+
+
 Version 2.1.2 (2012-01-16)
 --------------------------
 
