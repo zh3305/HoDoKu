@@ -1,0 +1,127 @@
+
+Release notes
+=============
+
+HoDoKu is a solver/generator/analyzer for standard sudoku. It is written in
+Java/Swing and should therefore run on any platform supported by Java (tested
+on Windows and Linux - Ubuntu/GTK+-LAF). Since it is written in Java the
+Java Runtime Environment (JRE) version 1.6 or higher must be installed on your computer
+before you can run HoDoKu. The JRE am be downloaded from 
+http://java.sun.com/javase/downloads/index.jsp.
+
+Available languages: English and german
+
+For all Windows versions hodoku-x.x.exe is the preferred program version. For all other
+operating systems hodoku.x.x.jar has to be used. HoDoKu uses rather a lot of memory
+(especially if you use the "Find all available steps"-feature). The recommended way
+to run HoDoKu is:
+
+	java -Xmx256m -jar hodoku.x.x.jar
+
+Note: the parameter "-Xmx" is specific to the JRE provided by Sun. If you use a different
+JRE, please look up the correct parameter for setting the maximum heap size at startup.
+
+
+Change log
+==========
+
+Version 1.2.4 (2009-05-08)
+------------------------
+
+Features added:
+
+  - #2772853: Use Ctrl-Cursor to go to next unsolved cell
+
+Bugs fixed:
+
+  - #2762372: In coloring not all possible eliminations were found
+  - #2765903: Incorrect Siamese handling in Kraken search
+  - #2765909: When searching for Kraken Fish ALS were always used
+  - #2788800: "Only one fish per elimination" didn't return the smallest fish
+  - #2788799: Search for all fishes finds Basic Fish only when searching for Mutant
+  - #2788798: Search for Franken/Mutant returns Basic Fish
+
+
+Version 1.2 (2009-04-04)
+------------------------
+
+Features added:
+
+  - #2723180: Death Blossom added
+  - #2689196: "Enter game" has been renamed to "New Givens", "Modify givens" added
+  - #2689167: "Reset games" added, "Restart Game" reworked
+  - #2690534: Added Type 1/Type 2 to Kraken Fish output
+  - #2533240: Added Dual 2-String Kites and Dual Empty Rectangles
+  - #2691712: Added a "One step only" option for fish search
+  - #2689171: Added support for Siamese Fish
+  - #2690539: Allow selection of candidates in (Kraken) Fish search
+  - #2512887: ALS Chaining has been redone to allow overlapping ALS (optional)
+  - #2691742: Kraken Fish config added (for general solver)
+  - #2723253: ALs overlapping is now configurable
+  - #2723247: ALS nodes are now optional in NiceLoops/AICs and Forcing Chains/Nets
+  - #2689864: Statistics options added for batch solve (/vst)
+  - #2689186: Steps can be reordered using drag and drop
+
+Bugs fixed:
+
+  - #2690494: All steps panel not properly reset when new puzzle is created
+  - #2689165: Text for Template Set didn't show the affected cells
+  - #2689164: XY-Chain notation didn't show start and end links
+  - #2690582: All steps panel: Quick links were not saved at program exit
+
+
+Version 1.1 (2009-03-03)
+------------------------
+
+Features added:
+
+  - #2512895: Support for Kraken Fish added
+  - Support for Turbot fish added
+  - #2579893: ERs with only two cells in the ER are now found
+  - #2512881: Sue de Coqs with the same additional candidate in both 
+              flanking sets are now supported
+  - #2512876: Support for doubly linked ALS-XZ added
+  - #2512874: Change chain ordering (size of ALS is taken into account)
+  - #2577506: Fish type (endo fins/cannibalism) added in console output
+  - New command line options: /f, /bsa, /bsaf, /stdin
+  - #2634172: ALS nodes in Continuous Nice Loops are now handled
+  - "Find all steps" is now freely configurable
+
+Bugs fixed:
+
+  - #2619238: ALS might be not displayed correctly in steps containing more than one chain
+  - #2619244: ALS buddies handled incorrectly in chains
+  - #2628375: Some AICs were not found
+  - #2634176: AICs could overlap
+
+Version 1.0 (2009-01-29)
+------------------------
+
+Features added:
+
+  - Enhanced command line support: searching for puzzles with certain properties is
+    now freely configurable (options /c /s /lt /so added)
+  - Added a few short cuts
+  - #2530890: More output options in batch processing (options /vp /vs /vg added)
+  - #2543821: Custom console for hodoku-x.x.x.exe added
+  - #2541410: '0' instead of '.' in export possible
+  - #2536950: Window layout can be saved at shutdown
+
+Bugs fixed:
+
+  - #2539619: Selecting tabs in right pane didn't adjust menus
+  - #2537408: Clicking a step after pressing F12 threw an exception
+  - #2536944: Main window was too large
+  - #2533245: Numpad didn't work
+  - #2531752: Reading the config file didn't correctly adjust solver steps
+  - #2530555: Forcing Chain notation was broken
+  - #2512869: Nice Loop Notation was incomplete for Continuous Nice Loops and AICs
+  - #2512851: Background colors were not corrected when deleting solutions
+
+
+
+Version 0.9.0 (2009-01-15)
+--------------------------
+
+This is the first release of HoDoKu. No new features will be added before the release
+of version 1.0. This release is extensively tested and should be stable.

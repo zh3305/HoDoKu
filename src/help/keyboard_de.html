@@ -1,0 +1,162 @@
+<html>
+  <head>
+    <style type="text/css" media="all">
+    <!--
+    body {
+        font-family: Arial, sans-serif;
+        font-size: 12pt;
+        line-height: 25pt;
+    }
+
+    h1 {
+        font-size: 14pt;
+        font-weight: bold;
+        /*text-align: center;
+        margin: 0 auto; */
+    }
+
+    dt {
+        font-weight: bold;
+        margin: 5px;
+    }
+
+    dd {
+        margin: 5px;
+        margin-left: 40px;
+        margin-bottom: 10px;
+    }
+    -->
+    </style>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  </head>
+  <body>
+    <h1>Normale Benutzung</h1>
+    <dl>
+        <dt>Spielen mit der Maus (normales Spiel)</dt>
+        <dd>Klick auf eine Zelle wählt diese Zelle aus. Mit [Strg] oder [Umschalt]
+        können mehrere Zellen markiert werden. Werte/Kandidaten setzen:
+        <ul>
+            <li>Doppelklick auf einen Kandidaten setzt ihn in der Zelle</li>
+            <li>Gibt es in einer Zelle nur noch einen Kandidaten, wird er mit
+            Doppelklick auf die Zelle gesetzt</li>
+            <li>Sind Filter eingeschaltet, setzt Doppelklick auf eine Zelle den
+            gefilterten Kandidaten in der Zelle, wenn er ein Hidden Single ist</li>
+            <li>[Strg] Doppelklick auf einen Kandidaten schaltet ihn ein oder aus</li>
+        </ul>
+        </dd>
+        <dt>Spielen mit der Maus (Färbemodus)</dt>
+        <dd>Klick auf eine Farbe in der Statuszeile oder in der Ansicht "Aktive Zelle"
+        schaltet den Färbemodus ein. Klick auf eine Zelle/einen Kandidaten schaltet die
+        Farbe ein bzw. aus. Mit [Umschalt] kann eine andere Farbe gewählt werden. Klick auf
+        die Hintergrundfarbe in der Palette (oder Drücken von [Esc]) schaltet den Färbemodus
+        wieder aus. Klick auf die Farbe mit dem "R" schaltet den Färbemodus aus und
+        löscht alle Farben.
+        </dd>
+        <dt>[links], [oben], [rechts], [unten]</dt>
+        <dd>Bewegt den Cursor (die gerade aktive Zelle).</dd>
+        <dt>[Umschalt][links], [Umschalt][oben], [Umschalt][rechts], [Umschalt][unten]</dt>
+        <dd>Erweitert den Bereich der markierten Zellen.</dd>
+        <dt>[Strg][links], [Strg][oben], [Strg][rechts], [Strg][unten]</dt>
+        <dd>Bewegt den Cursor zur nächsten ungelösten Zelle.</dd>
+        <dt>[Umschalt][Strg][links], [Umschalt][Strg][oben], [Umschalt][Strg][rechts], [Umschalt][Strg][unten]</dt>
+        <dd>Sind Filter eingeschaltet, springt der Cursor zur nächsten ungelösten Zelle,
+        die den Filterkandidaten enthält</dd>
+        <dt>[Pos1]</dt>
+        <dd>Setzt den Cursor ganz nach links.</dd>
+        <dt>[Ende]</dt>
+        <dd>Setzt den Cursor ganz nach rechts.</dd>
+        <dt>[Strg][Pos1]</dt>
+        <dd>Setzt den Cursor ganz nach oben.</dd>
+        <dt>[Strg][Ende]</dt>
+        <dd>Setzt den Cursor ganz nach unten.</dd>
+        <dt>[1] ... [9]</dt>
+        <dd>Setzt den Wert in der aktiven Zelle; in der Angabe gesetzte Zellen
+        (schwarze Ziffern) können nicht überschrieben werden.</dd>
+        <dt>[Strg][1] ... [Strg][9]</dt>
+        <dd>Schaltet den entsprechenden Kandidaten in der aktiven Zelle ein bzw. aus.</dd>
+        <dt>[Leerzeichen]</dt>
+        <dd>Wenn ein Filter gesetzt ist (siehe unten), wird der gefilterte
+        Kandidat ein-/ausgeschaltet.</dd>
+        <dt>[Entf], [Rückschritt]</dt>
+        <dd>Löscht den Wert in der aktiven Zelle (Angabe kann nicht gelöscht werden).</dd>
+    </dl>
+    <h1>Filter</h1>
+    <p>HoDoKu unterstützt zwei verschiedene Filter: Anzeige aller Zellen, in denen
+    eine bestimmte Ziffer erlaubt ist (Zellen sind grün), und Anzeige aller Zellen, 
+    in denen die Ziffer verboten ist (Zellen sind rot).</p>
+    <dl>
+        <dt>[F1] ... [F9]</dt>
+        <dd>Setzt bzw. löscht die gefilterte Ziffer.</dd>
+        <dt>[Strg][F1] ... [Strg][F9]</dt>
+        <dd>Setzt bzw. löscht die gefilterte Ziffer und wechselt dabei den
+        Filtermodus (erlaubt/verboten).</dd>
+        <dt>[&gt;]</dt>
+        <dd>Ist ein Filter aktiv, wird die nächste Ziffer gesetzt.</dd>
+        <dt>[&lt;]</dt>
+        <dd>Ist ein Filter aktiv, wird die vorhergehende Ziffer gesetzt.</dd>
+    </dl>
+    <h1>Coloring</h1>
+    <dl>
+        <dt>[a]/[A], [b]/[B], [c]/[C], [d]/[D], [e]/[E]</dt>
+        <dd>Setzt/löscht den Hintergrund der gerade aktiven Zelle.</dd>
+        <dt>[r]</dt>
+        <dd>Setzt den Hintergrund aller Zellen zurück.</dd>
+    </dl>
+    <h1>Sonstiges</h1>
+    <dl>
+        <dt>[Umschalt][Strg]</dt>
+        <dd>Zeige alle möglichen Kandidaten in der aktiven Zelle (nur wenn
+        "Optionen|Alle Kandidaten anzeigen" nicht gesetzt ist).</dd>
+        <dt>[Umschalt][Alt]</dt>
+        <dd>Zeige alle möglichen Kandidaten in allen Zellen (nur wenn
+        "Optionen|Alle Kandidaten anzeigen" nicht gesetzt ist).</dd>
+    </dl>
+    <h1>Menü und Dialoge</h1>
+    <dl>
+        <dt>[Strg][n]</dt>
+        <dd>Erzeuge ein neues zufälliges Sudoku.</dd>
+        <dt>[Strg][o]</dt>
+        <dd>Sudoku laden.</dd>
+        <dt>[Strg][s]</dt>
+        <dd>Sudoku speichern.</dd>
+        <dt>[Strg][p]</dt>
+        <dd>Sudoku drucken.</dd>
+        <dt>[Alt][x]</dt>
+        <dd>Programm beenden.</dd>
+        <dt>[Strg][z]</dt>
+        <dd>Rückgängig.</dd>
+        <dt>[Strg][y]</dt>
+        <dd>Wiederherstellen.</dd>
+        <dt>[Strg][c]</dt>
+        <dd>Kandidaten in die Zwischenablage kopieren.</dd>
+        <dt>[Strg][g]</dt>
+        <dd>Angabe in die Zwischenablage kopieren.</dd>
+        <dt>[Strg][v]</dt>
+        <dd>Sudoku aus der Zwischenablage einfügen.</dd>
+        <dt>[Strg][r]</dt>
+        <dd>Sudoku zurücksetzen.</dd>
+        <dt>[Strg][Umschalt][e]</dt>
+        <dd>Einstellungen.</dd>
+        <dt>[Strg][Umschalt][1] ... [Strg][Umschalt][5]</dt>
+        <dd>Setze den Schwierigkeitsgrad für neu erzeugte Sudokus (1 ... Leicht bis
+        5 ... Extrem).</dd>
+        <dt>[Alt][F12]</dt>
+        <dd>Vagen Hinweis zeigen.</dd>
+        <dt>[Strg][F12]</dt>
+        <dd>Konkreten Hinweis zeigen.</dd>
+        <dt>[F12]</dt>
+        <dd>Nächsten Lösungsschritt zeigen.</dd>
+        <dt>[F11]</dt>
+        <dd>Alle Singles setzen.</dd>
+        <dt>[Strg][Umschalt][s]</dt>
+        <dd>Nur Sudoku anzeigen.</dd>
+        <dt>[Strg][Umschalt][z]</dt>
+        <dd>Übersicht über verwendete Lösungsschritte anzeigen.</dd>
+        <dt>[Strg][Umschalt][l]</dt>
+        <dd>Lösung(en) anzeigen.</dd>
+        <dt>[Strg][Umschalt][a]</dt>
+        <dd>Alle derzeit möglichen Lösungsschritte anzeigen.</dd>
+    </dl>
+  </body>
+</html>

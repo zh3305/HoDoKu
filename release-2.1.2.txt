@@ -1,0 +1,246 @@
+
+Release notes
+=============
+
+HoDoKu is a solver/generator/trainer/analyzer for standard sudoku. It is written in
+Java/Swing and should therefore run on any platform supported by Java (tested
+on Windows and Linux - Ubuntu/GTK+-LAF). Since it is written in Java the
+Java Runtime Environment (JRE) version 1.6 or higher must be installed on your computer
+before you can run HoDoKu. The JRE am be downloaded from 
+http://www.oracle.com/technetwork/java/javase/downloads/index.html
+
+Available languages: English and german
+
+For all Windows versions hodoku.exe is the preferred program version. For all other
+operating systems hodoku.jar has to be used. HoDoKu uses rather a lot of memory
+(especially if you use the "Find all available steps" feature). The recommended way
+to run HoDoKu is:
+
+	java -Xmx256m -jar hodoku.jar
+
+Note: the parameter "-Xmx" is specific to the JRE provided by Oracle. If you use a 
+different JRE, please look up the correct parameter for setting the maximum 
+heap size at startup.
+
+
+Change log
+==========
+
+Version 2.1.2 (2012-01-16)
+--------------------------
+
+Features added:
+
+  - #3452538: Backgound colors can alternate
+  - #3436698: Command line option /sl added
+  - #3473994: OR instead of AND for filter (configurable)
+  - #3463740: Additional info in all steps view
+
+Bugs fixed:
+
+  - #3467383: Exception when starting from HoDoKu.jar
+  - #3453781: Exception when batch creating puzzles
+  - #3454452: Pressing <ctrl><c> in batch mode throws Exception
+  - #3436963: Backdoor search is broken
+  - #3425041: Cant always paste on MacOS
+  - #3454627: volatile anzFound not updated atomically
+  - #3432099: shift + numeric value not working
+
+
+Version 2.1.1 (2011-10-23)
+--------------------------
+
+Features added:
+
+  - #3427511: If a single cell is selected, the cursor display disappears after 1 second (configurable)
+
+Bugs fixed:
+
+  - #3427507: Brute Force solver broken in batch mode
+  - #3427508: Template Set/Delete gives incorrect steps after a while
+  - #3427509: A search for Kraken Fish may throw exceptions
+  - #3427510: When candidates are colored, they are not displayed correctly
+
+
+Version 2.1 (2011-10-20)
+--------------------------
+
+Features added:
+
+  - #3387351: New extended print dialog / booklet printer
+  - #3387344: Added a simplified mouse mode
+  - #2940096: HoDoKu is now portable
+  - #2940101/#3011686: Puzzles are now created in the background
+  - #3387345: Progress marker added
+  - #2990569: Added tooltips for main frame
+  - #3324082: Highlight more than one candidate
+  - #3296914: Remove candidates via keyboard when a range of cells is selected
+  - #2970905/#3144406: Reworked loading of incorrect puzzles
+  - #2995579: Speed up creation of training puzzles
+  - #2689169: Allow URs/HRs with missing candidates
+  - #3387335: Added fullscreen mode, made hint pane and toolbar hideable
+  - #3387341: Changed display of focus (configurable)
+  - #3387355: Added filter for bivalue cells
+  - #3387356: Added game mode as startup option
+  - #3387357: Added hint buttons in the toolbar
+  - #3387359: Added a "solve up to" feature
+  - #3394519: Coloring of cells with values is now configurable
+
+Bugs fixed:
+
+  - #3098767: Create Sudoku Window Hangs
+  - #3394539: Store difficulty levels between runs
+  - #3387212: In "Print Solution" example grids could be incorrect
+  - #3303097: Fixed display of selected items under Nimbus
+  - #3214361: Fixed errors when loading incorrect PM grids
+  - #3134693: Hidden Pair incorrectly identified as Locked Pair
+  - #3054092: Show deviations option is not remembered
+  - #2954459: Arrows drawn incorrectly
+  - #3387353: Set value in group of cells was broken
+
+
+Version 2.0.1 (2010-04-14)
+--------------------------
+
+Features added:
+
+  - #2974069: Import of givens into an existing grid
+  - #2987128: Added print option for solution paths
+
+Bugs fixed:
+
+  - #2984538: XY-Chains not found
+
+
+Version 2.0 (2010-03-11)
+------------------------
+
+Features added:
+
+  - #2834110: New mouse interface
+  - #2940268: Selection of region of cells using the keyboard
+  - #2939789: It is now possible to color candidates as well as cells
+  - #2939792: Links to user manual, solving guide and home page added to help menu
+  - #2939800: Added seperate menu items for loading/saving configuration files
+  - #2834095: <shift><ctrl><cursor> jumps to the next highlighted cell if filters are applied
+  - #2940105: Savepoints implemented
+  - #2940106: History of created puzzles added
+  - #2940098: Learning/Training mode added
+  - #2689174: Sort options added to "All Steps" panel
+  - #2689183: Step progress measure added
+  - #2689181: Backdoor searcher added
+  - #2953525: Additional display options for fish added (/vf)
+
+Bugs fixed:
+
+  - #2790208: UR results not optimal
+  - #2834090: When exporting invalid grids to the clipboard as PMs empty cells are treated incorrectly
+  - #2834091: Result panels are not updated correctly when an invalid grid is loaded
+  - #2834085: "Find all steps" doesnt find BUG+1
+  - #2946982: position of horizontal divider bar is now adjusted correctly
+  - #2834087: Shortest XY-Chain not found
+  - #2790209: Accelerators for difficulty levels didnt work correctly
+  - #2811672: Filters didnt work correctly when "Show candidates" was not checked
+  - #2795464: Grouped Continuous Nice Loops could eliminate too many candidates
+
+
+Version 1.2.4 (2009-05-08)
+------------------------
+
+Features added:
+
+  - #2772853: Use Ctrl-Cursor to go to next unsolved cell
+
+Bugs fixed:
+
+  - #2762372: In coloring not all possible eliminations were found
+  - #2765903: Incorrect Siamese handling in Kraken search
+  - #2765909: When searching for Kraken Fish ALS were always used
+  - #2788800: "Only one fish per elimination" didn't return the smallest fish
+  - #2788799: Search for all fishes finds Basic Fish only when searching for Mutant
+  - #2788798: Search for Franken/Mutant returns Basic Fish
+
+
+Version 1.2 (2009-04-04)
+------------------------
+
+Features added:
+
+  - #2723180: Death Blossom added
+  - #2689196: "Enter game" has been renamed to "New Givens", "Modify givens" added
+  - #2689167: "Reset games" added, "Restart Game" reworked
+  - #2690534: Added Type 1/Type 2 to Kraken Fish output
+  - #2533240: Added Dual 2-String Kites and Dual Empty Rectangles
+  - #2691712: Added a "One step only" option for fish search
+  - #2689171: Added support for Siamese Fish
+  - #2690539: Allow selection of candidates in (Kraken) Fish search
+  - #2512887: ALS Chaining has been redone to allow overlapping ALS (optional)
+  - #2691742: Kraken Fish config added (for general solver)
+  - #2723253: ALs overlapping is now configurable
+  - #2723247: ALS nodes are now optional in NiceLoops/AICs and Forcing Chains/Nets
+  - #2689864: Statistics options added for batch solve (/vst)
+  - #2689186: Steps can be reordered using drag and drop
+
+Bugs fixed:
+
+  - #2690494: All steps panel not properly reset when new puzzle is created
+  - #2689165: Text for Template Set didn't show the affected cells
+  - #2689164: XY-Chain notation didn't show start and end links
+  - #2690582: All steps panel: Quick links were not saved at program exit
+
+
+Version 1.1 (2009-03-03)
+------------------------
+
+Features added:
+
+  - #2512895: Support for Kraken Fish added
+  - Support for Turbot fish added
+  - #2579893: ERs with only two cells in the ER are now found
+  - #2512881: Sue de Coqs with the same additional candidate in both 
+              flanking sets are now supported
+  - #2512876: Support for doubly linked ALS-XZ added
+  - #2512874: Change chain ordering (size of ALS is taken into account)
+  - #2577506: Fish type (endo fins/cannibalism) added in console output
+  - New command line options: /f, /bsa, /bsaf, /stdin
+  - #2634172: ALS nodes in Continuous Nice Loops are now handled
+  - "Find all steps" is now freely configurable
+
+Bugs fixed:
+
+  - #2619238: ALS might be not displayed correctly in steps containing more than one chain
+  - #2619244: ALS buddies handled incorrectly in chains
+  - #2628375: Some AICs were not found
+  - #2634176: AICs could overlap
+
+Version 1.0 (2009-01-29)
+------------------------
+
+Features added:
+
+  - Enhanced command line support: searching for puzzles with certain properties is
+    now freely configurable (options /c /s /lt /so added)
+  - Added a few short cuts
+  - #2530890: More output options in batch processing (options /vp /vs /vg added)
+  - #2543821: Custom console for hodoku-x.x.x.exe added
+  - #2541410: '0' instead of '.' in export possible
+  - #2536950: Window layout can be saved at shutdown
+
+Bugs fixed:
+
+  - #2539619: Selecting tabs in right pane didn't adjust menus
+  - #2537408: Clicking a step after pressing F12 threw an exception
+  - #2536944: Main window was too large
+  - #2533245: Numpad didn't work
+  - #2531752: Reading the config file didn't correctly adjust solver steps
+  - #2530555: Forcing Chain notation was broken
+  - #2512869: Nice Loop Notation was incomplete for Continuous Nice Loops and AICs
+  - #2512851: Background colors were not corrected when deleting solutions
+
+
+
+Version 0.9.0 (2009-01-15)
+--------------------------
+
+This is the first release of HoDoKu. No new features will be added before the release
+of version 1.0. This release is extensively tested and should be stable.

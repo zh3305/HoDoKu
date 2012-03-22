@@ -1,0 +1,182 @@
+<!-- 
+/*
+ * Copyright (C) 2008-11  Bernhard Hobiger
+ *
+ * This file is part of HoDoKu.
+ *
+ * HoDoKu is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * HoDoKu is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with HoDoKu. If not, see <http://www.gnu.org/licenses/>.
+ */
+    Document   : keyboard_default
+    Created on : 13.12.2008, 10:34:00
+    Author     : hobiwan
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <style type="text/css" media="all">
+    <!--
+    body {
+        font-family: Arial, sans-serif;
+        font-size: 12pt;
+        line-height: 25pt;
+    }
+
+    h1 {
+        font-size: 14pt;
+        font-weight: bold;
+        /*text-align: center;
+        margin: 0 auto; */
+    }
+
+    dt {
+        font-weight: bold;
+        margin: 5px;
+    }
+
+    dd {
+        margin: 5px;
+        margin-left: 40px;
+        margin-bottom: 10px;
+    }
+    -->
+    </style>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  </head>
+  <body>
+    <h1>Normal Operation</h1>
+    <dl>
+        <dt>Using the mouse (normal operation)</dt>
+        <dd>Clicking a cell selects that cell. Pressing [ctrl] or [shift] while clicking
+        selects a region of cells. Setting cells/candidates:
+        <ul>
+            <li>Double clicking a candidate sets it in the cell</li>
+            <li>If a cell has only one candidate left, double clicking the cell
+            sets that candidate in the cell</li>
+            <li>If filters are applied double clicking a filtered cell sets the
+            filtered candidate in the cell if it is a Hidden Single</li>
+            <li>Double clicking a candidate while pressing [ctrl] toggles the candidate</li>
+        </ul>
+        </dd>
+        <dt>Using the mouse (coloring mode)</dt>
+        <dd>Clicking a color in the status bar or the Active Cell view activates
+        coloring mode. Clicking a cell/candidate toggles the selected color for
+        that cell/candidate. Pressing [shift] while clicking uses another color.
+        Clicking the background color or pressing [esc] ends coloring mode. Clicking
+        the panel with the "R" ends coloring mode and deletes all colors.
+        </dd>
+        <dt>[left], [up], [right], [down]</dt>
+        <dd>Moves the cursor (the highlighted cell).</dd>
+        <dt>[shift][left], [shift][up], [shift][right], [shift][down]</dt>
+        <dd>Expands the range of selected cells.</dd>
+        <dt>[shift][ctrl][left], [shift][ctrl][up], [shift][ctrl][right], [shift][ctrl][down]</dt>
+        <dd>If filters are applied the cursor is moved to the next unsolved cell,
+        that contains the filtered candidate.</dd>
+        <dt>[ctrl][left], [ctrl][up], [ctrl][right], [ctrl][down]</dt>
+        <dd>Moves the cursor to the next unsolved cell.</dd>
+        <dt>[home]</dt>
+        <dd>Moves the cursor to the leftmost column.</dd>
+        <dt>[end]</dt>
+        <dd>Moves the cursor to the rightmost column.</dd>
+        <dt>[ctrl][home]</dt>
+        <dd>Moves the cursor to the topmost row.</dd>
+        <dt>[ctrl][end]</dt>
+        <dd>Moves the cursor to the bottommost row.</dd>
+        <dt>[1] ... [9]</dt>
+        <dd>Sets the value in the highlighted cell; givens (shown in black)
+        cannot be overridden.</dd>
+        <dt>[Ctrl][1] ... [Ctrl][9]</dt>
+        <dd>Toggles the candidate in the highlighted cell.</dd>
+        <dt>[blank]</dt>
+        <dd>If a filter is set (see below) toggles the filtered candidate.</dd>
+        <dt>[del], [backspace]</dt>
+        <dd>Deletes value in cell (givens cannot be deleted).</dd>
+    </dl>
+    <h1>Filters</h1>
+    <p>Filters come in two varieties: Show all allowed cells for placing a
+    certain digit (cells are green) or show all forbidden cells for
+    a digit (cells are red).</p>
+    <dl>
+        <dt>[F1] ... [F9]</dt>
+        <dd>Sets/toggles the filtered digit.</dd>
+        <dt>[ctrl][F1] ... [ctrl][F9]</dt>
+        <dd>Sets/toggles the filtered digit and switches the filter mode (allowed/forbidden).</dd>
+        <dt>[&gt;]</dt>
+        <dd>If a filter is active, set the next digit.</dd>
+        <dt>[&lt;]</dt>
+        <dd>If a filter is active, set the previous digit.</dd>
+    </dl>
+    <h1>Coloring</h1>
+    <dl>
+        <dt>[a]/[A], [b]/[B], [c]/[C], [d]/[D], [e]/[E]</dt>
+        <dd>Sets/toggles background color of the selected cell.</dd>
+        <dt>[r]</dt>
+        <dd>Resets background on all cells.</dd>
+    </dl>
+    <h1>Miscellaneous</h1>
+    <dl>
+        <dt>[shift][ctrl]</dt>
+        <dd>Show all possible candidates in cell with focus (only if "Options|Show all candidates"
+        is not set).</dd>
+        <dt>[shift][alt]</dt>
+        <dd>Show all possible candidates in all cells (only if "Options|Show all candidates"
+        is not set).</dd>
+    </dl>
+    <h1>Menu and Dialogs</h1>
+    <dl>
+        <dt>[ctrl][n]</dt>
+        <dd>Create new random sudoku.</dd>
+        <dt>[ctrl][o]</dt>
+        <dd>Open puzzle file.</dd>
+        <dt>[ctrl][s]</dt>
+        <dd>Save sudoku.</dd>
+        <dt>[ctrl][p]</dt>
+        <dd>Print sudoku.</dd>
+        <dt>[alt][x]</dt>
+        <dd>Quit program.</dd>
+        <dt>[ctrl][z]</dt>
+        <dd>Undo.</dd>
+        <dt>[ctrl][y]</dt>
+        <dd>Redo.</dd>
+        <dt>[ctrl][c]</dt>
+        <dd>Copy candidates to clipboard.</dd>
+        <dt>[ctrl][g]</dt>
+        <dd>Copy givens to clipboard.</dd>
+        <dt>[ctrl][v]</dt>
+        <dd>Paste sudoku from clipboard.</dd>
+        <dt>[ctrl][r]</dt>
+        <dd>Restart game.</dd>
+        <dt>[ctrl][shift][p]</dt>
+        <dd>Edit Preferences.</dd>
+        <dt>[ctrl][shift][1] ... [ctrl][shift][5]</dt>
+        <dd>Set difficulty level for newly created sudokus (1 ... Easy to 5 .. Extreme).</dd>
+        <dt>[alt][F12]</dt>
+        <dd>Show vage hint.</dd>
+        <dt>[ctrl][F12]</dt>
+        <dd>Show concrete hint.</dd>
+        <dt>[F12]</dt>
+        <dd>Show next step.</dd>
+        <dt>[F11]</dt>
+        <dd>Set all singles.</dd>
+        <dt>[ctrl][shift][s]</dt>
+        <dd>Show sudoku only.</dd>
+        <dt>[ctrl][shift][u]</dt>
+        <dd>Show summary of steps used to solve the sudoku.</dd>
+        <dt>[ctrl][shift][o]</dt>
+        <dd>Show solution(s).</dd>
+        <dt>[ctrl][shift][a]</dt>
+        <dd>Show all possible steps for current state.</dd>
+    </dl>
+  </body>
+</html>

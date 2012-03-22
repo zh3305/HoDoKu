@@ -1,0 +1,25 @@
+<launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>C:\Sudoku\Alles rund um HoDoKu\HoDoKu\dist\HoDoKu.jar</jar>
+  <outfile>C:\Sudoku\Alles rund um HoDoKu\HoDoKu\launch4j\hodoku.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine>/launch4j</cmdLine>
+  <chdir></chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
+  <customProcName>false</customProcName>
+  <stayAlive>false</stayAlive>
+  <manifest></manifest>
+  <icon>C:\Sudoku\Alles rund um HoDoKu\HoDoKu\src\img\hodoku02.ico</icon>
+  <jre>
+    <path></path>
+    <minVersion>1.6.0</minVersion>
+    <maxVersion></maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+    <maxHeapSize>512</maxHeapSize>
+    <opt>-Dlaunch4j.exedir=&quot;%EXEDIR%&quot;</opt>
+    <opt>-Dlaunch4j.exefile=&quot;%EXEFILE%&quot;</opt>
+  </jre>
+</launch4jConfig>

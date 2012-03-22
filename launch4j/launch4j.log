@@ -1,0 +1,52 @@
+
+
+CmdLine:	D:\Projekte\Java\HoDoKu\launch4j\hodoku.exe --l4j-debug
+WOW64:		no
+Check launcher:	 (n/a)
+64-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
+32-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
+Ignore:		SOFTWARE\JavaSoft\Java Runtime Environment\1.6
+Match:		SOFTWARE\JavaSoft\Java Runtime Environment\1.6.0_07
+Match:		SOFTWARE\JavaSoft\Java Runtime Environment\1.6.0_10
+64-bit search:	SOFTWARE\JavaSoft\Java Development Kit...
+32-bit search:	SOFTWARE\JavaSoft\Java Development Kit...
+Ignore:		SOFTWARE\JavaSoft\Java Development Kit\1.6
+Ignore:		SOFTWARE\JavaSoft\Java Development Kit\1.6.0_07
+Ignore:		SOFTWARE\JavaSoft\Java Development Kit\1.6.0_10
+Check launcher:	C:\Programme\Java\jre6\bin\javaw.exe (OK)
+Unlink:		C:\Programme\Java\jre6\launch4j-tmp\hodoku.exe
+Unlink:		C:\Programme\Java\jre6\launch4j-tmp\hodoku.exe.manifest
+Unlink:		C:\Programme\Java\jre6\launch4j-tmp\launch4j.exe
+Unlink:		C:\Programme\Java\jre6\launch4j-tmp\launch4j.exe.manifest
+Copy:		C:\Programme\Java\jre6\bin\javaw.exe -> C:\Programme\Java\jre6\launch4j-tmp\hodoku.exe
+Heap -Xmx:	512 MB / 0%, Free: 1133 MB, Heap size: 512 MB
+Launcher:	C:\Programme\Java\jre6\launch4j-tmp\hodoku.exe
+Launcher args:	-Xmx512m -jar "D:\Projekte\Java\HoDoKu\launch4j\hodoku.exe"
+Args length:	59/32768 chars
+Exit code:	1
+
+
+CmdLine:	D:\Projekte\Java\HoDoKu\launch4j\hodoku.exe --l4j-debug
+WOW64:		no
+Check launcher:	 (n/a)
+64-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
+32-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
+Ignore:		SOFTWARE\JavaSoft\Java Runtime Environment\1.6
+Match:		SOFTWARE\JavaSoft\Java Runtime Environment\1.6.0_07
+Match:		SOFTWARE\JavaSoft\Java Runtime Environment\1.6.0_10
+64-bit search:	SOFTWARE\JavaSoft\Java Development Kit...
+32-bit search:	SOFTWARE\JavaSoft\Java Development Kit...
+Ignore:		SOFTWARE\JavaSoft\Java Development Kit\1.6
+Ignore:		SOFTWARE\JavaSoft\Java Development Kit\1.6.0_07
+Ignore:		SOFTWARE\JavaSoft\Java Development Kit\1.6.0_10
+Check launcher:	C:\Programme\Java\jre6\bin\javaw.exe (OK)
+Unlink:		C:\Programme\Java\jre6\launch4j-tmp\hodoku.exe
+Unlink:		C:\Programme\Java\jre6\launch4j-tmp\hodoku.exe.manifest
+Unlink:		C:\Programme\Java\jre6\launch4j-tmp\launch4j.exe
+Unlink:		C:\Programme\Java\jre6\launch4j-tmp\launch4j.exe.manifest
+Copy:		C:\Programme\Java\jre6\bin\javaw.exe -> C:\Programme\Java\jre6\launch4j-tmp\hodoku.exe
+Heap -Xmx:	512 MB / 0%, Free: 1112 MB, Heap size: 512 MB
+Launcher:	C:\Programme\Java\jre6\launch4j-tmp\hodoku.exe
+Launcher args:	-Xmx512m -jar "D:\Projekte\Java\HoDoKu\launch4j\hodoku.exe"
+Args length:	59/32768 chars
+Exit code:	1
