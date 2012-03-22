@@ -3620,7 +3620,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
      */
     public void checkProgress() {
         int anz = sudoku.getSolvedCellsAnz();
-        System.out.println("  checkProgress() - anz: " + anz);
+//        System.out.println("  checkProgress() - anz: " + anz);
         if (anz == 0) {
             sudoku.setStatus(SudokuStatus.EMPTY);
             sudoku.setStatusGivens(SudokuStatus.EMPTY);
@@ -3630,7 +3630,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
         } else {
             // we have to check!
             int anzSol = generator.getNumberOfSolutions(sudoku);
-            System.out.println("  checkProgress() - anzSol: " + anzSol);
+//            System.out.println("  checkProgress() - anzSol: " + anzSol);
             sudoku.setStatus(anzSol);
             // the status of the givens is not changed here; it only changes
             // when the givens themselved are changed

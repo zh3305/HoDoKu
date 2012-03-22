@@ -39,7 +39,7 @@ import sudoku.SudokuStatus;
  */
 public class SudokuGenerator {
     /** Debug flag */
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     
     /** Maximum number of tries when generating a puzzle using a pattern */
     private static final int MAX_TRIES = 1000000;
