@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-11  Bernhard Hobiger, MaNik-e Team
+ * Copyright (C) 2008-12  Bernhard Hobiger, MaNik-e Team
  *
  * This file is part of HoDoKu.
  *
