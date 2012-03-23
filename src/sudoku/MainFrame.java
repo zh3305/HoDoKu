@@ -18,6 +18,7 @@
  */
 package sudoku;
 
+
 import generator.BackgroundGeneratorThread;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -96,7 +97,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
 //    public static final String BUILD = "Build 16";
     public static final String BUILD;
     public static final String REV =  "$LastChangedRevision$";
-    private SudokuPanel sudokuPanel;
+    private SudokuPanel sudokuPanel = null;
     //private DifficultyLevel level = Options.getInstance().getDifficultyLevels()[DifficultyType.EASY.ordinal()];
     private JToggleButton[] toggleButtons = new JToggleButton[10];
     private JRadioButtonMenuItem[] levelMenuItems = new JRadioButtonMenuItem[5];
