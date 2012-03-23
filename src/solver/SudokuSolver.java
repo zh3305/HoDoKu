@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import sudoku.ClipboardMode;
 import sudoku.DifficultyLevel;
 import sudoku.DifficultyType;
 import sudoku.FindAllStepsProgressDialog;
@@ -614,7 +613,11 @@ public class SudokuSolver {
 
     /**
      * Loads back a saved state. Whether the objects had been copied
-     * before is irrelevant here.
+     * before is irrelevant here.<br><br>
+     * 
+     * Dont forget to set the score or loading saved sudokus
+     * will not display correctly in the summary panel (relies on it!).
+     * 
      * @param state
      */
     public void setState(GuiState state) {
@@ -627,6 +630,7 @@ public class SudokuSolver {
         }
         anzSteps = state.getAnzSteps();
         steps = state.getSteps();
+        score = state.getSudoku().getScore();
     }
 
     private void resetProgressStepCounters() {
