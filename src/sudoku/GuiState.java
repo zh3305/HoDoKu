@@ -18,6 +18,7 @@
  */
 package sudoku;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.SortedMap;
@@ -166,6 +167,9 @@ public class GuiState {
         if (steps == null || anzSteps == null) {
             Logger.getLogger(GuiState.class.getName()).log(Level.SEVERE, "Trying to reset anzSteps, but attributes have not been set ({0}/{1})!", new Object[] { steps, anzSteps});
             return;
+        }
+        if (DEBUG) {
+            System.out.println("resetAnzSteps() start (" + steps.size() + ")");
         }
         // now start
         // adjust anzSteps if necessary, else reset it
@@ -359,6 +363,9 @@ public class GuiState {
      * @param tabSteps the tabSteps to set
      */
     public void setTabSteps(List<List<SolutionStep>> tabSteps) {
+        if (steps == null || steps.isEmpty()) {
+            steps = new ArrayList<SolutionStep>(tabSteps.get(0));
+        }
         this.tabSteps = tabSteps;
     }
 
