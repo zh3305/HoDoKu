@@ -22,6 +22,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import solver.SudokuSolver;
 
 /**
@@ -58,6 +60,9 @@ import solver.SudokuSolver;
  * @author hobiwan
  */
 public class GuiState {
+    /** Debug flag - set to false before releasing! */
+    // TODO: reset debug flag
+    private static final boolean DEBUG = true;
     // items from SudokuPanel
     private Sudoku2 sudoku = null;
     private Stack<Sudoku2> undoStack = null;
@@ -134,7 +139,6 @@ public class GuiState {
 
     /**
      * Sets all necessary GUI state information. NULL objectes are ignored.<br>
-     * @param ignoreSolutions
      */
     public void set() {
         if (sudokuSolver != null) {
@@ -147,12 +151,65 @@ public class GuiState {
             sudokuPanel.setState(this);
         }
     }
+    
+    /**
+     * {@link #anzSteps} can become out of sync, when
+     * a sudoku file is loaded and the step order has been
+     * changed (it is assumed, that the order in {@link #anzSteps}
+     * is the same as in {@link Options#solverSteps}).<br><br>
+     * 
+     * The method assumes, that {@link #anzSteps} and {@link #steps}
+     * have already been set.
+     */
+    public void resetAnzSteps() {
+        // better save than sorry...
+        if (steps == null || anzSteps == null) {
+            Logger.getLogger(GuiState.class.getName()).log(Level.SEVERE, "Trying to reset anzSteps, but attributes have not been set ({0}/{1})!", new Object[] { steps, anzSteps});
+            return;
+        }
+        // now start
+        // adjust anzSteps if necessary, else reset it
+        StepConfig[] cfg = Options.getInstance().solverSteps;
+        int length = cfg.length;
+        if (anzSteps.length != length) {
+            anzSteps = new int[length];
+        } else {
+            for (int i = 0; i < anzSteps.length; i++) {
+                anzSteps[i] = 0;
+            }
+        }
+        // now iterate over steps and increment the according entry in anzSteps
+        for (SolutionStep act : steps) {
+            // get the correct StepConfig (has to be done this way,
+            // because some SolutionTypes dont have StepConfigs!
+            StepConfig config = act.getType().getStepConfig();
+            if (config != null) {
+                // now get the correct index for the StepConfig
+                int index = 0;
+                for (index = 0; index < cfg.length; index++) {
+                    if (cfg[index] == config) {
+                        break;
+                    }
+                }
+                if (index < cfg.length) {
+                    anzSteps[index]++;
+                } else {
+                    if (DEBUG) {
+                        System.out.println("resetAnzSteps(): NO config found for " + act.getType().getStepName() + " (1)");
+                    }
+                }
+            } else {
+                if (DEBUG) {
+                    System.out.println("resetAnzSteps(): NO config found for " + act.getType().getStepName() + " (1)");
+                }
+            }
+        }
+    }
 
     /**
      * @return the sudoku
      */
-    public // items from SudokuPanel
-    Sudoku2 getSudoku() {
+    public Sudoku2 getSudoku() {
         return sudoku;
     }
 
@@ -250,8 +307,8 @@ public class GuiState {
     /**
      * @return the steps
      */
-    public // items from SudokuSolver
-    List<SolutionStep> getSteps() {
+    public List<SolutionStep> getSteps() {
+        // items from SudokuSolver
         return steps;
     }
 
