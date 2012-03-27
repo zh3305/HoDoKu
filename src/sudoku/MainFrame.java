@@ -3196,6 +3196,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
                 state.setSteps((List<SolutionStep>) in.readObject());
                 state.setTitels((List<String>) in.readObject());
                 state.setTabSteps((List<List<SolutionStep>>) in.readObject());
+                
                 state.resetAnzSteps();
                 try {
                     savePoints = (List<GuiState>) in.readObject();
