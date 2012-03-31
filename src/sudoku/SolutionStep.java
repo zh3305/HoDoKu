@@ -1967,11 +1967,11 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
 
         // nach Äquivalenz (gleiche zu löschende Kandidaten)
         if (!isEquivalent(o)) {
-            // change 20110512: short chains first!
-            int chainDiff = compareChainLengths(o);
-            if (chainDiff != 0) {
-                return chainDiff;
-            }
+//            // change 20110512: short chains first!
+//            int chainDiff = compareChainLengths(o);
+//            if (chainDiff != 0) {
+//                return chainDiff;
+//            }
             
             // nicht äquivalent: nach Indexsumme der zu löschenden Kandidaten
             sum1 = getIndexSumme(candidatesToDelete);
@@ -2129,7 +2129,7 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
      * The sum of the indices of a collection of candidates
      * is used as a sorting criteria. For this to work, the
      * indices have to be weighted or else two combinations of
-     * different indices could lead to the same sum.
+     * different indices could lead to the same sum.<br><br>
      * 
      * @param list
      * @return 

@@ -46,6 +46,7 @@ Bugs fixed:
   - #3476976: Debug message written to console window in batch
   - #3492680: Inconsisten fish sorting (Finned/Sashimi)
   - #3513608: Comparison exception in AlsComparer
+  - #3513603: Search for all steps ignores ALS types
 
 
 Version 2.1.3 (2012-01-19)
