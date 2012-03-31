@@ -143,7 +143,7 @@ public class Sudoku2 implements Cloneable {
     public static final int[] ANZ_VALUES = new int[0x200];
     /** The indices of the constraints for every cell (LINE, COL, BLOCK) */
     public static int[][] CONSTRAINTS = new int[LENGTH][3];
-    /** The candidate represented by the least siginificant bit that is set in a candidate mask.
+    /** The candidate represented by the least significant bit that is set in a candidate mask.
      *  If only one bit is set, the array contains the value of that bit (candidate). */
     public static final short[] CAND_FROM_MASK = new short[0x200];
     
@@ -909,6 +909,32 @@ public class Sudoku2 implements Cloneable {
             }
         }
         return ssTemp.toString();
+    }
+    
+    /**
+     * Checks, if a necessary candidate is missing from {@link #userCells}.
+     * "Necessary" means, that a candidate is missing, that has to be set
+     * in the cell. Is used to determine, whether a hint can be created
+     * when not using "Show all candidates".
+     * 
+     * @return 
+     */
+    public boolean checkUserCands() {
+        if (! solutionSet) {
+            // we cant check without the solution!
+            return false;
+        }
+        for (int i = 0; i < LENGTH; i++) {
+            if (values[i] != 0) {
+                // cell already set, ignore!
+                continue;
+            }
+            if ((userCells[i] & MASKS[solution[i]]) == 0) {
+                // candidate is missing!
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -2547,5 +2573,58 @@ public class Sudoku2 implements Cloneable {
             default: statusGivens = SudokuStatus.MULTIPLE_SOLUTIONS; break;
         }
     }
+    
+    /**
+     * Checks, if user candidate have been set in the Sudoku. Needed for
+     * determining, how to switch between {@link #cells} and {@link #userCells}.
+     * 
+     * @return 
+     */
+    public boolean userCandidatesEmpty() {
+        for (int i = 0; i < userCells.length; i++) {
+            if (userCells[i] != 0) {
+                //at least one candidate has already been set
+                return false;
+            }
+        }
+        return true;
+    }
 
+    /**
+     * Switches from user candidates to all candidates: candidates already
+     * eliminated by the user stay eliminated. As a precaution, missing necessary
+     * candidates are added first. This will only work, if a solution has already
+     * been set. It is the responsibility of the caller to ensure that.
+     */
+    public void switchToAllCandidates() {
+        // first add necessary candidates (might not be necessary)
+        for (int i = 0; i < userCells.length; i++) {
+            if (values[i] == 0 && solution[i] !=0){
+                userCells[i] |= MASKS[solution[i]];
+            }
+        }
+        // now simply copy the user candidates over
+        System.arraycopy(userCells, 0, cells, 0,LENGTH);
+        // rebuild internal data
+        rebuildInternalData();
+    }
+
+    /**
+     * Reset {@link #cells} to all possible candidates.
+     */
+    public void rebuildAllCandidates() {
+        for (int i = 0; i < cells.length; i++) {
+            if (values[i] != 0) {
+                cells[i] = 0;
+            } else {
+                for (int cand = 1; cand <= 9; cand++) {
+                    if (isValidValue(i, cand)) {
+                        cells[i] |= MASKS[cand];
+                    }
+                }
+            }
+        }
+        // rebuild internal data
+        rebuildInternalData();
+    }
 }

@@ -1989,68 +1989,11 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
     }//GEN-LAST:event_redGreenToggleButtonActionPerformed
 
     private void mediumHintMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mediumHintMenuItemActionPerformed
-        if (sudokuPanel.getSudoku().isSolved()) {
-            JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.already_solved"));
-            return;
-        }
-        if (sudokuPanel.getSudoku().getStatus() == SudokuStatus.EMPTY
-                || sudokuPanel.getSudoku().getStatus() == SudokuStatus.INVALID) {
-            JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.invalid_puzzle"));
-            return;
-        }
-        if (!sudokuPanel.isShowCandidates()) {
-            JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.not_available"),
-                    java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.hint"), JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
-        if (sudokuPanel.getSudoku().checkSudoku() == false) {
-            JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.invalid_values_or_candidates"),
-                    java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.hint"), JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
-        SolutionStep step = sudokuPanel.getNextStep(false);
-        sudokuPanel.abortStep();
-        fixFocus();
-        if (step != null) {
-            JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.possible_step")
-                    + step.toString(1),
-                    java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.medium_hint"), JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.dont_know"),
-                    java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.error"), JOptionPane.ERROR_MESSAGE);
-        }
+        getHint(1);
     }//GEN-LAST:event_mediumHintMenuItemActionPerformed
 
     private void vageHintMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vageHintMenuItemActionPerformed
-        if (sudokuPanel.getSudoku().isSolved()) {
-            JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.already_solved"));
-            return;
-        }
-        if (sudokuPanel.getSudoku().getStatus() == SudokuStatus.EMPTY
-                || sudokuPanel.getSudoku().getStatus() == SudokuStatus.INVALID) {
-            JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.invalid_puzzle"));
-            return;
-        }
-        if (!sudokuPanel.isShowCandidates()) {
-            JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.not_available"),
-                    java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.hint"), JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
-        if (sudokuPanel.getSudoku().checkSudoku() == false) {
-            JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.invalid_values_or_candidates"),
-                    java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.hint"), JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
-        SolutionStep step = sudokuPanel.getNextStep(false);
-        sudokuPanel.abortStep();
-        fixFocus();
-        if (step != null) {
-            JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.possible_step")
-                    + step.toString(0), java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.vage_hint"), JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.dont_know"),
-                    java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.error"), JOptionPane.ERROR_MESSAGE);
-        }
+        getHint(0);
     }//GEN-LAST:event_vageHintMenuItemActionPerformed
 
     private void alleHiddenSinglesSetzenMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alleHiddenSinglesSetzenMenuItemActionPerformed
@@ -2092,34 +2035,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
     }//GEN-LAST:event_hinweisAusführenButtonActionPerformed
 
     private void lösungsSchrittMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lösungsSchrittMenuItemActionPerformed
-        if (sudokuPanel.getSudoku().isSolved()) {
-            JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.already_solved"));
-            return;
-        }
-        if (sudokuPanel.getSudoku().getStatus() == SudokuStatus.EMPTY
-                || sudokuPanel.getSudoku().getStatus() == SudokuStatus.INVALID) {
-            JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.invalid_puzzle"));
-            return;
-        }
-        if (!sudokuPanel.isShowCandidates()) {
-            JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.not_available"),
-                    java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.hint"), JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
-        if (sudokuPanel.getSudoku().checkSudoku() == false) {
-            JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.invalid_values_or_candidates"),
-                    java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.hint"), JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
-        SolutionStep step = sudokuPanel.getNextStep(false);
-        if (step != null) {
-            setSolutionStep(step, false);
-        } else {
-            hinweisTextArea.setText(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.dont_know"));
-            hinweisTextArea.setCaretPosition(0);
-        }
-        check();
-        fixFocus();
+        getHint(2);
     }//GEN-LAST:event_lösungsSchrittMenuItemActionPerformed
 
     private void neuerHinweisButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_neuerHinweisButtonActionPerformed
@@ -2141,7 +2057,52 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
     }//GEN-LAST:event_showWrongValuesMenuItemActionPerformed
 
     private void showCandidatesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showCandidatesMenuItemActionPerformed
-        sudokuPanel.setShowCandidates(showCandidatesMenuItem.isSelected());
+                        System.out.println("sel0:" + showCandidatesMenuItem.isSelected());
+        if (! showCandidatesMenuItem.isSelected()) {
+            // just set the flag and be done!
+            sudokuPanel.setShowCandidates(showCandidatesMenuItem.isSelected());
+        } else {
+            // if no user candidates have been set, the internal flag is just toggled.
+            // if user candidates have been set, further checks have to be made
+            if (sudokuPanel.getSudoku().userCandidatesEmpty()) {
+                // just set the flag and be done!
+                sudokuPanel.setShowCandidates(showCandidatesMenuItem.isSelected());
+            } else {
+                // display a dialog, that lets the user choose, what to do
+                boolean doYes = true;
+                if (!sudokuPanel.getSudoku().checkUserCands()) {
+                    // necessary candidates are missing!
+                    int ret = JOptionPane.showConfirmDialog(null,
+                            java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.candidatesMissing"),
+                            java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.error"),
+                            JOptionPane.YES_NO_CANCEL_OPTION);
+                    if (ret == JOptionPane.CANCEL_OPTION) {
+                        // change the menu item!
+                        showCandidatesMenuItem.setSelected(false);
+                        fixFocus();
+                        return;
+                    } else if (ret == JOptionPane.YES_OPTION) {
+                        doYes = true;
+                    } else {
+                        doYes = false;
+                    }
+                }
+                if (doYes) {
+                    // retain all changes to the user candidates
+                    sudokuPanel.getSudoku().switchToAllCandidates();
+                    sudokuPanel.getSolver().setSudoku(sudokuPanel.getSudoku());
+                    sudokuPanel.checkProgress();
+                    sudokuPanel.setShowCandidates(showCandidatesMenuItem.isSelected());
+                    System.out.println("sel:" + showCandidatesMenuItem.isSelected());
+                } else {
+                    // revert all changes
+                    sudokuPanel.getSudoku().rebuildAllCandidates();
+                    sudokuPanel.getSolver().setSudoku(sudokuPanel.getSudoku());
+                    sudokuPanel.checkProgress();
+                    sudokuPanel.setShowCandidates(showCandidatesMenuItem.isSelected());
+                }
+            }
+        }
         check();
         fixFocus();
     }//GEN-LAST:event_showCandidatesMenuItemActionPerformed
@@ -2541,6 +2502,63 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
         }
     }//GEN-LAST:event_savePuzzleMenuItemActionPerformed
 
+    
+    /**
+     * Gets a new hint for the sudoku if possible. Checks are made to ensure,
+     * that hints are only displayed for valid puzzles.
+     * 
+     * @param mode <code>0</code> for "vage hint", <code>1</code> for "concrete
+     * hint" and <code>2</code> for "show next step".
+     */
+    private void getHint(int mode) {
+        if (sudokuPanel.getSudoku().isSolved()) {
+            JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.already_solved"));
+            return;
+        }
+        if (sudokuPanel.getSudoku().getStatus() == SudokuStatus.EMPTY
+                || sudokuPanel.getSudoku().getStatus() == SudokuStatus.INVALID) {
+            JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.invalid_puzzle"));
+            return;
+        }
+        if (!sudokuPanel.isShowCandidates()) {
+            JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.not_available"),
+                    java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.hint"), JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        if (sudokuPanel.getSudoku().checkSudoku() == false) {
+            JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.invalid_values_or_candidates"),
+                    java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.hint"), JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        SolutionStep step = sudokuPanel.getNextStep(false);
+        if (mode == 0 || mode == 1) {
+            sudokuPanel.abortStep();
+            fixFocus();
+            if (step != null) {
+                int strMode = 0;
+                String msg = java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.vage_hint");
+                if (mode == 1) {
+                    strMode = 1;
+                    msg = java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.medium_hint");
+                }
+                JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.possible_step")
+                        + step.toString(strMode), msg, JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.dont_know"),
+                        java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.error"), JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            if (step != null) {
+                setSolutionStep(step, false);
+            } else {
+                hinweisTextArea.setText(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.dont_know"));
+                hinweisTextArea.setCaretPosition(0);
+            }
+        }
+        fixFocus();
+        check();
+    }
+    
     /**
      * Sets a new mode ({@link GameMode#LEARNING}, {@link GameMode#PLAYING} or
      * {@link GameMode#PRACTISING}). If the new mode is "playing", no further

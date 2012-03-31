@@ -3001,7 +3001,8 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
     
     /**
      * When solving manually, the sudoku can be in an invalid state. This should
-     * be handled here: 
+     * be handled before calling this method.
+     * 
      * @param singlesOnly
      * @return 
      */

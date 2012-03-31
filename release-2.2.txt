@@ -39,6 +39,7 @@ Features added:
   - #3489431: Improve interoperability with SimpleSudoku
   - #3489725: Remove BrowserLauncher2 library
   - #3454460: Add a save command
+  - #3387347: Switching to "Show all candidates" retains eliminations
 
 Bugs fixed:
 
