@@ -584,11 +584,11 @@ public class SudokuStepFinder {
      * @param newSudoku
      * @return
      */
-    public List<SolutionStep> getAllAlses(Sudoku2 newSudoku) {
+    public List<SolutionStep> getAllAlses(Sudoku2 newSudoku, boolean doXz, boolean doXy, boolean doChain) {
         initialize();
         Sudoku2 oldSudoku = getSudoku();
         setSudoku(newSudoku);
-        List<SolutionStep> steps = alsSolver.getAllAlses();
+        List<SolutionStep> steps = alsSolver.getAllAlses(doXz, doXy, doChain);
         setSudoku(oldSudoku);
         return steps;
     }

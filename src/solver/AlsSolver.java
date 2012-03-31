@@ -165,9 +165,14 @@ public class AlsSolver extends AbstractSolver {
 
     /**
      * Finds all ALS steps except Death Blossom present in the current grid.
-     * @return
+     * The parameters specify, which types should be searched.
+     * 
+     * @param doXz
+     * @param doXy
+     * @param doChain
+     * @return 
      */
-    protected List<SolutionStep> getAllAlses() {
+    protected List<SolutionStep> getAllAlses(boolean doXz, boolean doXy, boolean doChain) {
         sudoku = finder.getSudoku();
         List<SolutionStep> oldSteps = steps;
         List<SolutionStep> resultSteps = new ArrayList<SolutionStep>();
@@ -181,18 +186,24 @@ public class AlsSolver extends AbstractSolver {
         }
         collectAllAlses();
         collectAllRestrictedCommons(Options.getInstance().isAllowAlsOverlap());
-        steps.clear();
-        getAlsXZInt(false);
-        Collections.sort(steps, alsComparator);
-        resultSteps.addAll(steps);
-        steps.clear();
-        getAlsXYWingInt(false);
-        Collections.sort(steps, alsComparator);
-        resultSteps.addAll(steps);
-        steps.clear();
-        getAlsXYChainInt();
-        Collections.sort(steps, alsComparator);
-        resultSteps.addAll(steps);
+        if (doXz) {
+            steps.clear();
+            getAlsXZInt(false);
+            Collections.sort(steps, alsComparator);
+            resultSteps.addAll(steps);
+        }
+        if (doXy) {
+            steps.clear();
+            getAlsXYWingInt(false);
+            Collections.sort(steps, alsComparator);
+            resultSteps.addAll(steps);
+        }
+        if (doChain) {
+            steps.clear();
+            getAlsXYChainInt();
+            Collections.sort(steps, alsComparator);
+            resultSteps.addAll(steps);
+        }
         if (TIMING) {
             millis1 = System.nanoTime() - millis1;
 //            System.out.println("getAllAlses() total: " + (millis1 / 1000000.0) + "ms");
@@ -1261,18 +1272,20 @@ public class AlsSolver extends AbstractSolver {
         // Very long running time
         //sudoku.setSudoku(":9001:369:.......173.+1.8+7.+5+2+7......+3+8+4+371..+5+86+1..+84+53+7+9+985.+7.+1+2+42+7....84+5+51.7..+2.+3...5..+7.+1:215 216 416 235 236 436:396 615 635 686 686 686 686 696 696 696 696 915 935 986 996:");
         // ALS Chain not found: Almost Locked Set Chain: A=r3c4 {57}, B=r4c4 {57}, C=r4c69 {257}, D=r56c8 {567}, RCs=5,7, X=7 => r3c8<>7
-        sudoku.setSudoku(":9003:7:.+6.+4.+9+213+94.+2+3+1+68.2+1+3.6+8+9.+46+89.+1.4+3.+3..8..+1.....3..+8..+43+61..5+9+8.+5.+94+37+26+7+9+2+6+8+5+3+4+1:753 256 756 763 266 766 569:738:");
+//        sudoku.setSudoku(":9003:7:.+6.+4.+9+213+94.+2+3+1+68.2+1+3.6+8+9.+46+89.+1.4+3.+3..8..+1.....3..+8..+43+61..5+9+8.+5.+94+37+26+7+9+2+6+8+5+3+4+1:753 256 756 763 266 766 569:738:");
         // doubly linked ALS not found
 //        sudoku.setSudoku(":0901-2:12357:9..17....4.1....7..7...31..14...6.98.9248173.38.5.......48...2.......6.7....6...3:793:172 244 385 571 572 796::");
         // ALS-Chain not found: 127- r1c156789 {1234679} -9- r3c4 {49} -4- r9c4 {49} -9- r2359c3 {12679} -127 => r1c3<>1, r1c3<>2, r1c3<>7
 //        sudoku.setSudoku(":0903:127:...+8......3.+57.8.98....315.9.8142......+3+5....5.+36...4.1.42+3....+3..7....6.8...531.:412 612 712 613 916 933 572 986 587 987:113 213 713::");
+        // Exceütion when sorting
+        sudoku.setSudoku(":0903-1:35:1+53+9+642+7+8+9847+2.3+6.72+6..8+9..638.+4+9..+7+4+91..+78.+6+5+7+2+8+1+6493+8+6+74+9..32+3.9.+7268.+2.56+8+37.9:139:334 355 534::");
         SudokuSolver solver = SudokuSolverFactory.getDefaultSolverInstance();
 //        AlsSolver as = new AlsSolver(null);
         long millis = System.nanoTime();
         int itAnz = 1;
         List<SolutionStep> steps = null;
         for (int i = 0; i < itAnz; i++) {
-            steps = solver.getStepFinder().getAllAlses(sudoku);
+            steps = solver.getStepFinder().getAllAlses(sudoku, false, false, true);
 //            as.getAlsXZ(true);
 //            as.getAlsXYWing();
 //            as.getAlsXYChain();
@@ -1303,6 +1316,7 @@ public class AlsSolver extends AbstractSolver {
  * @author hobiwan
  */
 class AlsComparator implements Comparator<SolutionStep> {
+    private static final boolean debug = false;
 
     /**
      * Sort order:<br>
@@ -1316,29 +1330,51 @@ class AlsComparator implements Comparator<SolutionStep> {
      */
     @Override
     public int compare(SolutionStep o1, SolutionStep o2) {
+        if (debug) {
+            System.out.println("Comparing:");
+            System.out.println("   " + o1);
+            System.out.println("   " + o2);
+        }
         int sum1 = 0, sum2 = 0;
 
         // zuerst nach Anzahl zu löschende Kandidaten (absteigend!)
         int result = o2.getCandidatesToDelete().size() - o1.getCandidatesToDelete().size();
+        if (debug) {
+            System.out.println("      1: " + result);
+        }
         if (result != 0) {
             return result;        // nach Äquivalenz (gleiche zu löschende Kandidaten)
         }
         if (!o1.isEquivalent(o2)) {
             // nicht äquivalent: nach Indexsumme der zu löschenden Kandidaten
             sum1 = o1.getIndexSumme(o1.getCandidatesToDelete());
-            sum2 = o1.getIndexSumme(o2.getCandidatesToDelete());
-            return sum1 == sum2 ? 1 : sum1 - sum2;
+            sum2 = o2.getIndexSumme(o2.getCandidatesToDelete());
+        if (debug) {
+            System.out.println("      2: " + (sum1 - sum2) + " (" + sum1 + "/" + sum2 + ")");
+        }
+            return (sum1 - sum2);
         }
 
         // Nach Anzahl ALS
         result = o1.getAlses().size() - o2.getAlses().size();
+        if (debug) {
+            System.out.println("      3: " + result);
+        }
         if (result != 0) {
             return result;        // Nach Anzahl Kandidaten in allen ALS
         }
         result = o1.getAlsesIndexCount() - o2.getAlsesIndexCount();
+        if (debug) {
+            System.out.println("      4: " + result);
+        }
         if (result != 0) {
             return result;        // zuletzt nach Typ
         }
-        return o1.getType().ordinal() - o2.getType().ordinal();
+//        return o1.getType().ordinal() - o2.getType().ordinal();
+                if (debug) {
+            System.out.println("      5: " + (o1.getType().compare(o2.getType())));
+        }
+
+        return o1.getType().compare(o2.getType());
     }
 }

@@ -257,7 +257,9 @@ public class FindAllSteps implements Runnable {
                     updateProgress(java.util.ResourceBundle.getBundle("intl/FindAllStepsProgressDialog").getString("FindAllStepsProgressDialog.als"), actStep);
                     if (isAllStepsEnabled(SolutionType.ALS_XZ) || isAllStepsEnabled(SolutionType.ALS_XY_WING) ||
                             isAllStepsEnabled(SolutionType.ALS_XY_CHAIN)) {
-                        steps1 = stepFinder.getAllAlses(sudoku);
+                        steps1 = stepFinder.getAllAlses(sudoku, isAllStepsEnabled(SolutionType.ALS_XZ),
+                                isAllStepsEnabled(SolutionType.ALS_XY_WING),
+                                isAllStepsEnabled(SolutionType.ALS_XY_CHAIN));
                         filterSteps(steps1);
                         steps.addAll(steps1);
                     }

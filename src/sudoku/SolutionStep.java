@@ -2125,10 +2125,21 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
         return true;
     }
 
+    /**
+     * The sum of the indices of a collection of candidates
+     * is used as a sorting criteria. For this to work, the
+     * indices have to be weighted or else two combinations of
+     * different indices could lead to the same sum.
+     * 
+     * @param list
+     * @return 
+     */
     public int getIndexSumme(List<Candidate> list) {
         int sum = 0;
+        int offset = 1;
         for (int i = 0; i < list.size(); i++) {
-            sum += list.get(i).getIndex();
+            sum += list.get(i).getIndex() * offset + list.get(i).getValue();
+            offset += 80;
         }
         return sum;
     }

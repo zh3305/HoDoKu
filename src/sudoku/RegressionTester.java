@@ -150,7 +150,7 @@ public class RegressionTester {
      */
     public void test(String testCase) {
         anzTestCases++;
-        //System.out.println("testCase: " + testCase);
+//        System.out.println("testCase: " + testCase);
         String[] parts = testCase.split(":");
         // check for variants and fail cases (step must not be found!)
         int variant = 0;
@@ -547,7 +547,9 @@ public class RegressionTester {
                      (type == SolutionType.ALS_XY_WING && variant == 2)) {
                     Options.getInstance().setAllowAlsOverlap(true);
                 }
-                steps = stepFinder.getAllAlses(sudoku);
+                steps = stepFinder.getAllAlses(sudoku, type == SolutionType.ALS_XZ,
+                        type == SolutionType.ALS_XY_WING,
+                        type == SolutionType.ALS_XY_CHAIN);
                 checkResults(testCase, steps, sudoku, start, failCase);
                 Options.getInstance().setOnlyOneAlsPerStep(oldOption);
                 Options.getInstance().setAllowAlsOverlap(oldOption2);
