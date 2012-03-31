@@ -1095,8 +1095,10 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
                     getAls(tmp, 1);
                     tmp.append(", X=");
                     getAlsXorZ(tmp, true);
-                    tmp.append(", Z=");
-                    getAlsXorZ(tmp, false);
+                    if (! fins.isEmpty()) {
+                        tmp.append(", Z=");
+                        getAlsXorZ(tmp, false);
+                    }
                     getCandidatesToDelete(tmp);
                     str = tmp.toString();
                 }
@@ -2059,18 +2061,18 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
             return sum2 - sum1;
         }
 
-        // Kandidaten sind gleich: nach Fins (je weniger desto besser)
-        if (!isEqualCandidate(fins, o.fins)) {
-            // zuerst nach Anzahl fins
-            if (fins.size() != o.fins.size()) {
-                return fins.size() - o.fins.size();
-            }
-            // gleich Anzahl Fins -> nach Indexsumme
-            sum1 = getIndexSumme(fins);
-            sum2 = getIndexSumme(o.fins);
-//            return sum1 == sum2 ? 1 : sum2 - sum1;
-            return sum2 - sum1;
-        }
+//        // Kandidaten sind gleich: nach Fins (je weniger desto besser)
+//        if (!isEqualCandidate(fins, o.fins)) {
+//            // zuerst nach Anzahl fins
+//            if (fins.size() != o.fins.size()) {
+//                return fins.size() - o.fins.size();
+//            }
+//            // gleich Anzahl Fins -> nach Indexsumme
+//            sum1 = getIndexSumme(fins);
+//            sum2 = getIndexSumme(o.fins);
+////            return sum1 == sum2 ? 1 : sum2 - sum1;
+//            return sum2 - sum1;
+//        }
 
         // zuletzt nach Typ
         //return type.ordinal() - o.type.ordinal();

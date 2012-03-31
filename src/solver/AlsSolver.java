@@ -101,6 +101,8 @@ public class AlsSolver extends AbstractSolver {
     private int stemCellIndex = 0;
     /** For various checks */
     private SudokuSet tmpSet = new SudokuSet();
+    /** For various checks */
+    private SudokuSet tmpSet1 = new SudokuSet();
     /** Statistics: Number of calls. */
     private static int anzCalls = 0;
     /** Statistics: Time for collectAllAlses(). */
@@ -348,8 +350,12 @@ public class AlsSolver extends AbstractSolver {
             if (rc.getCand2() != 0) {
                 // als1 and als2 are doubly linked -> check for additional eliminations
                 checkCandidatesToDelete(als1, als2, rc.getCand2());
-                checkDoublyLinkedAls(als1, als2, rc.getCand1(), rc.getCand2());
-                checkDoublyLinkedAls(als2, als1, rc.getCand1(), rc.getCand2());
+                boolean d1 = checkDoublyLinkedAls(als1, als2, rc.getCand1(), rc.getCand2());
+                boolean d2 = checkDoublyLinkedAls(als2, als1, rc.getCand1(), rc.getCand2());
+                if (d1 || d2) {
+                    // no common candidates for doublylinked als-xz
+                    globalStep.getFins().clear();
+                }
             }
             if (globalStep.getCandidatesToDelete().size() > 0) {
                 // Step zusammenbauen
@@ -1012,6 +1018,12 @@ public class AlsSolver extends AbstractSolver {
                 for (int l = 0; l < restrictedCommonBuddiesSet.size(); l++) {
                     globalStep.addCandidateToDelete(restrictedCommonBuddiesSet.get(l), cand);
                 }
+                //add the common candidates themselves as fins (for display only)
+                tmpSet1.set(als1.indicesPerCandidat[cand]);
+                tmpSet1.or(als2.indicesPerCandidat[cand]);
+                for (int l = 0; l < tmpSet1.size(); l++) {
+                    globalStep.addFin(tmpSet1.get(l), cand);
+                }
             }
         }
     }
@@ -1072,14 +1084,15 @@ public class AlsSolver extends AbstractSolver {
      * @param rc1 The first Restricted Common
      * @param rc2 The second Restricted Common
      */
-    private void checkDoublyLinkedAls(Als als1, Als als2, int rc1, int rc2) {
+    private boolean checkDoublyLinkedAls(Als als1, Als als2, int rc1, int rc2) {
+        boolean isDoubly = false;
         // collect the remaining candidates
         possibleRestrictedCommonsSet = als1.candidates;
         possibleRestrictedCommonsSet &= ~Sudoku2.MASKS[rc1];
         possibleRestrictedCommonsSet &= ~Sudoku2.MASKS[rc2];
         if (possibleRestrictedCommonsSet == 0) {
             // nothing can be eliminated
-            return;
+            return false;
         }
         // for any candidate left get all buddies, subtract als1 and als2 and check for eliminations
         int[] prcs = Sudoku2.POSSIBLE_VALUES[possibleRestrictedCommonsSet];
@@ -1090,9 +1103,11 @@ public class AlsSolver extends AbstractSolver {
             if (!restrictedCommonIndexSet.isEmpty()) {
                 for (int j = 0; j < restrictedCommonIndexSet.size(); j++) {
                     globalStep.addCandidateToDelete(restrictedCommonIndexSet.get(j), cand);
+                    isDoubly = true;
                 }
             }
         }
+        return isDoubly;
     }
 
     /**
