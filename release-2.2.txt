@@ -51,6 +51,8 @@ Bugs fixed:
   - #3509643: Undo/Redo and all steps error
   - #3513680: Problems displaying AL-XZ
   - #3513851: Singles sorted wrongly in All steps panel
+  - #3509639: Deleting values from cells is broken
+  - #3509637: All steps can become out of sync
 
 
 Version 2.1.3 (2012-01-19)
