@@ -2079,6 +2079,10 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
         return type.compare(o.getType());
     }
 
+    public boolean isEqualValues(SolutionStep s) {
+        return isEqualInteger(values, s.getValues());
+    }
+    
     private boolean isEqualInteger(List<Integer> l1, List<Integer> l2) {
         if (l1.size() != l2.size()) {
             return false;

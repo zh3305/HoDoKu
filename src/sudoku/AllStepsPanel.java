@@ -413,7 +413,7 @@ public final class AllStepsPanel extends javax.swing.JPanel implements TreeSelec
                 root.add(lastCat1);
                 lastEntry = new DefaultMutableTreeNode(step);
                 lastCat1.add(lastEntry);
-            } else if (step.isEqualCandidate(lastStep)) {
+            } else if (step.isEqualCandidate(lastStep) && step.isEqualValues(lastStep)) {
                 // same step -> put step under lastStep
                 lastEntry.add(new DefaultMutableTreeNode(step));
             } else {
