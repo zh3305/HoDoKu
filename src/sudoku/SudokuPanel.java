@@ -295,6 +295,8 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
         color4bMenuItem = new javax.swing.JMenuItem();
         color5aMenuItem = new javax.swing.JMenuItem();
         color5bMenuItem = new javax.swing.JMenuItem();
+        deleteValuePopupMenu = new javax.swing.JPopupMenu();
+        deleteValueMenuItem = new javax.swing.JMenuItem();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("intl/SudokuPanel"); // NOI18N
         make1MenuItem.setText(bundle.getString("SudokuPanel.popup.make1")); // NOI18N
@@ -531,6 +533,14 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
         });
         cellPopupMenu.add(color5bMenuItem);
 
+        deleteValueMenuItem.setText(bundle.getString("SudokuPanel.deleteValueItem.text")); // NOI18N
+        deleteValueMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteValueMenuItemActionPerformed(evt);
+            }
+        });
+        deleteValuePopupMenu.add(deleteValueMenuItem);
+
         setBackground(new java.awt.Color(255, 255, 255));
         setMinimumSize(new java.awt.Dimension(300, 300));
         setPreferredSize(new java.awt.Dimension(600, 600));
@@ -664,6 +674,10 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
         lastPressedCand = -1;
     }//GEN-LAST:event_formMouseReleased
 
+    private void deleteValueMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteValueMenuItemActionPerformed
+        popupDeleteValueFromCell();
+    }//GEN-LAST:event_deleteValueMenuItemActionPerformed
+
     /**
      * New mouse control for version 2.0:
      * <ul>
@@ -719,17 +733,19 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                     } else {
                         // no region or cell outside region -> change focus and toggle candidate
                         setAktRowCol(line, col);
-//                        aktLine = line;
-//                        aktCol = col;
                         clearRegion();
-                        int showHintCellValue = getShowHintCellValue();
-                        if ((cand == -1 || ! sudoku.isCandidate(line, col, cand, ! showCandidates)) && 
-                                showHintCellValue != 0) {
-                            toggleCandidateInCell(aktLine, aktCol, showHintCellValue);
-                        } else if (cand != -1) {
-                            toggleCandidateInCell(aktLine, aktCol, cand);
+                        if (sudoku.getValue(line, col) != 0 && !sudoku.isFixed(line, col)) {
+                            deleteValuePopupMenu.show(this, getX(line, col) + cellSize, getY(line, col));
+                        } else {
+                            int showHintCellValue = getShowHintCellValue();
+                            if ((cand == -1 || !sudoku.isCandidate(line, col, cand, !showCandidates))
+                                    && showHintCellValue != 0) {
+                                toggleCandidateInCell(aktLine, aktCol, showHintCellValue);
+                            } else if (cand != -1) {
+                                toggleCandidateInCell(aktLine, aktCol, cand);
+                            }
+                            changed = true;
                         }
-                        changed = true;
                     }
                 } else {
                     // bring up popup menu
@@ -912,16 +928,12 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
      * @param col 
      */
     private void setAktRowCol(int row, int col) {
-        boolean changed = false;
         if (aktLine != row) {
             aktLine = row;
-            changed = true;
         }
         if (aktCol != col) {
             aktCol = col;
-            changed = true;
         }
-//        if (changed && Options.getInstance().isDeleteCursorDisplay()) {
         if (Options.getInstance().isDeleteCursorDisplay()) {
             deleteCursorTimer.stop();
             lastCursorChanged = System.currentTimeMillis();
@@ -1345,7 +1357,6 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                 if ((modifiers & KeyEvent.CTRL_DOWN_MASK) == 0) {
                     // Zelle löschen
                     if (sudoku.getValue(aktLine, aktCol) != 0 && !sudoku.isFixed(aktLine, aktCol)) {
-                        System.out.println("clear cell: ");
                         sudoku.setCell(aktLine, aktCol, 0);
                         changed = true;
                     }
@@ -2696,7 +2707,6 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
         // dont restrict the area
 //        double dx = cs3 * 2.0 / 3.0;
 //        double leftDx = cs3 / 6.0;
-        // TODO: Should clickable area be smaller?
         double dx = cs3;
         double leftDx = 0;
         //System.out.println("p = " + p + ", startX = " + startX + ", startY = " + startY + ", dx = " + dx + ", leftDX = " + leftDx);
@@ -2776,6 +2786,8 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
     private javax.swing.JMenuItem color4bMenuItem;
     private javax.swing.JMenuItem color5aMenuItem;
     private javax.swing.JMenuItem color5bMenuItem;
+    private javax.swing.JMenuItem deleteValueMenuItem;
+    private javax.swing.JPopupMenu deleteValuePopupMenu;
     private javax.swing.JMenuItem exclude1MenuItem;
     private javax.swing.JMenuItem exclude2MenuItem;
     private javax.swing.JMenuItem exclude3MenuItem;
@@ -3361,7 +3373,8 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
 
     /**
      * Brings up the popup menu for the cell at line/col. If the cell is
-     * already set, no menu is displayed. For every other cell the contents
+     * already set, a different menu is displayed, that allowsto delete the value
+     * from the cell. For every other cell the contents
      * of the menu is restricted to sensible actions.<br>
      * If a region of cells is selected, "Make x" is restricted to
      * candidates, that appear in all cells, "Exclude x" is restricted
@@ -3372,13 +3385,15 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
     private void showPopupMenu(int line, int col) {
         jSeparator2.setVisible(true);
         if (sudoku.getValue(line, col) != 0 && selectedCells.isEmpty()) {
-            // cell is already set -> no popup!
+            // cell is already set -> delete value popup (not for givens!)
+            if (! sudoku.isFixed(aktLine, aktCol)) {
+                setAktRowCol(line, col);
+                deleteValuePopupMenu.show(this, getX(line, col) + cellSize, getY(line, col));
+            }
             return;
         }
         if (selectedCells.isEmpty()) {
             setAktRowCol(line, col);
-//            aktLine = line;
-//            aktCol = col;
         }
         excludeSeveralMenuItem.setVisible(false);
         for (int i = 1; i <= 9; i++) {
@@ -3442,6 +3457,32 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
             mainFrame.fixFocus();
             repaint();
         }
+    }
+    
+    /**
+     * Deletes the value from the active cell.
+     */
+    private void popupDeleteValueFromCell() {
+//        System.out.println("delete valuefrom " + aktLine+ "/"+aktCol);
+        undoStack.push(sudoku.clone());
+        boolean changed = false;
+        if (sudoku.getValue(aktLine, aktCol) != 0 && !sudoku.isFixed(aktLine, aktCol)) {
+//            System.out.println("clear cell: ");
+            sudoku.setCell(aktLine, aktCol, 0);
+            changed = true;
+        }
+        if (changed) {
+            // Undo wurde schon behandelt, Redo ist nicht mehr möglich
+            redoStack.clear();
+            checkProgress();
+        } else {
+            // kein Undo nötig -> wieder entfernen
+            undoStack.pop();
+        }
+        updateCellZoomPanel();
+        mainFrame.fixFocus();
+        mainFrame.check();
+        repaint();
     }
 
     /**

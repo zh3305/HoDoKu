@@ -62,8 +62,7 @@ import solver.SudokuSolver;
  */
 public class GuiState {
     /** Debug flag - set to false before releasing! */
-    // TODO: reset debug flag
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     // items from SudokuPanel
     private Sudoku2 sudoku = null;
     private Stack<Sudoku2> undoStack = null;
