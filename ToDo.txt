@@ -2,13 +2,13 @@
 
    - user created arrows (3022071)
    - Add a pattern generator to sudoku creation that allows a user to specify which cells should contain givens.
-     (2940097)
-   - Hints when "Show all candidates" is not selected (3387347)
-   - Add mouse click detection (3387327)
+     (2940097) - doesnt work correctly: no valid puzzles are found
    - Add animation for automatic solving (3387362)
-   - Alt-click for candidates (3387344)
-   - Undo leads to incorrect hints (3260556) (2963769)
 
+ok - Alt-click for candidates (3387344)
+ok - Undo leads to incorrect hints (3260556) (2963769)
+ok - Hints when "Show all candidates" is not selected (3387347)
+ok - Add mouse click detection (3387327)
 ok - Tooltips für alle Knöpfe und Menüs (2990569)
 ok - Add extended print options (3387351)
 ok - Add progress and success marker (3387345)
