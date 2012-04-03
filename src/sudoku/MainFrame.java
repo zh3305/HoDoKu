@@ -2643,6 +2643,12 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
      * @param sudoku
      */
     private void addSudokuToHistory(Sudoku2 sudoku) {
+        if (sudoku.getLevel() == null) {
+            //somethingwent wrong, dont add it to the history
+            //TODO
+            System.out.println("no level in history!");
+            return;
+        }
         List<String> history = Options.getInstance().getHistoryOfCreatedPuzzles();
         while (history.size() > Options.getInstance().getHistorySize() - 1) {
             history.remove(history.size() - 1);
