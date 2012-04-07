@@ -207,4 +207,21 @@ public class SudokuSinglesQueue implements Cloneable {
 //        System.out.println("  Queue cleared!");
         getIndex = putIndex = 0;
     }
+
+    /**
+     * Return a formatted String containing the contents of the queue.
+     * For debugging only.
+     * 
+     * @return 
+     */
+    @Override
+    public String toString() {
+        StringBuilder tmp = new StringBuilder();
+        tmp.append("Singles Queue START\r\n");
+        for (int i = getIndex; i < putIndex; i++) {
+            tmp.append("   ").append(indices[i]).append("/").append(values[i]).append("\r\n");
+        }
+        tmp.append("Singles Queue END\r\n");
+        return tmp.toString();
+    }
 }

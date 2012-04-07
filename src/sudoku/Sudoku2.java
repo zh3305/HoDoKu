@@ -1716,8 +1716,10 @@ public class Sudoku2 implements Cloneable {
                     if (newFree == 1) {
                         addHiddenSingle(CONSTRAINTS[index][i], value);
                     } else if (newFree == 0) {
-                        // puzzle invalid
-                        return false;
+                        // can happen, if the candidate was invalid;
+                        // invalid candidates produce an entry in the HS queue
+                        // that has to be deleted again (BUG 3515379)
+                        hsQueue.deleteHiddenSingle(CONSTRAINTS[index][i], value);
                     }
                 }
             }
@@ -2626,5 +2628,17 @@ public class Sudoku2 implements Cloneable {
         }
         // rebuild internal data
         rebuildInternalData();
+    }
+    
+    /**
+     * Print the contents of the singles queues to stdout. For debugging
+     * only.
+     * 
+     */
+    public void printSinglesQueues() {
+        System.out.println("Naked Singles:\r\n");
+        System.out.println(nsQueue);
+        System.out.println("Hidden Singles:\r\n");
+        System.out.println(hsQueue);
     }
 }
