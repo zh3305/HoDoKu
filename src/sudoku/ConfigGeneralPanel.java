@@ -18,6 +18,7 @@
  */
 package sudoku;
 
+import generator.BackgroundGeneratorThread;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -874,11 +875,26 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
     
     public void okPressed() {
         // levels[0] = INCOMPLETE
+        int[] oldScores = new int[levels.length];
+        for (int i = 1; i < levels.length; i++) {
+            oldScores[i] = levels[i].getMaxScore();
+        }
         levels[1].setMaxScore(Integer.parseInt(easyTextField.getText()));
         levels[2].setMaxScore(Integer.parseInt(mediumTextField.getText()));
         levels[3].setMaxScore(Integer.parseInt(hardTextField.getText()));
         levels[4].setMaxScore(Integer.parseInt(unfairTextField.getText()));
         Options.getInstance().setDifficultyLevels(Options.getInstance().copyDifficultyLevels(levels));
+        // now check, if the scores have changed
+        boolean scoresChanged = false;
+        for (int i = 1; i < levels.length; i++) {
+            if (levels[i].getMaxScore() != oldScores[i]) {
+                scoresChanged = true;
+                break;
+            }
+        }
+        if (scoresChanged) {
+            BackgroundGeneratorThread.getInstance().resetAll();
+        }
         
         boolean oldUseDefaultFontSize = Options.getInstance().isUseDefaultFontSize();
         Options.getInstance().setUseDefaultFontSize(defaultSizeCheckBox.isSelected());

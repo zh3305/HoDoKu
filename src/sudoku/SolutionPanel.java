@@ -537,17 +537,15 @@ private void tabPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//
         stepForegroundColors.add(tmpIndex, actStepForegroundColors);
         for (int i = 0; i < actSteps.size(); i++) {
             //data[i] = steps.get(i).toString(1);
-            // TODO
-            System.out.println("setStepsInList(): " + actSteps.get(i));
+//            System.out.println("setStepsInList(): " + actSteps.get(i));
             data[i] = actSteps.get(i).toString(2);
-            // TODO
-            System.out.println("setStepsInList(): " + data[i]);
-            System.out.println("   type: " + actSteps.get(i).getType());
-            System.out.println("   config: " + SolutionType.getStepConfig(actSteps.get(i).getType()));
-            System.out.println("   level: " + SolutionType.getStepConfig(actSteps.get(i).getType()).getLevel());
-            System.out.println("   level2: " + Options.getInstance().getDifficultyLevels()[SolutionType.getStepConfig(actSteps.get(i).getType()).getLevel()]);
-            System.out.println("   background: " + Options.getInstance().getDifficultyLevels()[SolutionType.getStepConfig(actSteps.get(i).getType()).getLevel()].getBackgroundColor());
-            System.out.println("   foreground: " + Options.getInstance().getDifficultyLevels()[SolutionType.getStepConfig(actSteps.get(i).getType()).getLevel()].getForegroundColor());
+//            System.out.println("setStepsInList(): " + data[i]);
+//            System.out.println("   type: " + actSteps.get(i).getType());
+//            System.out.println("   config: " + SolutionType.getStepConfig(actSteps.get(i).getType()));
+//            System.out.println("   level: " + SolutionType.getStepConfig(actSteps.get(i).getType()).getLevel());
+//            System.out.println("   level2: " + Options.getInstance().getDifficultyLevels()[SolutionType.getStepConfig(actSteps.get(i).getType()).getLevel()]);
+//            System.out.println("   background: " + Options.getInstance().getDifficultyLevels()[SolutionType.getStepConfig(actSteps.get(i).getType()).getLevel()].getBackgroundColor());
+//            System.out.println("   foreground: " + Options.getInstance().getDifficultyLevels()[SolutionType.getStepConfig(actSteps.get(i).getType()).getLevel()].getForegroundColor());
             actStepBackgroundColors[i] = Options.getInstance().getDifficultyLevels()[SolutionType.getStepConfig(actSteps.get(i).getType()).getLevel()].getBackgroundColor();
             actStepForegroundColors[i] = Options.getInstance().getDifficultyLevels()[SolutionType.getStepConfig(actSteps.get(i).getType()).getLevel()].getForegroundColor();
         }
