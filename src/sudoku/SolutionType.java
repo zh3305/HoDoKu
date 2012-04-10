@@ -296,9 +296,10 @@ public enum SolutionType {
      * @return The StepConfig appropriate for type
      */
     public static StepConfig getStepConfig(SolutionType type) {
-        if (type == SolutionType.LOCKED_CANDIDATES_1 || type == SolutionType.LOCKED_CANDIDATES_2) {
-            type = SolutionType.LOCKED_CANDIDATES;
-        }
+        // Split Locked Candidates in two
+//        if (type == SolutionType.LOCKED_CANDIDATES_1 || type == SolutionType.LOCKED_CANDIDATES_2) {
+//            type = SolutionType.LOCKED_CANDIDATES;
+//        }
         if (type == SolutionType.CONTINUOUS_NICE_LOOP || type == SolutionType.DISCONTINUOUS_NICE_LOOP ||
                 type == SolutionType.AIC) {
             type = SolutionType.NICE_LOOP;

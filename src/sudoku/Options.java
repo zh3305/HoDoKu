@@ -66,7 +66,8 @@ public final class Options {
         new StepConfig(300, SolutionType.HIDDEN_SINGLE, DifficultyType.EASY.ordinal(), SolutionCategory.SINGLES, 14, 0, true, true, 300, true, false),
         new StepConfig(1000, SolutionType.LOCKED_PAIR, DifficultyType.MEDIUM.ordinal(), SolutionCategory.INTERSECTIONS, 40, 0, true, true, 1000, true, false),
         new StepConfig(1100, SolutionType.LOCKED_TRIPLE, DifficultyType.MEDIUM.ordinal(), SolutionCategory.INTERSECTIONS, 60, 0, true, true, 1100, true, false),
-        new StepConfig(1200, SolutionType.LOCKED_CANDIDATES, DifficultyType.MEDIUM.ordinal(), SolutionCategory.INTERSECTIONS, 50, 0, true, true, 1200, true, false),
+//        new StepConfig(1200, SolutionType.LOCKED_CANDIDATES, DifficultyType.MEDIUM.ordinal(), SolutionCategory.INTERSECTIONS, 50, 0, true, true, 1200, true, false),
+        new StepConfig(1200, SolutionType.LOCKED_CANDIDATES_1, DifficultyType.MEDIUM.ordinal(), SolutionCategory.INTERSECTIONS, 50, 0, true, true, 1200, true, false),
         new StepConfig(1300, SolutionType.NAKED_PAIR, DifficultyType.MEDIUM.ordinal(), SolutionCategory.SUBSETS, 60, 0, true, true, 1300, true, false),
         new StepConfig(1400, SolutionType.NAKED_TRIPLE, DifficultyType.MEDIUM.ordinal(), SolutionCategory.SUBSETS, 80, 0, true, true, 1400, true, false),
         new StepConfig(1500, SolutionType.HIDDEN_PAIR, DifficultyType.MEDIUM.ordinal(), SolutionCategory.SUBSETS, 70, 0, true, true, 1500, true, false),
@@ -149,7 +150,8 @@ public final class Options {
         new StepConfig(5330, SolutionType.SIMPLE_COLORS, DifficultyType.HARD.ordinal(), SolutionCategory.COLORING, 150, 0, true, true, 5330, false, false),
         new StepConfig(5360, SolutionType.MULTI_COLORS, DifficultyType.HARD.ordinal(), SolutionCategory.COLORING, 200, 0, true, true, 5360, false, false),
         new StepConfig(8450, SolutionType.KRAKEN_FISH, DifficultyType.EXTREME.ordinal(), SolutionCategory.LAST_RESORT, 500, 0, false, false, 8450, false, false),
-        new StepConfig(3120, SolutionType.TURBOT_FISH, DifficultyType.HARD.ordinal(), SolutionCategory.SINGLE_DIGIT_PATTERNS, 120, 0, true, true, 3120, false, false)
+        new StepConfig(3120, SolutionType.TURBOT_FISH, DifficultyType.HARD.ordinal(), SolutionCategory.SINGLE_DIGIT_PATTERNS, 120, 0, true, true, 3120, false, false),
+        new StepConfig(1210, SolutionType.LOCKED_CANDIDATES_2, DifficultyType.MEDIUM.ordinal(), SolutionCategory.INTERSECTIONS, 50, 0, true, true, 1210, true, false)
     };
     // nicht sortierte steps mit allen Änderungen -> wird so in *.cfg-File geschrieben
     private StepConfig[] orgSolverSteps = null;

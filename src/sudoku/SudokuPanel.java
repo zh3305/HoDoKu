@@ -3282,6 +3282,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
      * @return
      */
     private boolean isHiddenSingle(int candidate, int line, int col) {
+        sudoku.rebuildInternalData();
         SudokuStepFinder finder = SudokuSolverFactory.getDefaultSolverInstance().getStepFinder();
         List<SolutionStep> steps = finder.findAllHiddenSingles(sudoku);
         for (SolutionStep act : steps) {
