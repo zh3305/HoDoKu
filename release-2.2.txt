@@ -58,6 +58,7 @@ Bugs fixed:
   - #3515379: Filter sets Invalid Candidate/Value
   - #3516396: Filters and Hidden Singles
   - #3514464: Changing maximum scores doesnt reset pregen puzzles
+  - #3516415: Background generation request cancels generation
 
 
 Version 2.1.3 (2012-01-19)

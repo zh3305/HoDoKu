@@ -50,8 +50,7 @@ import sudoku.StepConfig;
  */
 public class BackgroundGeneratorThread implements Runnable {
     /** Debug flag */
-    //TODO
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     /** The singleton instance */
     private static BackgroundGeneratorThread instance = null;
     /** the actual creator */
@@ -313,6 +312,10 @@ public class BackgroundGeneratorThread implements Runnable {
                     String puzzle = generator.generate(level, mode);
                     if (puzzle == null) {
                         //couldnt create one -> stop for now
+                        // BUG: dont give up just now!
+                        if (DEBUG) {
+                            System.out.println("couldnt find suitable puzzles, retrying!");
+                        }
                         break;
                     }
                     // store it
@@ -325,7 +328,7 @@ public class BackgroundGeneratorThread implements Runnable {
                     mode = null;
                 }
                 if (DEBUG) {
-                    System.out.println("Done!");
+                    System.out.println("Done (level = " + level + ", isInterrupted() = " + thread.isInterrupted() + ")!");
                 }
             } catch (InterruptedException ex) {
                 thread.interrupt();

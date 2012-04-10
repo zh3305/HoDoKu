@@ -93,6 +93,7 @@ public class BackgroundGenerator {
         Sudoku2 sudoku = null;
         SudokuGenerator creator = null; 
         SudokuSolver solver = null;
+        setAnz(0);
         if (dlg == null) {
             // get any instance
             solver = SudokuSolverFactory.getInstance();
