@@ -19,9 +19,11 @@
 
 package solver;
 
-import sudoku.*;
 import java.util.ArrayList;
 import java.util.List;
+import sudoku.SolutionStep;
+import sudoku.Sudoku2;
+import sudoku.SudokuSet;
 
 /**
  *
@@ -43,6 +45,8 @@ public class GroupNode {
     
     /**
      * Creates a new instance of GroupNode
+     * @param cand
+     * @param indices  
      */
     public GroupNode(int cand, SudokuSet indices) {
         this.cand = cand;
@@ -81,6 +85,8 @@ public class GroupNode {
      *   - check if they have a candidate left
      *   - if so, check if an intersection of line/col and a block contains
      *     more than one candidate; if yes -> group node found
+     * @param finder
+     * @return  
      */
     public static List<GroupNode> getGroupNodes(SudokuStepFinder finder) {
         List<GroupNode> groupNodes = new ArrayList<GroupNode>();

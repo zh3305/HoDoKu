@@ -140,7 +140,11 @@ public class Chain implements Cloneable {
     public Chain() {
     }
 
-    /** Create ans initialize a new chain. */
+    /** Create ans initialize a new chain.
+     * @param start
+     * @param end
+     * @param chain  
+     */
     public Chain(int start, int end, int[] chain) {
         this.start = start;
         this.end = end;

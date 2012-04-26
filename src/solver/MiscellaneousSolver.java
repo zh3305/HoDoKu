@@ -103,7 +103,10 @@ public class MiscellaneousSolver extends AbstractSolver {
     /** For temporary calculations */
     private SudokuSet tmpSet = new SudokuSet();
 
-    /** Creates a new instance of MiscellaneousSolver */
+    /** 
+     * Creates a new instance of MiscellaneousSolver
+     * @param finder 
+     */
     public MiscellaneousSolver(SudokuStepFinder finder) {
         super(finder);
         for (int i = 0; i < stack1.length; i++) {

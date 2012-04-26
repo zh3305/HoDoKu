@@ -76,6 +76,7 @@ public class ExtendedPrintProgressDialog extends javax.swing.JDialog implements 
     private static final double[] PPP = new double[] {
        1.0, 2.0, 4.0, 2.0, 4.0 
     };
+    private static final long serialVersionUID = 1L;
     /** The background thread, that is used to do the necessary calculations. */
     private Thread thread;
     /** The textfields with the number of puzzles for all sections */
@@ -133,7 +134,19 @@ public class ExtendedPrintProgressDialog extends javax.swing.JDialog implements 
     /** Job aborted in a booklet print */
     private boolean jobAborted = false;
 
-    /** Creates new form ExtendedPrintProgressDialog */
+    /** Creates new form ExtendedPrintProgressDialog
+     * @param parent
+     * @param modal
+     * @param numberTextFields
+     * @param levelComboBoxes
+     * @param modeComboBoxes
+     * @param candCheckBoxes
+     * @param layout
+     * @param printRating
+     * @param allBlack
+     * @param printBooklet
+     * @param manualDuplex  
+     */
     public ExtendedPrintProgressDialog(java.awt.Frame parent, boolean modal,
             JTextField[] numberTextFields, JComboBox[] levelComboBoxes,
             JComboBox[] modeComboBoxes, JCheckBox[] candCheckBoxes,
@@ -144,6 +157,7 @@ public class ExtendedPrintProgressDialog extends javax.swing.JDialog implements 
         getRootPane().setDefaultButton(cancelButton);
         KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, false);
         Action escapeAction = new AbstractAction() {
+            private static final long serialVersionUID = 1L;
             @Override
             public void actionPerformed(ActionEvent e) {
                 setVisible( false );

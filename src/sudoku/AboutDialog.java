@@ -30,8 +30,12 @@ import javax.swing.KeyStroke;
  * @author  hobiwan
  */
 public class AboutDialog extends javax.swing.JDialog {
+    private static final long serialVersionUID = 1L;
 
-    /** Creates new form AboutDialog */
+    /** Creates new form AboutDialog
+     * @param parent
+     * @param modal  
+     */
     public AboutDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -41,6 +45,7 @@ public class AboutDialog extends javax.swing.JDialog {
 
         KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, false);
         Action escapeAction = new AbstractAction() {
+            private static final long serialVersionUID = 1L;
             @Override
             public void actionPerformed(ActionEvent e) {
                 setVisible( false );

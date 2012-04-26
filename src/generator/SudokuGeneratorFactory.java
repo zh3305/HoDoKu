@@ -93,7 +93,9 @@ public class SudokuGeneratorFactory {
      */
     private SudokuGeneratorFactory() { /* class cannot be instantiated! */ }
 
-    /** Get the {@link #defaultGenerator}. */
+    /** Get the {@link #defaultGenerator}.
+     * @return 
+     */
     public static SudokuGenerator getDefaultGeneratorInstance() {
         return defaultGenerator;
     }

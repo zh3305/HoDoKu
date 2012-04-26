@@ -281,7 +281,7 @@ public class Sudoku2 implements Cloneable {
         for (int i = 1; i < CAND_FROM_MASK.length; i++) {
             short j = -1;
             while ((i & MASKS[++j]) == 0);
-            CAND_FROM_MASK[i] = (short) (j);
+            CAND_FROM_MASK[i] = j;
         }
     }
 
@@ -303,14 +303,14 @@ public class Sudoku2 implements Cloneable {
         Sudoku2 newSudoku = null;
         try {
             newSudoku = (Sudoku2) super.clone();
-            newSudoku.cells = (short[]) cells.clone();
-            newSudoku.userCells = (short[]) userCells.clone();
-            newSudoku.values = (int[]) values.clone();
-            newSudoku.solution = (int[]) solution.clone();
-            newSudoku.fixed = (boolean[]) fixed.clone();
+            newSudoku.cells = cells.clone();
+            newSudoku.userCells = userCells.clone();
+            newSudoku.values = values.clone();
+            newSudoku.solution = solution.clone();
+            newSudoku.fixed = fixed.clone();
             newSudoku.free = new byte[free.length][];
             for (int i = 0; i < free.length; i++) {
-                newSudoku.free[i] = (byte[]) free[i].clone();
+                newSudoku.free[i] = free[i].clone();
             }
             if (initialState != null) {
                 // no copy needed, is immutable!
@@ -1011,7 +1011,6 @@ public class Sudoku2 implements Cloneable {
      * {@link #unsolvedCellsAnz} is checked and {@link #free} and
      * the queues for Naked and Hidden Singles are rebuilt.
      *
-     * @return
      */
     public void rebuildInternalData() {
         // delete the queues
@@ -1425,7 +1424,8 @@ public class Sudoku2 implements Cloneable {
     /**
      * Returns the value set in <code>index</code> or 0, if
      * the cell is not set.
-     * @param index
+     * @param line 
+     * @param col 
      * @return
      */
     public int getValue(int line, int col) {
@@ -1445,7 +1445,8 @@ public class Sudoku2 implements Cloneable {
     /**
      * Returns the solution set in <code>index</code> or 0, if
      * the solution is unknown.
-     * @param index
+     * @param line 
+     * @param col 
      * @return
      */
     public int getSolution(int line, int col) {
@@ -1567,7 +1568,7 @@ public class Sudoku2 implements Cloneable {
     /**
      * Checks, if a given set of candidates is present in the cell
      * @param index
-     * @param value
+     * @param candidates 
      * @param user
      * @return
      */
@@ -1597,7 +1598,7 @@ public class Sudoku2 implements Cloneable {
 
     /**
      * Returns a string containing all candidates for the given cell.
-     * @param type
+     * @param index 
      * @return
      */
     public String getCandidateString(int index) {
@@ -1816,6 +1817,7 @@ public class Sudoku2 implements Cloneable {
      * @param index
      * @param value
      * @param isFixed
+     * @param user 
      * @return <code>false</code>, if the puzzle becomes invalid by setting a cell
      */
     public boolean setCell(int index, int value, boolean isFixed, boolean user) {
@@ -2154,7 +2156,8 @@ public class Sudoku2 implements Cloneable {
      * returns them in <code>buddies</code>. groupedBuddies is used
      * for calculations.
      *
-     * @param cells The cells for which the buddies should be calculated
+     * @param mask1 
+     * @param mask2 
      * @param buddiesOut The resulting buddies
      */
     public static void getBuddies(long mask1, long mask2, SudokuSetBase buddiesOut) {

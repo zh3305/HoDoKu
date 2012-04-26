@@ -195,6 +195,8 @@ public final class SudokuSetShort implements Cloneable, Serializable {
 
     /**
      * gibt ((this & set) == this) zurück
+     * @param set
+     * @return  
      */
     public boolean andEquals(SudokuSetShort set) {
         short m = (short) (mask & set.mask);
@@ -203,6 +205,8 @@ public final class SudokuSetShort implements Cloneable, Serializable {
 
     /**
      * gibt ((this & ~set) == this) zurück
+     * @param set
+     * @return  
      */
     public boolean andNotEquals(SudokuSetShort set) {
         short m = (short) (mask & ~set.mask);
@@ -211,6 +215,8 @@ public final class SudokuSetShort implements Cloneable, Serializable {
 
     /**
      * gibt ((this & set) == 0) zurück
+     * @param set
+     * @return  
      */
     public boolean andEmpty(SudokuSetShort set) {
         short m = (short) (mask & set.mask);

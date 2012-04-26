@@ -44,6 +44,7 @@ import javax.swing.UIManager;
  * @author  hobiwan
  */
 public class ConfigGeneralPanel extends javax.swing.JPanel {
+    private static final long serialVersionUID = 1L;
 
     private JButton[] levelFGButtons;
     private JButton[] levelBGButtons;
@@ -70,6 +71,7 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
 
     /**
      * Creates new form ConfigGeneralPanel
+     * @param mainFrame 
      */
     public ConfigGeneralPanel(Component mainFrame) {
         this.mainFrame = mainFrame;
@@ -968,7 +970,7 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
         Options.getInstance().setShowSudokuSolved(showSudokuSolvedCheckBox.isSelected());
         Options.getInstance().setDeleteCursorDisplay(deleteCursorAfterCheckBox.isSelected());
         String number = deleteCursorAfterMsTextField.getText();
-        if (number == null || number.equals("")) {
+        if (number == null || number.isEmpty()) {
             number = "0";
         }
         Options.getInstance().setDeleteCursorDisplayLength(Integer.parseInt(number));

@@ -75,7 +75,9 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
     public SolutionStep() {
     }
 
-    /** Creates a new instance of SolutionStep */
+    /** Creates a new instance of SolutionStep
+     * @param type 
+     */
     public SolutionStep(SolutionType type) {
         setType(type);
     }
@@ -106,8 +108,8 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
             newStep.alses = (List<AlsInSolutionStep>) ((ArrayList) alses).clone();
             newStep.colorCandidates = (SortedMap<Integer, Integer>) ((TreeMap) getColorCandidates()).clone();
             newStep.restrictedCommons = (List<RestrictedCommon>) ((ArrayList) restrictedCommons).clone();
-            newStep.potentialCannibalisticEliminations = (SudokuSet) potentialCannibalisticEliminations.clone();
-            newStep.potentialEliminations = (SudokuSet) potentialEliminations.clone();
+            newStep.potentialCannibalisticEliminations = potentialCannibalisticEliminations.clone();
+            newStep.potentialEliminations = potentialEliminations.clone();
         } catch (CloneNotSupportedException ex) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error while cloning", ex);
         }
@@ -149,6 +151,11 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
      * Chain wird als Forcing Chain ausgegeben. Wenn weakLinks nicht gesetzt ist,
      * werden die weak links übersprungen. Der erste und der letzte Link werden
      * immer ausgegeben (egal ob strong oder weak und auch innerhalb von Klammern)
+     * @param chain
+     * @param start
+     * @param end
+     * @param weakLinks
+     * @return  
      */
     public StringBuffer getForcingChainString(int[] chain, int start, int end, boolean weakLinks) {
         StringBuffer tmp = new StringBuffer();
@@ -680,6 +687,8 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
      * art == 0: Kurzform
      * art == 1: Mittellang
      * art == 2: ausführlich
+     * @param art
+     * @return  
      */
     public String toString(int art) {
         String str = null;
@@ -1805,6 +1814,9 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
      * Doesnt work: if a step has more than one chain, a cell can be part of more than one
      * ALS; index has to be checked against a chain (only when a certain chain is requested,
      * which means if chainIndex != -1)!
+     * @param index
+     * @param chainIndex
+     * @return  
      */
     public int getAlsIndex(int index, int chainIndex) {
         if (chainIndex == -1) {
@@ -1830,6 +1842,8 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
 
     /**
      * Adds a new colored candidate
+     * @param index
+     * @param color  
      */
     public void addColorCandidate(int index, int color) {
         getColorCandidates().put(index, color);
@@ -1847,6 +1861,8 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
      *
      * Es wurde absichtlich nicht equals() überschrieben, weil es ein ganz anderer
      * Gleichheitsbegriff ist.
+     * @param s
+     * @return  
      */
     public boolean isEqual(SolutionStep s) {
         if (!isEquivalent(s)) {
@@ -1876,6 +1892,8 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
      *    Exception: both steps are fish
      * 20120112: All steps handled specially in compareTo() are
      *    to be treated as equivalent!
+     * @param s
+     * @return  
      */
     public boolean isEquivalent(SolutionStep s) {
         // Special steps first:
@@ -1902,6 +1920,8 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
     /**
      * Der aktuelle Step ist eun Substep des übergebenen Steps, wenn alle
      * zu löschenden Kandidaten auch im übergebenen Step enthalten sind.
+     * @param s
+     * @return  
      */
     public boolean isSubStep(SolutionStep s) {
         if (s.candidatesToDelete.size() < candidatesToDelete.size()) {
@@ -2280,7 +2300,7 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
     }
 
     /**
-     * @param progressScoreSingles the progressScoreSingles to set
+     * @param progressScoreSinglesOnly 
      */
     public void setProgressScoreSinglesOnly(int progressScoreSinglesOnly) {
         this.progressScoreSinglesOnly = progressScoreSinglesOnly;

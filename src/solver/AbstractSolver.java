@@ -56,7 +56,9 @@ public abstract class AbstractSolver {
 
     private SudokuSet tmpSet = new SudokuSet();
     
-    /** Creates a new instance of AbstractSolver */
+    /** Creates a new instance of AbstractSolver
+     * @param finder 
+     */
     public AbstractSolver(SudokuStepFinder finder) {
         this.finder = finder;
     }

@@ -38,6 +38,7 @@ public class ConfigStepPanel extends javax.swing.JPanel {
         java.util.ResourceBundle.getBundle("intl/ConfigStepPanel").getString("ConfigStepPanel.fishDisplayTypeLabel.text2"),
         java.util.ResourceBundle.getBundle("intl/ConfigStepPanel").getString("ConfigStepPanel.fishDisplayTypeLabel.text3")
     };
+    private static final long serialVersionUID = 1L;
     
     /** Creates new form ConfigStepPanel */
     public ConfigStepPanel() {

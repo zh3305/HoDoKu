@@ -28,6 +28,7 @@ import javax.swing.JPanel;
  * @author  hobiwan
  */
 public class SplitPanel extends javax.swing.JPanel {
+    private static final long serialVersionUID = 1L;
     private SudokuPanel sudokuPanel;
     private Component rightComponent;
     
@@ -80,6 +81,8 @@ public class SplitPanel extends javax.swing.JPanel {
      * (preferredSize wird auf aktuelle Größe gesetzt, die Breite kann dabei
      * verringert werden, wenn Platz ist).<br />
      * Die aufrufende Funktion ruft anschließend pack() auf.
+     * @param sudokuPanel
+     * @param rightPanel  
      */
     public void setSplitPane(SudokuPanel sudokuPanel, JPanel rightPanel) {
         Dimension preferredSize;

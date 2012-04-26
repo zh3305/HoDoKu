@@ -36,10 +36,14 @@ import javax.swing.UIManager;
  * @author  hobiwan
  */
 public class ConfigTrainingDialog extends javax.swing.JDialog {
+    private static final long serialVersionUID = 1L;
     private ConfigTrainigPanel myConfigTrainingPanel;
     private boolean okPressed;
 
-    /** Creates new form ConfigDialog */
+    /** Creates new form ConfigDialog
+     * @param parent
+     * @param modal  
+     */
     public ConfigTrainingDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -50,6 +54,7 @@ public class ConfigTrainingDialog extends javax.swing.JDialog {
 
         KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, false);
         Action escapeAction = new AbstractAction() {
+            private static final long serialVersionUID = 1L;
             @Override
             public void actionPerformed(ActionEvent e) {
                 setVisible( false );

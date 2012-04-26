@@ -168,7 +168,7 @@ public class SudokuGenerator {
 
     /**
      * Solves a sudoku given by a 81 int array.
-     * @param sudokuString
+     * @param cellValues 
      */
     public void solve(int[] cellValues) {
 //        System.out.println("start solving " + getSolutionAsString(cellValues));
@@ -319,7 +319,6 @@ public class SudokuGenerator {
      * 
      * This method is used by the {@link BackgroundGenerator}.
      * 
-     * @param level
      * @param symmetric
      * @return
      */
@@ -548,8 +547,11 @@ public class SudokuGenerator {
             // get the next position to try
             int i = rand.nextInt(81);
             do {
-                if( i < 80 ) i++;
-                else i = 0;
+                if( i < 80 ) {
+                    i++;
+                } else {
+                    i = 0;
+                }
             } while (used[i]);
             used[i] = true;
             usedCount--;

@@ -28,7 +28,9 @@ import sudoku.SolutionType;
  */
 public class GiveUpSolver extends AbstractSolver {
     
-    /** Creates a new instance of GiveUpSolver */
+    /** Creates a new instance of GiveUpSolver
+     * @param finder 
+     */
     public GiveUpSolver(SudokuStepFinder finder) {
         super(finder);
     }

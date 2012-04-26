@@ -31,10 +31,14 @@ import javax.swing.KeyStroke;
  * @author  hobiwan
  */
 public class FishChooseCandidatesDialog extends javax.swing.JDialog {
+    private static final long serialVersionUID = 1L;
     private JCheckBox[] checkBoxes;
     private String fishCandidates;
 
-    /** Creates new form FishChooseCandidatesDialog */
+    /** Creates new form FishChooseCandidatesDialog
+     * @param parent
+     * @param fishCandidates  
+     */
     public FishChooseCandidatesDialog(java.awt.Frame parent, String fishCandidates) {
         super(parent, true);
         initComponents();
@@ -52,6 +56,7 @@ public class FishChooseCandidatesDialog extends javax.swing.JDialog {
 
         KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, false);
         Action escapeAction = new AbstractAction() {
+            private static final long serialVersionUID = 1L;
             @Override
             public void actionPerformed(ActionEvent e) {
                 setVisible( false );

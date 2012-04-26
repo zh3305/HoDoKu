@@ -306,6 +306,7 @@ public class Main {
 
     /**
      * @param args the command line arguments
+     * @throws IOException  
      */
     public static void main(String[] args) throws IOException {
         // Logging: Standardm‰ﬂig auf die Console, ins Logfile nur Exceptions
@@ -397,7 +398,7 @@ public class Main {
         }
 
         // set locale
-        if (!Options.getInstance().getLanguage().equals("")) {
+        if (!Options.getInstance().getLanguage().isEmpty()) {
             Locale.setDefault(new Locale(Options.getInstance().getLanguage()));
         }
         // adjust names of difficulty levels
@@ -478,7 +479,7 @@ public class Main {
                             String[] tmpOptionsArray = getOptionsFromStringBuilder(tmpOptions);
                             for (int j = 0; j < tmpOptionsArray.length; j++) {
                                 String opt = tmpOptionsArray[j].trim();
-                                if (!opt.equals("")) {
+                                if (!opt.isEmpty()) {
                                     options.add(tmpOptionsArray[j]);
                                 }
                             }
@@ -502,7 +503,7 @@ public class Main {
                         String[] tmpOptionsArray = getOptionsFromStringBuilder(tmpOptions);
                         for (int j = 0; j < tmpOptionsArray.length; j++) {
                             String opt = tmpOptionsArray[j].trim();
-                            if (!opt.equals("")) {
+                            if (!opt.isEmpty()) {
                                 options.add(tmpOptionsArray[j]);
                             }
                         }

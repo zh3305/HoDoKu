@@ -44,6 +44,7 @@ public class SudokuSet extends SudokuSetBase implements Cloneable {
     private static int[][] possibleValues = new int[256][8];
     // und zu jeder Zahl die Länge des Arrays
     public static int[] anzValues = new int[256];
+    private static final long serialVersionUID = 1L;
     
     private int[] values = null;
     private int anz = 0;
@@ -121,6 +122,9 @@ public class SudokuSet extends SudokuSetBase implements Cloneable {
     /**
      * prüft, ob alle Elemente in values im Set s1 vorkommen.
      * Alle nicht enthaltenen Kandidaten werden in das SudokuSet fins geschrieben
+     * @param s1
+     * @param fins
+     * @return  
      */
     public boolean isCovered(SudokuSet s1, SudokuSet fins) {
         long m1 = ~s1.mask1 & mask1;

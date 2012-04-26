@@ -32,6 +32,7 @@ import javax.swing.UIManager;
  * @author  hobiwan
  */
 public class ConfigColorPanel extends javax.swing.JPanel {
+    private static final long serialVersionUID = 1L;
 
     private JButton[] buttons = null;
     private Color[] colors = null;

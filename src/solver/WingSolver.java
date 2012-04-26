@@ -53,7 +53,9 @@ public class WingSolver extends AbstractSolver {
     /** The second index of the strong link for W-Wings */
     private int wIndex2 = -1;
     
-    /** Creates a new instance of WingSolver */
+    /** Creates a new instance of WingSolver
+     * @param finder 
+     */
     public WingSolver(SudokuStepFinder finder) {
         super(finder);
     }

@@ -20,7 +20,6 @@
 package solver;
 
 import generator.SudokuGeneratorFactory;
-import java.util.Arrays;
 import sudoku.SolutionStep;
 import sudoku.SolutionType;
 import sudoku.Sudoku2;
@@ -32,7 +31,9 @@ import sudoku.SudokuSet;
  */
 public class BruteForceSolver extends AbstractSolver {
     
-    /** Creates a new instance of BruteForceSolver */
+    /** Creates a new instance of BruteForceSolver
+     * @param finder 
+     */
     public BruteForceSolver(SudokuStepFinder finder) {
         super(finder);
     }

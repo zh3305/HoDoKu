@@ -273,7 +273,6 @@ public class SudokuStepFinder {
 
     /**
      * Executes a step.
-     * @param sudoku
      * @param step
      */
     public void doStep(SolutionStep step) {
@@ -582,6 +581,9 @@ public class SudokuStepFinder {
     /**
      * Finds all ALS-XZ, ALS-XY and ALS-Chains.
      * @param newSudoku
+     * @param doXz 
+     * @param doXy 
+     * @param doChain 
      * @return
      */
     public List<SolutionStep> getAllAlses(Sudoku2 newSudoku, boolean doXz, boolean doXy, boolean doChain) {

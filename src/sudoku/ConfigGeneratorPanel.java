@@ -42,6 +42,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author hobiwan
  */
 public class ConfigGeneratorPanel extends javax.swing.JPanel {
+    private static final long serialVersionUID = 1L;
     /** The standard background color of the textfield {@link #numberOfGivensTextField}. */
     private Color okColor;
     /** The background color for "error" (a light red) */

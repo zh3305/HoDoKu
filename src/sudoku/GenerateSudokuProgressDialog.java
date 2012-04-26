@@ -37,6 +37,7 @@ import javax.swing.KeyStroke;
  * @author  hobiwan
  */
 public class GenerateSudokuProgressDialog extends javax.swing.JDialog implements Runnable {
+    private static final long serialVersionUID = 1L;
     /** The newly generated sudoku. */
     private Sudoku2 sudoku;
     /** The background thread, that is used to run the {@link #generator}. */
@@ -52,7 +53,8 @@ public class GenerateSudokuProgressDialog extends javax.swing.JDialog implements
      * Creates a new instance.
      * @param parent
      * @param modal
-     * @param level 
+     * @param level
+     * @param mode  
      */
     public GenerateSudokuProgressDialog(java.awt.Frame parent, boolean modal, DifficultyLevel level,
             GameMode mode) {
@@ -61,6 +63,7 @@ public class GenerateSudokuProgressDialog extends javax.swing.JDialog implements
         getRootPane().setDefaultButton(cancelButton);
         KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, false);
         Action escapeAction = new AbstractAction() {
+            private static final long serialVersionUID = 1L;
             @Override
             public void actionPerformed(ActionEvent e) {
                 setVisible( false );

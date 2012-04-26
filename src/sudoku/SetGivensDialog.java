@@ -33,10 +33,14 @@ import javax.swing.KeyStroke;
  * @author hobiwan
  */
 public class SetGivensDialog extends javax.swing.JDialog {
+    private static final long serialVersionUID = 1L;
     private boolean okPressed = false;
     private String givens = null;
 
-    /** Creates new form SetGivensDialog */
+    /** Creates new form SetGivensDialog
+     * @param parent
+     * @param modal  
+     */
     public SetGivensDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -45,6 +49,7 @@ public class SetGivensDialog extends javax.swing.JDialog {
 
         KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, false);
         Action escapeAction = new AbstractAction() {
+            private static final long serialVersionUID = 1L;
             @Override
             public void actionPerformed(ActionEvent e) {
                 setVisible( false );

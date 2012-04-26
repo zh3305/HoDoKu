@@ -35,6 +35,7 @@ import javax.swing.KeyStroke;
  * @author hobiwan
  */
 public class WriteAsPNGDialog extends javax.swing.JDialog {
+    private static final long serialVersionUID = 1L;
     private File bildFile;
     private int auflösung;
     private double bildSize;
@@ -43,7 +44,14 @@ public class WriteAsPNGDialog extends javax.swing.JDialog {
     
     private JRadioButton[] einheiten;
     
-    /** Creates new form WriteAsPNGDialog */
+    /** Creates new form WriteAsPNGDialog
+     * @param parent
+     * @param modal
+     * @param bildFile
+     * @param size
+     * @param auflösung
+     * @param einheit  
+     */
     public WriteAsPNGDialog(java.awt.Frame parent, boolean modal, File bildFile,
             double size, int auflösung, int einheit) {
         super(parent, modal);
@@ -70,6 +78,7 @@ public class WriteAsPNGDialog extends javax.swing.JDialog {
         getRootPane().setDefaultButton(bildSpeichernButton);
         KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, false);
         Action escapeAction = new AbstractAction() {
+            private static final long serialVersionUID = 1L;
             @Override
             public void actionPerformed(ActionEvent e) {
                 setVisible( false );
@@ -308,12 +317,15 @@ public class WriteAsPNGDialog extends javax.swing.JDialog {
         chooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
             @Override
             public boolean accept(File f) {
-                if (f.isDirectory()) return true;
+                if (f.isDirectory()) {
+                    return true;
+                }
                 String[] parts = f.getName().split("\\.");
                 if (parts.length > 1) {
                     String ext = parts[parts.length - 1];
-                    if (ext.equalsIgnoreCase("png"))
+                    if (ext.equalsIgnoreCase("png")) {
                         return true;
+                    }
                 }
                 return false;
             }

@@ -95,6 +95,7 @@ import solver.SudokuStepFinder;
  * @author  hobiwan
  */
 public class SudokuPanel extends javax.swing.JPanel implements Printable {
+    private static final long serialVersionUID = 1L;
     // Konstante
 
     private boolean colorKu = Options.getInstance().isShowColorKu();
@@ -202,7 +203,9 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
     /** The AWT double click speed (depends on system settings) */
     private long doubleClickSpeed = -1;
 
-    /** Creates new form SudokuPanel */
+    /** Creates new form SudokuPanel
+     * @param mf 
+     */
     public SudokuPanel(MainFrame mf) {
         mainFrame = mf;
         sudoku = new Sudoku2();
@@ -962,7 +965,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
         state.setSudoku(sudoku);
         state.setStep(step);
         if (copy) {
-            state.setSudoku((Sudoku2) sudoku.clone());
+            state.setSudoku(sudoku.clone());
             if (step != null) {
                 state.setStep((SolutionStep) step.clone());
             }
@@ -1955,7 +1958,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
         if (width > 1000) {
             strokeWidth *= 1.5f;
         }
-        int strokeWidthInt = (int) Math.round(strokeWidth / 2);
+        int strokeWidthInt = Math.round(strokeWidth / 2);
         delta = DELTA;
         deltaRand = DELTA_RAND;
         if (deltaRand < strokeWidthInt) {
@@ -3190,7 +3193,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
 
         if (i.hasNext()) //there's at least one ImageWriter, just use the first one
         {
-            ImageWriter imageWriter = (ImageWriter) i.next();
+            ImageWriter imageWriter = i.next();
             //get the param
             ImageWriteParam param = imageWriter.getDefaultWriteParam();
             ImageTypeSpecifier its = new ImageTypeSpecifier(bi.getColorModel(), bi.getSampleModel());

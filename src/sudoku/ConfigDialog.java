@@ -36,6 +36,7 @@ import javax.swing.UIManager;
  * @author  hobiwan
  */
 public class ConfigDialog extends javax.swing.JDialog {
+    private static final long serialVersionUID = 1L;
     private ConfigSolverPanel myConfigSolverPanel;
     private ConfigGeneralPanel myGeneralPanel;
     private ConfigStepPanel myConfigStepPanel;
@@ -45,7 +46,11 @@ public class ConfigDialog extends javax.swing.JDialog {
     private ConfigTrainigPanel myConfigTrainingPanel;
     private ConfigGeneratorPanel myConfigGeneratorPanel;
 
-    /** Creates new form ConfigDialog */
+    /** Creates new form ConfigDialog
+     * @param parent
+     * @param modal
+     * @param tabIndex  
+     */
     public ConfigDialog(java.awt.Frame parent, boolean modal, int tabIndex) {
         super(parent, modal);
         initComponents();
@@ -54,6 +59,7 @@ public class ConfigDialog extends javax.swing.JDialog {
 
         KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, false);
         Action escapeAction = new AbstractAction() {
+            private static final long serialVersionUID = 1L;
             @Override
             public void actionPerformed(ActionEvent e) {
                 setVisible( false );

@@ -71,6 +71,7 @@ public class CellZoomPanel extends javax.swing.JPanel {
     private static final String[] NUMBERS = new String[]{
         "1", "2", "3", "4", "5", "6", "7", "8", "9"
     };
+    private static final long serialVersionUID = 1L;
     private MainFrame mainFrame;
     private Font buttonFont = null;
     private Font iconFont = null;
@@ -87,7 +88,9 @@ public class CellZoomPanel extends javax.swing.JPanel {
     private SudokuPanel sudokuPanel;
     private int colorImageHeight = -1;
 
-    /** Creates new form CellZoomPanel */
+    /** Creates new form CellZoomPanel
+     * @param mainFrame 
+     */
     public CellZoomPanel(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
 
@@ -1028,11 +1031,11 @@ public class CellZoomPanel extends javax.swing.JPanel {
             colorPanelHeight -= (120 - buttonPanelHeight);
             buttonPanelHeight = 120;
         }
-        int colorPanelGesWidth = (int) (colorPanelHeight * 4);
+        int colorPanelGesWidth = colorPanelHeight * 4;
         if (colorPanelGesWidth > width - 2 * X_OFFSET) {
             colorPanelHeight = (int) ((width - 2 * X_OFFSET) / 4.5);
         }
-        colorPanelGesWidth = (int) (colorPanelHeight * 4);
+        colorPanelGesWidth = colorPanelHeight * 4;
         colorImageHeight = colorPanelHeight * 2 / 3;
 
         // ok, do the layout
@@ -1073,7 +1076,7 @@ public class CellZoomPanel extends javax.swing.JPanel {
         cellColorPanel.setSize(colorPanelHeight * 2 / 3, colorPanelHeight * 2 / 3);
         cellColorPanel.setLocation(cpx, y + colorPanelHeight / 6);
         cellColorPanel.doLayout();
-        chooseCellColorPanel.setSize((int) (3 * colorPanelHeight), colorPanelHeight);
+        chooseCellColorPanel.setSize((3 * colorPanelHeight), colorPanelHeight);
         chooseCellColorPanel.setLocation(cpx + colorPanelHeight, y);
         chooseCellColorPanel.doLayout();
         y += colorPanelHeight;
@@ -1087,7 +1090,7 @@ public class CellZoomPanel extends javax.swing.JPanel {
         candidateColorPanel.setSize(colorPanelHeight * 2 / 3, colorPanelHeight * 2 / 3);
         candidateColorPanel.setLocation(cpx, y + colorPanelHeight / 6);
         candidateColorPanel.doLayout();
-        chooseCandidateColorPanel.setSize((int) (3 * colorPanelHeight), colorPanelHeight);
+        chooseCandidateColorPanel.setSize((3 * colorPanelHeight), colorPanelHeight);
         chooseCandidateColorPanel.setLocation(cpx + colorPanelHeight, y);
         chooseCandidateColorPanel.doLayout();
 
@@ -1125,6 +1128,7 @@ public class CellZoomPanel extends javax.swing.JPanel {
      * @param aktColor
      * @param index
      * @param colorCellOrCandidate
+     * @param singleCell 
      * @param coloredCells
      * @param coloredCandidates
      */

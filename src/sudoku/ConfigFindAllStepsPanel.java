@@ -34,6 +34,7 @@ public class ConfigFindAllStepsPanel extends javax.swing.JPanel {
     private static String[] finSizes = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
     private static String[] fishTypes = {"Basic", "Basic/Franken", "Basic/Franken/Mutant"};
     private static String[] alsChainLengths = {"4", "5", "6", "7"};
+    private static final long serialVersionUID = 1L;
     private StepConfig[] steps;
     private String fishCandidates;
     private String krakenFishCandidates;

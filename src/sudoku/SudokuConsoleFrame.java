@@ -33,6 +33,7 @@ import java.util.logging.StreamHandler;
  * @author  hobiwan
  */
 public class SudokuConsoleFrame extends javax.swing.JFrame {
+    private static final long serialVersionUID = 1L;
     private StreamHandler consoleHandler = null;
 
     /** Creates new form SudokuConsoleFrame */

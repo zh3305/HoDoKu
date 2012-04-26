@@ -62,7 +62,9 @@ public class SimpleSolver extends AbstractSolver {
     /** Bitmaps for indices per candidate in one unit. */
     private short[] ipcMask = new short[10];
 
-    /** Creates a new instance of SimpleSolver */
+    /** Creates a new instance of SimpleSolver
+     * @param finder 
+     */
     protected SimpleSolver(SudokuStepFinder finder) {
         super(finder);
         steps = new ArrayList<SolutionStep>();
@@ -262,10 +264,18 @@ public class SimpleSolver extends AbstractSolver {
         if (cachedSteps.size() > 0 && cachedStepsNumber == finder.getStepNumber()) {
             // steps were cached and are still valid -> try them
             SolutionType type = SolutionType.NAKED_PAIR;
-            if (anz == 2 && lockedOnly) type = SolutionType.LOCKED_PAIR;
-            if (anz == 3 && ! lockedOnly) type = SolutionType.NAKED_TRIPLE;
-            if (anz == 3 && lockedOnly) type = SolutionType.LOCKED_TRIPLE;
-            if (anz == 4) type = SolutionType.NAKED_QUADRUPLE;
+            if (anz == 2 && lockedOnly) {
+                type = SolutionType.LOCKED_PAIR;
+            }
+            if (anz == 3 && ! lockedOnly) {
+                type = SolutionType.NAKED_TRIPLE;
+            }
+            if (anz == 3 && lockedOnly) {
+                type = SolutionType.LOCKED_TRIPLE;
+            }
+            if (anz == 4) {
+                type = SolutionType.NAKED_QUADRUPLE;
+            }
             for (SolutionStep step : cachedSteps) {
                 if (step.getType() == type) {
                     return step;
@@ -278,9 +288,13 @@ public class SimpleSolver extends AbstractSolver {
         cachedStepsNumber = finder.getStepNumber();
         // try blocks first, guarantees to find all Locked Subsets in one method call
         SolutionStep step = findNakedXleInEntity(Sudoku2.BLOCKS, anz, lockedOnly, ! lockedOnly, true);
-        if (step != null || lockedOnly) return step;
+        if (step != null || lockedOnly) {
+            return step;
+        }
         step = findNakedXleInEntity(Sudoku2.LINES, anz, lockedOnly, ! lockedOnly, true);
-        if (step != null) return step;
+        if (step != null) {
+            return step;
+        }
         step = findNakedXleInEntity(Sudoku2.COLS, anz, lockedOnly, ! lockedOnly, true);
         return step;
     }
@@ -508,9 +522,13 @@ public class SimpleSolver extends AbstractSolver {
     private SolutionStep findHiddenXle(int anz) {
         SudokuUtil.clearStepList(steps);
         SolutionStep step = findHiddenXleInEntity(2 * Sudoku2.UNITS, Sudoku2.BLOCKS, anz, true);
-        if (step != null) return step;
+        if (step != null) {
+            return step;
+        }
         step = findHiddenXleInEntity(0, Sudoku2.LINES, anz, true);
-        if (step != null) return step;
+        if (step != null) {
+            return step;
+        }
         step = findHiddenXleInEntity(Sudoku2.UNITS, Sudoku2.COLS, anz, true);
         return step;
     }

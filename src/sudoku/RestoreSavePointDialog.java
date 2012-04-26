@@ -46,6 +46,7 @@ import javax.swing.table.TableColumnModel;
  * @author hobiwan
  */
 public class RestoreSavePointDialog extends javax.swing.JDialog {
+    private static final long serialVersionUID = 1L;
 
     private MainFrame mainFrame;
     private List<GuiState> savePoints;
@@ -56,7 +57,10 @@ public class RestoreSavePointDialog extends javax.swing.JDialog {
     };
     private boolean okPressed = false;
 
-    /** Creates new form HistoryDialog */
+    /** Creates new form HistoryDialog
+     * @param parent
+     * @param modal  
+     */
     public RestoreSavePointDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -70,6 +74,7 @@ public class RestoreSavePointDialog extends javax.swing.JDialog {
 
         KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, false);
         Action escapeAction = new AbstractAction() {
+            private static final long serialVersionUID = 1L;
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -201,6 +206,7 @@ public class RestoreSavePointDialog extends javax.swing.JDialog {
             data[i][1] = state.getName();
         }
         savePointTable.setModel(new DefaultTableModel(data, columnNames) {
+            private static final long serialVersionUID = 1L;
 
             @Override
             public boolean isCellEditable(int row, int col) {
@@ -275,6 +281,7 @@ public class RestoreSavePointDialog extends javax.swing.JDialog {
     }
 
     class MyTableCellRenderer extends DefaultTableCellRenderer {
+        private static final long serialVersionUID = 1L;
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value,

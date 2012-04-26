@@ -37,12 +37,17 @@ import javax.swing.KeyStroke;
  */
 public class FindAllStepsProgressDialog extends javax.swing.JDialog {
     private static final int MAX_STEPS = 27;
+    private static final long serialVersionUID = 1L;
     
     private List<SolutionStep> steps;
     private Thread thread;
     private long ticks;
     
-    /** Creates new form FindAllStepsProgressDialog */
+    /** Creates new form FindAllStepsProgressDialog
+     * @param parent
+     * @param modal
+     * @param sudoku  
+     */
     public FindAllStepsProgressDialog(java.awt.Frame parent, boolean modal, Sudoku2 sudoku) {
         super(parent, modal);
         
@@ -50,6 +55,7 @@ public class FindAllStepsProgressDialog extends javax.swing.JDialog {
         getRootPane().setDefaultButton(abbrechenButton);
         KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, false);
         Action escapeAction = new AbstractAction() {
+            private static final long serialVersionUID = 1L;
             @Override
             public void actionPerformed(ActionEvent e) {
                 abbrechenButtonActionPerformed(null);

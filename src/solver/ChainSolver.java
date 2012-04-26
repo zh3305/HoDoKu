@@ -19,7 +19,6 @@
 
 package solver;
 
-import sudoku.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -28,6 +27,14 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import sudoku.Candidate;
+import sudoku.Chain;
+import sudoku.Options;
+import sudoku.SolutionStep;
+import sudoku.SolutionType;
+import sudoku.Sudoku2;
+import sudoku.SudokuSet;
+import sudoku.SudokuSetBase;
 
 /**
  * Searches for simple chains: Remote Pairs, Turbot Fish, X-Chain and XY-Chain.
@@ -147,7 +154,9 @@ public class ChainSolver extends AbstractSolver {
         chainComparator = new ChainComparator();
     }
 
-    /** Creates a new instance of ChainSolver */
+    /** Creates a new instance of ChainSolver
+     * @param finder 
+     */
     public ChainSolver(SudokuStepFinder finder) {
         super(finder);
         for (int i = 0; i < stack.length; i++) {

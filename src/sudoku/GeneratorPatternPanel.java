@@ -31,6 +31,7 @@ import java.awt.event.MouseEvent;
  * @author hobiwan
  */
 public class GeneratorPatternPanel extends javax.swing.JPanel {
+    private static final long serialVersionUID = 1L;
     /** Default width of the border around the grid. */
     private int borderWidth = 5;
     /** The number of rows/columns in the sudoku. */

@@ -53,7 +53,9 @@ public class TemplateSolver extends AbstractSolver {
     private List<SolutionStep> steps; // gefundene Lösungsschritte
     private SolutionStep globalStep = new SolutionStep(SolutionType.HIDDEN_SINGLE);
     
-    /** Creates a new instance of TemplateSolver */
+    /** Creates a new instance of TemplateSolver
+     * @param finder 
+     */
     public TemplateSolver(SudokuStepFinder finder) {
         super(finder);
     }

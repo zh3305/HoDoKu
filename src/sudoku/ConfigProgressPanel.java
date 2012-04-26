@@ -43,6 +43,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+
 /**
  *
  * @author  hobiwan
@@ -68,6 +69,7 @@ implements ListDragAndDropChange {
         new SSTSConfig(SolutionType.XY_WING, 2500),
         new SSTSConfig(SolutionType.HIDDEN_QUADRUPLE, 2600)
     };
+    private static final long serialVersionUID = 1L;
 
     private StepConfig[] steps;
     private DefaultListModel model;
@@ -80,6 +82,7 @@ implements ListDragAndDropChange {
     private boolean listView = false; // absichtlich verkehrt, damit stepList gesetzt wird
 
     /** Creates new form ConfigSolverPanel */
+    @SuppressWarnings("ResultOfObjectAllocationIgnored")
     public ConfigProgressPanel() {
         initComponents();
         
@@ -673,6 +676,7 @@ implements ListDragAndDropChange {
     }
     
     class CheckBoxRenderer extends JCheckBox implements ListCellRenderer {
+        private static final long serialVersionUID = 1L;
         private boolean isTargetCell;
         private int index;
         
@@ -748,7 +752,6 @@ implements ListDragAndDropChange {
     // End of variables declaration//GEN-END:variables
     
 }
-
 class SSTSConfig {
     SolutionType type;
     int progressIndex;

@@ -166,7 +166,9 @@ public class TablingSolver extends AbstractSolver {
     private boolean initialized = false;
     private long lastUsed = -1;
 
-    /** Creates a new instance of TablingSolver */
+    /** Creates a new instance of TablingSolver
+     * @param finder 
+     */
     public TablingSolver(SudokuStepFinder finder) {
         super(finder);
 

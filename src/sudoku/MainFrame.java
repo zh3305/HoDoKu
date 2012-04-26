@@ -94,6 +94,7 @@ import solver.SudokuSolverFactory;
  * @author  hobiwan
  */
 public class MainFrame extends javax.swing.JFrame implements FlavorListener {
+    private static final long serialVersionUID = 1L;
 
     class ColorKuIcon implements Icon {
 
@@ -225,8 +226,10 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         BUILD = "Build " + dummy[1];
     }
 
-    /** Creates new form MainFrame */
-    @SuppressWarnings("LeakingThisInConstructor")
+    /** Creates new form MainFrame
+     * @param launchFile 
+     */
+    @SuppressWarnings({"LeakingThisInConstructor"})
     public MainFrame(String launchFile) {
         // if a configuration file is given at the command line, load it before anything
         // else is done (helps restoring the screen layout)
@@ -443,6 +446,9 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         setToggleButton(null, false);
         prepareToggleButtonsForColorku(Options.getInstance().isShowColorKu());
 
+        // initialize colorKuMeniItem
+        showColorKuMenuItem.setSelected(Options.getInstance().isShowColorKu());
+        
         // Caret-Listener for display of Forcing Chains
         hinweisTextArea.addCaretListener(caretListener);
 
@@ -584,7 +590,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         showCandidatesMenuItem = new javax.swing.JCheckBoxMenuItem();
         showWrongValuesMenuItem = new javax.swing.JCheckBoxMenuItem();
         showDeviationsMenuItem = new javax.swing.JCheckBoxMenuItem();
-        showColorKuMenuItem = new javax.swing.JMenuItem();
+        showColorKuMenuItem = new javax.swing.JCheckBoxMenuItem();
         jSeparator10 = new javax.swing.JSeparator();
         colorCellsMenuItem = new javax.swing.JRadioButtonMenuItem();
         colorCandidatesMenuItem = new javax.swing.JRadioButtonMenuItem();
@@ -1440,6 +1446,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         optionenMenu.add(showDeviationsMenuItem);
 
         showColorKuMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.showColorKuMenuItem.mnemonic").charAt(0));
+        showColorKuMenuItem.setSelected(true);
         showColorKuMenuItem.setText(bundle.getString("MainFrame.showColorKuMenuItem.text")); // NOI18N
         showColorKuMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2108,7 +2115,6 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
     }//GEN-LAST:event_showWrongValuesMenuItemActionPerformed
 
     private void showCandidatesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showCandidatesMenuItemActionPerformed
-        System.out.println("sel0:" + showCandidatesMenuItem.isSelected());
         if (!showCandidatesMenuItem.isSelected()) {
             // just set the flag and be done!
             sudokuPanel.setShowCandidates(showCandidatesMenuItem.isSelected());
@@ -2144,7 +2150,6 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
                     sudokuPanel.getSolver().setSudoku(sudokuPanel.getSudoku());
                     sudokuPanel.checkProgress();
                     sudokuPanel.setShowCandidates(showCandidatesMenuItem.isSelected());
-                    System.out.println("sel:" + showCandidatesMenuItem.isSelected());
                 } else {
                     // revert all changes
                     sudokuPanel.getSudoku().rebuildAllCandidates();
@@ -2659,7 +2664,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
                 }
             }
             String techniques = Options.getInstance().getTrainingStepsString(true);
-            if (techniques.equals("")) {
+            if (techniques.isEmpty()) {
                 JOptionPane.showMessageDialog(this,
                         ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.notechniques"),
                         ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.error"), JOptionPane.ERROR_MESSAGE);
@@ -2698,7 +2703,6 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
      * and selected step), solutions and summary. Used by {@link #loadFromFile(boolean)} and
      * {@link RestoreSavePointDialog}.<br>
      * @param state
-     * @param ignoreSolutions
      */
     public void setState(GuiState state) {
         state.set();
@@ -3259,6 +3263,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
      * @param path
      * @param fileType 0 .. options, 1 .. sudoku from hsol, 8 .. sudoku from text file
      */
+    @SuppressWarnings("CallToThreadDumpStack")
     private void loadFromFile(String path, int fileType) {
         try {
             sudokuFileName = path;
@@ -4053,7 +4058,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
     private javax.swing.JMenuItem seiteEinrichtenMenuItem;
     private javax.swing.JMenuItem setGivensMenuItem;
     private javax.swing.JCheckBoxMenuItem showCandidatesMenuItem;
-    private javax.swing.JMenuItem showColorKuMenuItem;
+    private javax.swing.JCheckBoxMenuItem showColorKuMenuItem;
     private javax.swing.JCheckBoxMenuItem showDeviationsMenuItem;
     private javax.swing.JCheckBoxMenuItem showHintButtonsCheckBoxMenuItem;
     private javax.swing.JCheckBoxMenuItem showHintPanelMenuItem;

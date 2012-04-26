@@ -40,6 +40,7 @@ import solver.SudokuSolverFactory;
  * @author  hobiwan
  */
 public class SolutionPanel extends javax.swing.JPanel {
+    private static final long serialVersionUID = 1L;
 
     private MainFrame mainFrame;
     private SudokuSolver solver;
@@ -58,7 +59,9 @@ public class SolutionPanel extends javax.swing.JPanel {
     private Color[] actStepForegroundColors;
     private boolean inTabbedPaneRemoveAll = false;
 
-    /** Creates new form SolutionPanel */
+    /** Creates new form SolutionPanel
+     * @param mainFrame 
+     */
     public SolutionPanel(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
 
@@ -738,6 +741,7 @@ private void tabPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//
     }
     
     class SolutionListRenderer extends JLabel implements ListCellRenderer {
+        private static final long serialVersionUID = 1L;
         
         public SolutionListRenderer() {
             setOpaque(true);

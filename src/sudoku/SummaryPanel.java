@@ -36,10 +36,13 @@ import solver.SudokuSolver;
  * @author  hobiwan
  */
 public class SummaryPanel extends javax.swing.JPanel {
+    private static final long serialVersionUID = 1L;
     private MainFrame mainFrame;
     private SummaryTableModel model;
     
-    /** Creates new form SummaryPanel */
+    /** Creates new form SummaryPanel
+     * @param mainFrame 
+     */
     public SummaryPanel(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
         
@@ -123,6 +126,7 @@ public class SummaryPanel extends javax.swing.JPanel {
     }
     
     class SummaryTableModel extends AbstractTableModel {
+        private static final long serialVersionUID = 1L;
         String[] columnNames = { java.util.ResourceBundle.getBundle("intl/SummaryPanel").getString("SummaryPanel.count"), java.util.ResourceBundle.getBundle("intl/SummaryPanel").getString("SummaryPanel.technique"), java.util.ResourceBundle.getBundle("intl/SummaryPanel").getString("SummaryPanel.score") };
         Object[][] content = { { "", "", "", null } };
         
@@ -176,6 +180,7 @@ public class SummaryPanel extends javax.swing.JPanel {
     }
     
     class SummaryTableRenderer extends JLabel implements TableCellRenderer {
+        private static final long serialVersionUID = 1L;
         private Color backColor;
         
         public SummaryTableRenderer() {

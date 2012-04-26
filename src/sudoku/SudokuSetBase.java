@@ -89,9 +89,9 @@ public class SudokuSetBase implements Cloneable, Serializable {
     public void add(int value) {
         // Bitmap
         if (value >= 64) {
-            mask2 = mask2 | MASKS[value - 64];
+            mask2 |= MASKS[value - 64];
         } else {
-            mask1 = mask1 | MASKS[value];
+            mask1 |= MASKS[value];
         }
         initialized = false;
     }
@@ -99,9 +99,9 @@ public class SudokuSetBase implements Cloneable, Serializable {
     public void remove(int value) {
         // Bitmap
         if (value >= 64) {
-            mask2 = mask2 & ~MASKS[value - 64];
+            mask2 &= ~MASKS[value - 64];
         } else {
-            mask1 = mask1 & ~MASKS[value];
+            mask1 &= ~MASKS[value];
         }
         initialized = false;
     }
@@ -187,19 +187,22 @@ public class SudokuSetBase implements Cloneable, Serializable {
 
     /**
      * Wenn this und b sich überschneiden, werden die gemeinsamen Kandidaten in c hinzugefügt
+     * @param b
+     * @param c
+     * @return  
      */
     public boolean intersects(SudokuSetBase b, SudokuSetBase c) {
         boolean result = false;
         long mask = mask1 & b.mask1;
         if (mask != 0) {
             result = true;
-            c.mask1 = c.mask1 | mask;
+            c.mask1 |= mask;
             c.initialized = false;
         }
         mask = mask2 & b.mask2;
         if (mask != 0) {
             result = true;
-            c.mask2 = c.mask2 | mask;
+            c.mask2 |= mask;
             c.initialized = false;
         }
         return result;
@@ -207,37 +210,41 @@ public class SudokuSetBase implements Cloneable, Serializable {
 
     /**
      * Gibt true zurück, wenn b zur Gänze in this enthalten ist
+     * @param b
+     * @return  
      */
     public boolean contains(SudokuSetBase b) {
         return (b.mask1 & ~mask1) == 0 && (b.mask2 & ~mask2) == 0;
     }
 
     public void or(SudokuSetBase b) {
-        mask1 = mask1 | b.mask1;
-        mask2 = mask2 | b.mask2;
+        mask1 |= b.mask1;
+        mask2 |= b.mask2;
         initialized = false;
     }
 
     public void orNot(SudokuSetBase set) {
-        mask1 = mask1 | ~set.mask1;
-        mask2 = mask2 | ~set.mask2;
+        mask1 |= ~set.mask1;
+        mask2 |= ~set.mask2;
         initialized = false;
     }
 
     public void and(SudokuSetBase set) {
-        mask1 = mask1 & set.mask1;
-        mask2 = mask2 & set.mask2;
+        mask1 &= set.mask1;
+        mask2 &= set.mask2;
         initialized = false;
     }
 
     public void andNot(SudokuSetBase set) {
-        mask1 = mask1 & ~set.mask1;
-        mask2 = mask2 & ~set.mask2;
+        mask1 &= ~set.mask1;
+        mask2 &= ~set.mask2;
         initialized = false;
     }
 
     /**
      * gibt ((this & set) == this) zurück
+     * @param set
+     * @return  
      */
     public boolean andEquals(SudokuSetBase set) {
         long m1 = mask1 & set.mask1;
@@ -247,6 +254,8 @@ public class SudokuSetBase implements Cloneable, Serializable {
 
     /**
      * gibt ((this & ~set) == this) zurück
+     * @param set
+     * @return  
      */
     public boolean andNotEquals(SudokuSetBase set) {
         long m1 = mask1 & ~set.mask1;
@@ -256,6 +265,8 @@ public class SudokuSetBase implements Cloneable, Serializable {
 
     /**
      * gibt ((this & set) == 0) zurück
+     * @param set
+     * @return  
      */
     public boolean andEmpty(SudokuSetBase set) {
         long m1 = mask1 & set.mask1;
@@ -304,6 +315,7 @@ public class SudokuSetBase implements Cloneable, Serializable {
      * Calculates this = (s1 & s2) and returns this.isEmpty()
      * @param s1
      * @param s2
+     * @return  
      */
     public static boolean andEmpty(SudokuSetBase s1, SudokuSetBase s2) {
         return ((s1.mask1 & s2.mask1) == 0 && (s1.mask2 & s2.mask2) == 0);

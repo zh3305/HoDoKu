@@ -30,11 +30,14 @@ import java.awt.RenderingHints;
  * @author hobiwan
  */
 public class StatusColorPanel extends javax.swing.JPanel {
+    private static final long serialVersionUID = 1L;
     private boolean reset = false;
     private Font font = null;
     private int index = -1;
     
-    /** Creates new form StatusColorPanel */
+    /** Creates new form StatusColorPanel
+     * @param index 
+     */
     public StatusColorPanel(int index) {
         this.index = index;
         if (index == -2) {

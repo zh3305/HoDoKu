@@ -284,7 +284,9 @@ public class FishSolver extends AbstractSolver {
     /** number of tries for finned fish per number of fins */
     private int[] anzFins = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-    /** Creates a new instance of FishSolver */
+    /** Creates a new instance of FishSolver
+     * @param finder 
+     */
     protected FishSolver(SudokuStepFinder finder) {
         super(finder);
         for (int i = 0; i < baseStack.length; i++) {
@@ -1698,6 +1700,7 @@ public class FishSolver extends AbstractSolver {
         System.out.println(tmpBuffer);
     }
 
+    @SuppressWarnings("CallToThreadDumpStack")
     public static void main(String[] args) {
 //        Sudoku2 sudoku = new Sudoku2();
 //        // X-Wing: 3 r37 c34 => r1c34,r4c34,r5c34,r6c34,r9c4<>3

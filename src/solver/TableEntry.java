@@ -369,11 +369,21 @@ public class TableEntry {
             long index4, long index5) {
         // lets try without sorting
         long tmp = 0;
-        if (index1 > 4096) index1 = 0;
-        if (index2 > 1023) index2 = 0;
-        if (index3 > 1023) index3 = 0;
-        if (index4 > 1023) index4 = 0;
-        if (index5 > 1023) index5 = 0;
+        if (index1 > 4096) {
+            index1 = 0;
+        }
+        if (index2 > 1023) {
+            index2 = 0;
+        }
+        if (index3 > 1023) {
+            index3 = 0;
+        }
+        if (index4 > 1023) {
+            index4 = 0;
+        }
+        if (index5 > 1023) {
+            index5 = 0;
+        }
         if (index2 > index1) {
             tmp = index2;
             index2 = index1;
@@ -569,6 +579,8 @@ public class TableEntry {
     
     /**
      * Retrieves the node type of the entry <code>entries[index]</code>.
+     * @param index
+     * @return  
      */
     public int getNodeType(int index) {
         return Chain.getSNodeType(entries[index]);

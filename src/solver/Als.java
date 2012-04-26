@@ -51,7 +51,6 @@ public class Als {
      * has been called.
      * @param indices
      * @param candidates
-     * @param sudoku
      */
     public Als(SudokuSet indices, short candidates) {
         this.indices = new SudokuSet(indices);
@@ -62,7 +61,6 @@ public class Als {
      * Computes all the additional fields; is done after the initial search
      * to optimize finding doubles.
      * 
-     * @param sudoku
      * @param finder
      */
     public void computeFields(SudokuStepFinder finder) {

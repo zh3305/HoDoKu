@@ -99,7 +99,9 @@ public class SudokuSolverFactory {
      */
     private SudokuSolverFactory() { /* class cannot be instantiated! */ }
 
-    /** Get the {@link #defaultSolver}. */
+    /** Get the {@link #defaultSolver}.
+     * @return 
+     */
     public static SudokuSolver getDefaultSolverInstance() {
         return defaultSolver;
     }

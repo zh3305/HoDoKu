@@ -47,6 +47,7 @@ import javax.swing.tree.TreeSelectionModel;
  */
 public class ConfigSolverPanel extends javax.swing.JPanel
 implements ListDragAndDropChange {
+    private static final long serialVersionUID = 1L;
     private StepConfig[] steps;
     private DefaultListModel model;
     private int dropIndex = -1;
@@ -539,6 +540,7 @@ implements ListDragAndDropChange {
     }
     
     class CheckBoxRenderer extends JCheckBox implements ListCellRenderer {
+        private static final long serialVersionUID = 1L;
         private boolean isTargetCell;
         private int index;
         
@@ -634,7 +636,7 @@ implements ListDragAndDropChange {
         }
         private void update(DocumentEvent e) {
             String txt = scoreTextField.getText().trim();
-            if (txt == null || txt.equals("")) {
+            if (txt == null || txt.isEmpty()) {
                 return;
             }
             StepConfig conf = (StepConfig)stepList.getSelectedValue();

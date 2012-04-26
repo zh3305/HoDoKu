@@ -217,7 +217,6 @@ public class SudokuUtil {
      * And we have to think of the possiblilty, that the class stored in {@link Options#laf} doesnt
      * exist at all, if the hcfg file is moved between platforms.<br><br>
      * 
-     * @return 
      */
     public static void setLookAndFeel() {
         // ok: start by getting the correct AND existing LaF class
@@ -225,7 +224,7 @@ public class SudokuUtil {
         boolean found = false;
         String className = Options.getInstance().getLaf();
         String oldClassName = className;
-        if (!className.equals("")) {
+        if (!className.isEmpty()) {
             String lafName = className.substring(className.lastIndexOf('.') + 1);
             for (int i = 0; i < lafs.length; i++) {
                 if (lafs[i].getClassName().equals(className)) {
@@ -296,7 +295,7 @@ public class SudokuUtil {
                 Enumeration<Object> keys = def.keys();
                 while (keys.hasMoreElements()) {
                     Object key = keys.nextElement();
-                    Font font = (Font) def.getFont(key);
+                    Font font = def.getFont(key);
                     if (font != null) {
                         if (font.getSize() != fontSize) {
 //                            System.out.println("Changing fontSize (2) from " + font.getSize() + " to " + fontSize);
@@ -322,7 +321,7 @@ public class SudokuUtil {
         Enumeration<Object> keys = def.keys();
         while (keys.hasMoreElements()) {
             Object key = keys.nextElement();
-            Font font = (Font) def.getFont(key);
+            Font font = def.getFont(key);
             if (font != null) {
                 items.put(key.toString(), font.getName() + "/" + font.getStyle() + "/" + font.getSize());
             }
@@ -423,7 +422,7 @@ public class SudokuUtil {
             if (cells[i].length() < maxLength) {
                 int anz = maxLength - cells[i].length();
                 for (int j = 0; j < anz; j++) {
-                    cells[i] = cells[i] + " ";
+                    cells[i] += " ";
                 }
             }
         }

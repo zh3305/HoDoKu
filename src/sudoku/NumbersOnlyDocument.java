@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with HoDoKu. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package sudoku;
 
 import java.awt.Toolkit;
@@ -29,19 +28,21 @@ import javax.swing.text.PlainDocument;
  * @author hobiwan
  */
 public class NumbersOnlyDocument extends PlainDocument {
-    
+
+    private static final long serialVersionUID = 1L;
+
     @Override
     public void insertString(int offs, String str, AttributeSet a)
-    throws BadLocationException {
-        
+            throws BadLocationException {
+
         char[] source = str.toCharArray();
         char[] result = new char[source.length];
         int j = 0;
-        
+
         for (int i = 0; i < result.length; i++) {
-            if (Character.isDigit(source[i]))
+            if (Character.isDigit(source[i])) {
                 result[j++] = source[i];
-            else {
+            } else {
                 Toolkit.getDefaultToolkit().beep();
                 //System.err.println("insertString: " + source[i]);
             }

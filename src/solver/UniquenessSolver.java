@@ -74,7 +74,9 @@ public class UniquenessSolver extends AbstractSolver {
     /** A flag that indicates if the last search was for ARs */
     private boolean lastSearchWasAR = false;
 
-    /** Creates a new instance of SimpleSolver */
+    /** Creates a new instance of SimpleSolver
+     * @param finder 
+     */
     public UniquenessSolver(SudokuStepFinder finder) {
         super(finder);
     }

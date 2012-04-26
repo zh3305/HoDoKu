@@ -108,7 +108,7 @@ public class SudokuSolver {
     /**
      * Tries to solve the sudoku using only singles.<br>
      * The internal variables are not changed
-     * @param sudoku
+     * @param newSudoku 
      * @return
      */
     public boolean solveSinglesOnly(Sudoku2 newSudoku) {
@@ -128,7 +128,8 @@ public class SudokuSolver {
     /**
      * Tries to solve the sudoku using only singles.<br>
      * The internal variables are not changed
-     * @param sudoku
+     * @param newSudoku 
+     * @param stepConfigs 
      * @return
      */
     public boolean solveWithSteps(Sudoku2 newSudoku, StepConfig[] stepConfigs) {
@@ -189,7 +190,7 @@ public class SudokuSolver {
      * @param rejectTooLowScore
      * @param dlg
      * @param singlesOnly
-     * @param stepConfig
+     * @param stepConfigs 
      * @param gameMode
      * @return
      */
@@ -284,7 +285,7 @@ public class SudokuSolver {
      * Calculates the progress scores of all steps in <code>steps</code>
      * (see {@link #getProgressScoreSingles(sudoku.Sudoku2, sudoku.SolutionStep) }).
      * @param tmpSudoku
-     * @param steps
+     * @param stepsTocheck 
      * @param dlg
      */
     public void getProgressScore(Sudoku2 tmpSudoku, List<SolutionStep> stepsTocheck, FindAllStepsProgressDialog dlg) {
@@ -300,7 +301,7 @@ public class SudokuSolver {
         boolean oldCheckTemplates = Options.getInstance().isCheckTemplates();
         Options.getInstance().setCheckTemplates(false);
         long nanos = System.nanoTime();
-        Sudoku2 workingSudoku = (Sudoku2) tmpSudoku.clone();
+        Sudoku2 workingSudoku = tmpSudoku.clone();
         for (int i = 0; i < stepsTocheck.size(); i++) {
             SolutionStep step = stepsTocheck.get(i);
             workingSudoku.set(tmpSudoku);
@@ -331,7 +332,7 @@ public class SudokuSolver {
      * defined as the number of singles the step unlocks in the sudoku, if
      * {@link Options#solverStepsProgress} is used.
      * @param tmpSudoku
-     * @param step
+     * @param orgStep  
      */
     public void getProgressScore(Sudoku2 tmpSudoku, SolutionStep orgStep) {
         Sudoku2 save = this.sudoku;
@@ -603,7 +604,7 @@ public class SudokuSolver {
      */
     public void getState(GuiState state, boolean copy) {
         if (copy) {
-            state.setAnzSteps((int[]) anzSteps.clone());
+            state.setAnzSteps(anzSteps.clone());
             state.setSteps((List<SolutionStep>) ((ArrayList)steps).clone());
         } else {
             state.setAnzSteps(anzSteps);

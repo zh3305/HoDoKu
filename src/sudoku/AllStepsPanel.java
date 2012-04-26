@@ -44,6 +44,7 @@ import javax.swing.tree.TreeSelectionModel;
  * @author  hobiwan
  */
 public final class AllStepsPanel extends javax.swing.JPanel implements TreeSelectionListener, Runnable {
+    private static final long serialVersionUID = 1L;
 
     private Sudoku2 sudoku;
     private MainFrame mainFrame;
@@ -51,7 +52,10 @@ public final class AllStepsPanel extends javax.swing.JPanel implements TreeSelec
     private List<SolutionStep> steps;
     private JToggleButton[] toggleButtons = null;
 
-    /** Creates new form AllStepsPanel */
+    /** Creates new form AllStepsPanel
+     * @param mainFrame
+     * @param sudoku  
+     */
     @SuppressWarnings("LeakingThisInConstructor")
     public AllStepsPanel(MainFrame mainFrame, Sudoku2 sudoku) {
         this.mainFrame = mainFrame;

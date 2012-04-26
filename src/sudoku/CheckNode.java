@@ -30,6 +30,7 @@ public class CheckNode extends DefaultMutableTreeNode {
     protected static final int NONE = 0;
     protected static final int HALF = 1;
     protected static final int FULL = 2;
+    private static final long serialVersionUID = 1L;
     private int selectionState;
     private StepConfig step;
     private boolean allSteps;

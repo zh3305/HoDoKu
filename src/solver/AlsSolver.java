@@ -112,7 +112,9 @@ public class AlsSolver extends AbstractSolver {
     /** Statistics: Total time. */
     private static long allNanos = 0;
 
-    /** Creates a new instance of AlsSolver */
+    /** Creates a new instance of AlsSolver
+     * @param finder 
+     */
     public AlsSolver(SudokuStepFinder finder) {
         super(finder);
         if (alsComparator == null) {

@@ -28,12 +28,17 @@ import solver.SudokuSolver;
  */
 public class SolverProgressDialog extends javax.swing.JDialog
         implements Runnable {
+    private static final long serialVersionUID = 1L;
 
     private SudokuSolver solver = null;
     private Thread thread = null;
     private boolean solved = false;
 
-    /** Creates new form SolverProgressDialog */
+    /** Creates new form SolverProgressDialog
+     * @param parent
+     * @param modal
+     * @param solver  
+     */
     public SolverProgressDialog(java.awt.Frame parent, boolean modal, SudokuSolver solver) {
         super(parent, modal);
         this.solver = solver;

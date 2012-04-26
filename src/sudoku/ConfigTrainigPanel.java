@@ -38,6 +38,7 @@ import javax.swing.tree.TreeSelectionModel;
  * @author  hobiwan
  */
 public class ConfigTrainigPanel extends javax.swing.JPanel {
+    private static final long serialVersionUID = 1L;
     private StepConfig[] steps;
     private DefaultListModel model;
     
@@ -360,6 +361,7 @@ public class ConfigTrainigPanel extends javax.swing.JPanel {
     }
     
     class CheckBoxRenderer extends JCheckBox implements ListCellRenderer {
+        private static final long serialVersionUID = 1L;
         
         public CheckBoxRenderer() {
         }

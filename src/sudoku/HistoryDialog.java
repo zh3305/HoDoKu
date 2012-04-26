@@ -47,6 +47,7 @@ import javax.swing.table.TableColumnModel;
  * @author hobiwan
  */
 public class HistoryDialog extends javax.swing.JDialog {
+    private static final long serialVersionUID = 1L;
     private MainFrame mainFrame;
     private String[][] data;
     private String[] puzzles;
@@ -60,7 +61,10 @@ public class HistoryDialog extends javax.swing.JDialog {
     private boolean okPressed = false;
     private boolean doubleClicked = false;
 
-    /** Creates new form HistoryDialog */
+    /** Creates new form HistoryDialog
+     * @param parent
+     * @param modal  
+     */
     public HistoryDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -75,6 +79,7 @@ public class HistoryDialog extends javax.swing.JDialog {
 
         KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, false);
         Action escapeAction = new AbstractAction() {
+            private static final long serialVersionUID = 1L;
             @Override
             public void actionPerformed(ActionEvent e) {
                 setVisible( false );
@@ -238,6 +243,7 @@ public class HistoryDialog extends javax.swing.JDialog {
             data[i][3] = parts[2];
         }
         historyTable.setModel(new DefaultTableModel(data, columnNames) {
+            private static final long serialVersionUID = 1L;
             @Override
             public boolean isCellEditable(int row, int col) {
                 return false;
@@ -323,6 +329,7 @@ public class HistoryDialog extends javax.swing.JDialog {
     }
 
     class MyTableCellRenderer extends DefaultTableCellRenderer {
+        private static final long serialVersionUID = 1L;
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value,
                 boolean isSelected, boolean hasFocus, int row, int column) {
