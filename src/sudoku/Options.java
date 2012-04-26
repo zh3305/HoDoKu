@@ -285,7 +285,7 @@ public final class Options {
     public static final boolean SHOW_CANDIDATES = true;    // alle Kandidaten anzeigen
     public static final boolean SHOW_WRONG_VALUES = true;  // Ungültige Zellen-/Kandidatenwerte anzeigen (Constraint-Verletzungen)
     public static final boolean SHOW_DEVIATIONS = true;    // Abweichungen von der richtigen Lösung anzeigen
-    private static boolean SHOW_COLORKU = false;	   // use colors instead of numbers
+    public static final boolean SHOW_COLORKU = false;	   // use colors instead of numbers
     public static final boolean INVALID_CELLS = false;     // show possible cells
     public static final boolean SAVE_WINDOW_LAYOUT = true; // save window layout at shutdown
     public static final boolean USE_SHIFT_FOR_REGION_SELECT = true; // use shift for selecting cells or toggeling candidates

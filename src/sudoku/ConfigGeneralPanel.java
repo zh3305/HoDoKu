@@ -154,7 +154,6 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
         showWrongValuesCheckBox = new javax.swing.JCheckBox();
         showDeviationsCheckBox = new javax.swing.JCheckBox();
         saveWindowLayoutCheckBox = new javax.swing.JCheckBox();
-        alternativeMouseModeCheckBox = new javax.swing.JCheckBox();
         localLabel = new javax.swing.JLabel();
         localComboBox = new javax.swing.JComboBox();
         lookAndFeelComboBox = new javax.swing.JComboBox();
@@ -162,6 +161,7 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
         defaultSizeCheckBox = new javax.swing.JCheckBox();
         fontSizeLabel = new javax.swing.JLabel();
         fontSizeTextField = new javax.swing.JTextField();
+        showColorKuCheckBox = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
         valuesLabel = new javax.swing.JLabel();
         candidatesLabel = new javax.swing.JLabel();
@@ -191,6 +191,7 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
         deleteCursorAfterMsTextField = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         toggleFilterAndOrCheckBox = new javax.swing.JCheckBox();
+        alternativeMouseModeCheckBox = new javax.swing.JCheckBox();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("intl/ConfigGeneralPanel"); // NOI18N
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("ConfigGeneralPanel.jPanel1.border.title"))); // NOI18N
@@ -455,11 +456,6 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
         saveWindowLayoutCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         saveWindowLayoutCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
-        alternativeMouseModeCheckBox.setMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigGeneralPanel").getString("ConfigGeneralPanel.alternativeMouseModeCheckBox.mnemonic").charAt(0));
-        alternativeMouseModeCheckBox.setText(bundle.getString("ConfigGeneralPanel.alternativeMouseModeCheckBox.text")); // NOI18N
-        alternativeMouseModeCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        alternativeMouseModeCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
-
         localLabel.setDisplayedMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigGeneralPanel").getString("ConfigGeneralPanel.localLabel.mnemonic").charAt(0));
         localLabel.setLabelFor(localComboBox);
         localLabel.setText(bundle.getString("ConfigGeneralPanel.localLabel.text")); // NOI18N
@@ -478,6 +474,10 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
         fontSizeLabel.setLabelFor(fontSizeTextField);
         fontSizeLabel.setText(bundle.getString("ConfigGeneralPanel.fontSizeLabel.text")); // NOI18N
 
+        showColorKuCheckBox.setMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigGeneralPanel").getString("ConfigGeneralPanel.colorKuCheckBox.mnemonic").charAt(0));
+        showColorKuCheckBox.setText(bundle.getString("ConfigGeneralPanel.showColorKuCheckBox.text")); // NOI18N
+        showColorKuCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -485,30 +485,29 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(defaultSizeCheckBox)
-                        .addContainerGap())
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(localLabel)
-                            .addComponent(lookAndFeelLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(localComboBox, 0, 120, Short.MAX_VALUE)
-                            .addComponent(lookAndFeelComboBox, 0, 120, Short.MAX_VALUE))
-                        .addGap(10, 10, 10))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                                .addComponent(fontSizeLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(fontSizeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(showCandidatesCheckBox, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(showWrongValuesCheckBox, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(showDeviationsCheckBox, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(saveWindowLayoutCheckBox, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(alternativeMouseModeCheckBox, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addContainerGap(61, Short.MAX_VALUE))))
+                    .addComponent(showCandidatesCheckBox)
+                    .addComponent(defaultSizeCheckBox)
+                    .addComponent(showWrongValuesCheckBox)
+                    .addComponent(showDeviationsCheckBox)
+                    .addComponent(saveWindowLayoutCheckBox)
+                    .addComponent(showColorKuCheckBox))
+                .addContainerGap())
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(fontSizeLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(fontSizeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(61, Short.MAX_VALUE))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(localLabel)
+                    .addComponent(lookAndFeelLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(localComboBox, 0, 120, Short.MAX_VALUE)
+                    .addComponent(lookAndFeelComboBox, 0, 120, Short.MAX_VALUE))
+                .addGap(10, 10, 10))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -536,8 +535,8 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(saveWindowLayoutCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(alternativeMouseModeCheckBox)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(showColorKuCheckBox)
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("ConfigGeneralPanel.jPanel3.border.title"))); // NOI18N
@@ -634,7 +633,7 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
                             .addComponent(candidatesButton)
                             .addComponent(printLargeButton)
                             .addComponent(printSmallButton))))
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         jPanel3Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {candidateFactorTextField, hintFactorTextField, valueFactorTextField});
@@ -712,6 +711,10 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
         toggleFilterAndOrCheckBox.setMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigGeneralPanel").getString("ConfigGeneralPanel.toggleFilterAndOrCheckBox.mnemonic").charAt(0));
         toggleFilterAndOrCheckBox.setText(bundle.getString("ConfigGeneralPanel.toggleFilterAndOrCheckBox.text")); // NOI18N
 
+        alternativeMouseModeCheckBox.setMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigGeneralPanel").getString("ConfigGeneralPanel.alternativeMouseModeCheckBox.mnemonic").charAt(0));
+        alternativeMouseModeCheckBox.setText(bundle.getString("ConfigGeneralPanel.alternativeMouseModeCheckBox.text")); // NOI18N
+        alternativeMouseModeCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -729,8 +732,9 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
                         .addGap(21, 21, 21)
                         .addComponent(deleteCursorAfterMsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel1)))
-                .addContainerGap(24, Short.MAX_VALUE))
+                        .addComponent(jLabel1))
+                    .addComponent(alternativeMouseModeCheckBox))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -751,6 +755,8 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(deleteCursorAfterMsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(alternativeMouseModeCheckBox)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -770,7 +776,7 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
                             .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 340, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 342, Short.MAX_VALUE)
                         .addComponent(resetButton)))
                 .addContainerGap())
         );
@@ -903,6 +909,7 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
         Options.getInstance().setShowCandidates(showCandidatesCheckBox.isSelected());
         Options.getInstance().setShowWrongValues(showWrongValuesCheckBox.isSelected());
         Options.getInstance().setShowDeviations(showDeviationsCheckBox.isSelected());
+        Options.getInstance().setShowColorKu(showColorKuCheckBox.isSelected());
         Options.getInstance().setSaveWindowLayout(saveWindowLayoutCheckBox.isSelected());
         Options.getInstance().setAlternativeMouseMode(alternativeMouseModeCheckBox.isSelected());
         
@@ -977,6 +984,7 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
             showCandidatesCheckBox.setSelected(Options.SHOW_CANDIDATES);
             showWrongValuesCheckBox.setSelected(Options.SHOW_WRONG_VALUES);
             showDeviationsCheckBox.setSelected(Options.SHOW_DEVIATIONS);
+            showColorKuCheckBox.setSelected(Options.SHOW_COLORKU);
             saveWindowLayoutCheckBox.setSelected(Options.SAVE_WINDOW_LAYOUT);
             alternativeMouseModeCheckBox.setSelected(Options.ALTERNATIVE_MOUSE_MODE);
             
@@ -1006,6 +1014,7 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
             showCandidatesCheckBox.setSelected(Options.getInstance().isShowCandidates());
             showWrongValuesCheckBox.setSelected(Options.getInstance().isShowWrongValues());
             showDeviationsCheckBox.setSelected(Options.getInstance().isShowDeviations());
+            showColorKuCheckBox.setSelected(Options.getInstance().isShowColorKu());
             saveWindowLayoutCheckBox.setSelected(Options.getInstance().isSaveWindowLayout());
             alternativeMouseModeCheckBox.setSelected(Options.getInstance().isAlternativeMouseMode());
             
@@ -1226,6 +1235,7 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox saveWindowLayoutCheckBox;
     private javax.swing.JCheckBox shiftKeyCheckBox;
     private javax.swing.JCheckBox showCandidatesCheckBox;
+    private javax.swing.JCheckBox showColorKuCheckBox;
     private javax.swing.JCheckBox showDeviationsCheckBox;
     private javax.swing.JCheckBox showSudokuSolvedCheckBox;
     private javax.swing.JCheckBox showWrongValuesCheckBox;

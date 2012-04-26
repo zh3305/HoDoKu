@@ -2559,7 +2559,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
         fixFocus();
     }//GEN-LAST:event_showColorKuMenuItemActionPerformed
 
-    private final void prepareToggleButtonsForColorku(boolean on) {
+    public final void prepareToggleButtonsForColorku(boolean on) {
         colorKu = on;
         if (on) {
             for (int i = 0, lim = toggleButtons.length - 1; i < lim; i++) {
