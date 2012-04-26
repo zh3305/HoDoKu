@@ -55,6 +55,7 @@ public final class Options {
         new DifficultyLevel(DifficultyType.UNFAIR, 5000, java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.unfair"), new Color(255, 150, 80), Color.BLACK),
         new DifficultyLevel(DifficultyType.EXTREME, Integer.MAX_VALUE, java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.extreme"), new Color(255, 100, 100), Color.BLACK)
     };
+
     private DifficultyLevel[] difficultyLevels = null;
     // Reihenfolge und Konfiguration der SolutionSteps
     // ACHTUNG: New solver steps must be added at the end of the array! The position is determined by "index"
@@ -66,7 +67,7 @@ public final class Options {
         new StepConfig(300, SolutionType.HIDDEN_SINGLE, DifficultyType.EASY.ordinal(), SolutionCategory.SINGLES, 14, 0, true, true, 300, true, false),
         new StepConfig(1000, SolutionType.LOCKED_PAIR, DifficultyType.MEDIUM.ordinal(), SolutionCategory.INTERSECTIONS, 40, 0, true, true, 1000, true, false),
         new StepConfig(1100, SolutionType.LOCKED_TRIPLE, DifficultyType.MEDIUM.ordinal(), SolutionCategory.INTERSECTIONS, 60, 0, true, true, 1100, true, false),
-//        new StepConfig(1200, SolutionType.LOCKED_CANDIDATES, DifficultyType.MEDIUM.ordinal(), SolutionCategory.INTERSECTIONS, 50, 0, true, true, 1200, true, false),
+        //        new StepConfig(1200, SolutionType.LOCKED_CANDIDATES, DifficultyType.MEDIUM.ordinal(), SolutionCategory.INTERSECTIONS, 50, 0, true, true, 1200, true, false),
         new StepConfig(1200, SolutionType.LOCKED_CANDIDATES_1, DifficultyType.MEDIUM.ordinal(), SolutionCategory.INTERSECTIONS, 50, 0, true, true, 1200, true, false),
         new StepConfig(1300, SolutionType.NAKED_PAIR, DifficultyType.MEDIUM.ordinal(), SolutionCategory.SUBSETS, 60, 0, true, true, 1300, true, false),
         new StepConfig(1400, SolutionType.NAKED_TRIPLE, DifficultyType.MEDIUM.ordinal(), SolutionCategory.SUBSETS, 80, 0, true, true, 1400, true, false),
@@ -284,6 +285,7 @@ public final class Options {
     public static final boolean SHOW_CANDIDATES = true;    // alle Kandidaten anzeigen
     public static final boolean SHOW_WRONG_VALUES = true;  // Ungültige Zellen-/Kandidatenwerte anzeigen (Constraint-Verletzungen)
     public static final boolean SHOW_DEVIATIONS = true;    // Abweichungen von der richtigen Lösung anzeigen
+    private static boolean SHOW_COLORKU = false;	   // use colors instead of numbers
     public static final boolean INVALID_CELLS = false;     // show possible cells
     public static final boolean SAVE_WINDOW_LAYOUT = true; // save window layout at shutdown
     public static final boolean USE_SHIFT_FOR_REGION_SELECT = true; // use shift for selecting cells or toggeling candidates
@@ -311,6 +313,7 @@ public final class Options {
     private boolean showCandidates = SHOW_CANDIDATES;
     private boolean showWrongValues = SHOW_WRONG_VALUES;
     private boolean showDeviations = SHOW_DEVIATIONS;
+    private boolean showColorKu = SHOW_COLORKU;
     private boolean invalidCells = INVALID_CELLS;
     private boolean saveWindowLayout = SAVE_WINDOW_LAYOUT;
     private boolean useShiftForRegionSelect = USE_SHIFT_FOR_REGION_SELECT;
@@ -368,6 +371,17 @@ public final class Options {
 //        new Color(150, 100, 255),
 //        new Color(150, 255, 100)
     };
+    public static final Color[] COLORKU_COLORS = {
+        Color.red,
+        new Color(255, 147, 28), // a better orange
+        Color.yellow,
+        new Color(0.0f, 0.8f, 0.0f), // dark green
+        Color.blue,
+        new Color(220, 93, 171), // purple
+        new Color(0.7f, 1.0f, 0.7f), // light green
+        new Color(0.7f, 1.0f, 1.0f), // sky blue
+        new Color(1.0f, 0.8f, 1.0f) // light purple (fuchsia)
+    };
     public static final Color[] HINT_CANDIDATE_ALS_COLORS = { // Zeichenfarbe für ALS-Candidaten
         Color.BLACK,
         Color.BLACK,
@@ -406,6 +420,7 @@ public final class Options {
     private Color hintCandidateEndoFinColor = HINT_CANDIDATE_ENDO_FIN_COLOR;
     private Color[] hintCandidateAlsBackColors = null;
     private Color[] hintCandidateAlsColors = null;
+    private Color[] colorKuColors = null;
     private Color arrowColor = ARROW_COLOR;
     private double valueFontFactor = VALUE_FONT_FACTOR;
     private double candidateFontFactor = CANDIDATE_FONT_FACTOR;
@@ -472,6 +487,10 @@ public final class Options {
         for (int i = 0; i < COLORING_COLORS.length; i++) {
             coloringColors[i] = new Color(COLORING_COLORS[i].getRGB());
         }
+        colorKuColors = new Color[COLORKU_COLORS.length];
+        for (int i = 0; i < COLORKU_COLORS.length; i++) {
+            colorKuColors[i] = new Color(COLORKU_COLORS[i].getRGB());
+        }
 
 //    public static final Font DEFAULT_VALUE_FONT = new Font("Tahoma", Font.PLAIN, 10);     // Standard für Zellenwerte (Größe wird ignoriert)
 //    public static final Font DEFAULT_CANDIDATE_FONT = new Font("Tahoma", Font.PLAIN, 10); // Standard für Kandidaten (Größe wird ignoriert)
@@ -511,7 +530,7 @@ public final class Options {
     public boolean checkFont(Font font) {
         return checkFont(font.getName());
     }
-    
+
     public boolean checkFont(String fontName) {
         if (availableFontNames == null) {
             availableFontNames = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
@@ -1240,6 +1259,23 @@ public final class Options {
      */
     public void setAllStepsAlsChainLength(int allStepsAlsChainLength) {
         this.allStepsAlsChainLength = allStepsAlsChainLength;
+    }
+
+    /**
+     * @return the colorKuColors
+     */
+    public Color[] getColorKuColors() {
+        return colorKuColors;
+    }
+
+    public Color getColorKuColor(int n) {
+        return (((n >= 1) && (n <= colorKuColors.length)) ? colorKuColors[n - 1] : Color.black);
+    }
+    /**
+     * @param colorKuColors the colorKuColors to set
+     */
+    public void setColorKuColors(Color[] colorKuColors) {
+        this.colorKuColors = colorKuColors;
     }
 
     private static class ProgressComparator implements Comparator<StepConfig> {
@@ -2011,5 +2047,19 @@ public final class Options {
      */
     public void setHistorySize(int aHistorySize) {
         historySize = aHistorySize;
+    }
+
+    /**
+     * @return the showColorKu
+     */
+    public boolean isShowColorKu() {
+        return showColorKu;
+    }
+
+    /**
+     * @param showColorKu the showColorKu to set
+     */
+    public void setShowColorKu(boolean showColorKu) {
+        this.showColorKu = showColorKu;
     }
 }

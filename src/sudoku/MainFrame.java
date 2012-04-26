@@ -20,9 +20,11 @@ package sudoku;
 
 import generator.BackgroundGeneratorThread;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
@@ -67,6 +69,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 import javax.imageio.ImageIO;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -92,13 +95,45 @@ import solver.SudokuSolverFactory;
  */
 public class MainFrame extends javax.swing.JFrame implements FlavorListener {
 
+    class ColorKuIcon implements Icon {
+
+        int w;
+        int h;
+        Color color;
+        // constructor
+
+        ColorKuIcon(int width, int height, Color c) {
+            w = width;
+            h = height;
+            color = c;
+        }
+
+        @Override
+        public void paintIcon(Component c, Graphics gc, int x, int y) {
+            gc.setColor(color);
+            gc.fillRect(x, y, w, h);
+            gc.setColor(Color.black);
+            gc.drawRect(x, y, w, h);
+        }
+
+        @Override
+        public int getIconWidth() {
+            return w;
+        }
+
+        @Override
+        public int getIconHeight() {
+            return h;
+        }
+    }
     public static final String VERSION = "HoDoKu - v2.2.0 beta";
 //    public static final String BUILD = "Build 16";
     public static final String BUILD;
-    public static final String REV =  "$LastChangedRevision$";
+    public static final String REV = "$LastChangedRevision$";
     private SudokuPanel sudokuPanel;
     //private DifficultyLevel level = Options.getInstance().getDifficultyLevels()[DifficultyType.EASY.ordinal()];
     private JToggleButton[] toggleButtons = new JToggleButton[10];
+    private Icon toggleButtonIcons[] = new Icon[10];
     private JRadioButtonMenuItem[] levelMenuItems = new JRadioButtonMenuItem[5];
     private JRadioButtonMenuItem[] modeMenuItems;
     private boolean oldShowDeviations = true;
@@ -176,6 +211,8 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
     private String sudokuFileName = null;
     /** The file type of the last loaded sudoku file: 1 .. hsol, 8 .. txt or 9 .. ss */
     private int sudokuFileType = -1;
+    /** ColorKu mode selected? */
+    private boolean colorKu = false;
 
     /** Incorporates the last subversion revision of this file into
      *  the version string.<br><br>
@@ -187,7 +224,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         String[] dummy = REV.split(" ");
         BUILD = "Build " + dummy[1];
     }
-    
+
     /** Creates new form MainFrame */
     @SuppressWarnings("LeakingThisInConstructor")
     public MainFrame(String launchFile) {
@@ -202,10 +239,10 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         setTitleWithFile();
         outerSplitPane.getActionMap().getParent().remove("startResize");
         outerSplitPane.getActionMap().getParent().remove("toggleFocus");
-        
+
         // change hintTextArea font to a proportional font
         String fontName = "Arial";
-        if (! Options.getInstance().checkFont(fontName)) {
+        if (!Options.getInstance().checkFont(fontName)) {
             fontName = Font.SANS_SERIF;
         }
         Font font = hinweisTextArea.getFont();
@@ -213,12 +250,12 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
 //        font = new Font(fontName, font.getStyle(), font.getSize());
         font = new Font(fontName, font.getStyle(), bearbeitenMenu.getFont().getSize());
         hinweisTextArea.setFont(font);
-        
+
         // status line fonts are a bit larger than default in Windows LAF
         // allow adjustments
         font = statusLinePanel.getFont();
         fontName = "Tahoma";
-        if (! Options.getInstance().checkFont(fontName)) {
+        if (!Options.getInstance().checkFont(fontName)) {
             fontName = font.getName();
         }
         int fontSize = 12;
@@ -230,11 +267,11 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         statusLabelLevel.setFont(font);
         statusLabelModus.setFont(font);
         progressLabel.setFont(font);
-        
+
         // get the current difficulty level (is overriden when levels are added
         //to the combo box)
         int actLevel = Options.getInstance().getActLevel();
-        
+
         Color lafMenuBackColor = UIManager.getColor("textHighlight");
         Color lafMenuColor = UIManager.getColor("textHighlightText");
         Color lafMenuInactiveColor = UIManager.getColor("textInactiveText");
@@ -381,10 +418,10 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             //jToolBar1.doLayout();
             //repaint();
         }
-        
+
         // set back the saved difficulty level
         Options.getInstance().setActLevel(actLevel);
-        
+
         // Menüzustand prüfen, übernimmt Werte von SudokuPanel; muss am Anfang stehen,
         // weil die Werte später in der Methode verwendet werden
         check();
@@ -400,7 +437,11 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         toggleButtons[7] = f8ToggleButton;
         toggleButtons[8] = f9ToggleButton;
         toggleButtons[9] = fxyToggleButton;
+        for (int i = 0, lim = toggleButtons.length; i < lim; i++) {
+            toggleButtonIcons[i] = toggleButtons[i].getIcon();
+        }
         setToggleButton(null, false);
+        prepareToggleButtonsForColorku(Options.getInstance().isShowColorKu());
 
         // Caret-Listener for display of Forcing Chains
         hinweisTextArea.addCaretListener(caretListener);
@@ -408,10 +449,10 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         // Images for progressLabel
         createProgressLabelImages();
         progressLabel.setIcon(progressImages[0]);
-        
+
         // set the mode
         setMode(Options.getInstance().getGameMode(), false);
-        
+
         // show hint buttons in toolbar
         setShowHintButtonsInToolbar();
 
@@ -424,7 +465,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         }
 
         fixFocus();
-        
+
         // Start background creation
         BackgroundGeneratorThread.getInstance().startCreation();
 
@@ -543,6 +584,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         showCandidatesMenuItem = new javax.swing.JCheckBoxMenuItem();
         showWrongValuesMenuItem = new javax.swing.JCheckBoxMenuItem();
         showDeviationsMenuItem = new javax.swing.JCheckBoxMenuItem();
+        showColorKuMenuItem = new javax.swing.JMenuItem();
         jSeparator10 = new javax.swing.JSeparator();
         colorCellsMenuItem = new javax.swing.JRadioButtonMenuItem();
         colorCandidatesMenuItem = new javax.swing.JRadioButtonMenuItem();
@@ -1396,6 +1438,15 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             }
         });
         optionenMenu.add(showDeviationsMenuItem);
+
+        showColorKuMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.showColorKuMenuItem.mnemonic").charAt(0));
+        showColorKuMenuItem.setText(bundle.getString("MainFrame.showColorKuMenuItem.text")); // NOI18N
+        showColorKuMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showColorKuMenuItemActionPerformed(evt);
+            }
+        });
+        optionenMenu.add(showColorKuMenuItem);
         optionenMenu.add(jSeparator10);
 
         colorButtonGroup.add(colorCellsMenuItem);
@@ -1909,7 +1960,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             tmpSudoku.setSudoku(preGenSudoku, true);
             Sudoku2 solvedSudoku = tmpSudoku.clone();
             SudokuSolver solver = SudokuSolverFactory.getDefaultSolverInstance();
-            solver.solve(actDiffLevel, solvedSudoku, true, null, false, 
+            solver.solve(actDiffLevel, solvedSudoku, true, null, false,
                     Options.getInstance().solverSteps, Options.getInstance().getGameMode());
             tmpSudoku.setLevel(solvedSudoku.getLevel());
             tmpSudoku.setScore(solvedSudoku.getScore());
@@ -2057,8 +2108,8 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
     }//GEN-LAST:event_showWrongValuesMenuItemActionPerformed
 
     private void showCandidatesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showCandidatesMenuItemActionPerformed
-                        System.out.println("sel0:" + showCandidatesMenuItem.isSelected());
-        if (! showCandidatesMenuItem.isSelected()) {
+        System.out.println("sel0:" + showCandidatesMenuItem.isSelected());
+        if (!showCandidatesMenuItem.isSelected()) {
             // just set the flag and be done!
             sudokuPanel.setShowCandidates(showCandidatesMenuItem.isSelected());
         } else {
@@ -2502,7 +2553,32 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
         }
     }//GEN-LAST:event_savePuzzleMenuItemActionPerformed
 
-    
+    private void showColorKuMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showColorKuMenuItemActionPerformed
+        sudokuPanel.setColorKu(showColorKuMenuItem.isSelected());
+        check();
+        fixFocus();
+    }//GEN-LAST:event_showColorKuMenuItemActionPerformed
+
+    private final void prepareToggleButtonsForColorku(boolean on) {
+        colorKu = on;
+        if (on) {
+            for (int i = 0, lim = toggleButtons.length - 1; i < lim; i++) {
+                JToggleButton button = toggleButtons[i];
+                Icon icon = button.getIcon();
+                int w = icon.getIconWidth();
+                int h = icon.getIconHeight();
+                Icon newicon = new ColorKuIcon(w, h, Options.getInstance().getColorKuColor(1 + i));
+                button.setIcon(newicon);
+                //button.repaint();
+            }
+        } else {
+            for (int i = 0, lim = toggleButtons.length - 1; i < lim; i++) {
+                JToggleButton button = toggleButtons[i];
+                button.setIcon(toggleButtonIcons[i]);
+            }
+        }
+    }
+
     /**
      * Gets a new hint for the sudoku if possible. Checks are made to ensure,
      * that hints are only displayed for valid puzzles.
@@ -2558,7 +2634,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
         fixFocus();
         check();
     }
-    
+
     /**
      * Sets a new mode ({@link GameMode#LEARNING}, {@link GameMode#PLAYING} or
      * {@link GameMode#PRACTISING}). If the new mode is "playing", no further
@@ -2616,7 +2692,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
         check();
         repaint();
     }
-    
+
     /**
      * Restores a complete GUI state including puzzle (optionally with coloring
      * and selected step), solutions and summary. Used by {@link #loadFromFile(boolean)} and
@@ -2852,7 +2928,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
     }
 
     private void setSpielen(boolean isSpielen) {
-        eingabeModus = ! isSpielen;
+        eingabeModus = !isSpielen;
         if (isSpielen) {
             if (oldShowDeviationsValid) {
                 showDeviationsMenuItem.setSelected(oldShowDeviations);
@@ -2870,6 +2946,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
         lösungsSchrittMenuItem.setEnabled(isSpielen);
         alleHiddenSinglesSetzenMenuItem.setEnabled(isSpielen);
         showDeviationsMenuItem.setEnabled(isSpielen);
+        showColorKuMenuItem.setEnabled(isSpielen);
 
         spielSpielenMenuItem.setEnabled(!isSpielen);
         spielEditierenMenuItem.setEnabled(isSpielen);
@@ -3029,7 +3106,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
                 if (checkFile.exists()) {
                     // Override warning!
                     MessageFormat msgf = new MessageFormat("");
-                    Object[] args = new Object[] { checkFile.getName() };
+                    Object[] args = new Object[]{checkFile.getName()};
                     msgf.applyPattern(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.file_exists"));
                     String warning = msgf.format(args);
                     String title = java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.hint");
@@ -3050,7 +3127,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
             setTitleWithFile();
         }
     }
-    
+
     /**
      * Actually writes configurations and sudoku files. If <code>puzzle</code>
      * is <code>false</code>, a configuration is written. <code>filterType</code>
@@ -3217,7 +3294,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
                 state.setAnzSteps((int[]) in.readObject());
                 state.setSteps((List<SolutionStep>) in.readObject());
                 state.setTitels((List<String>) in.readObject());
-                state.setTabSteps((List<List<SolutionStep>>) in.readObject());    
+                state.setTabSteps((List<List<SolutionStep>>) in.readObject());
                 state.resetAnzSteps();
                 try {
                     savePoints = (List<GuiState>) in.readObject();
@@ -3339,7 +3416,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
             }
         });
     }
-    
+
     private void setTitleWithFile() {
         savePuzzleMenuItem.setEnabled(sudokuFileName != null);
         if (sudokuFileName == null) {
@@ -3395,6 +3472,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
             showCandidatesMenuItem.setSelected(sudokuPanel.isShowCandidates());
             showWrongValuesMenuItem.setSelected(sudokuPanel.isShowWrongValues());
             showDeviationsMenuItem.setSelected(sudokuPanel.isShowDeviations());
+            showColorKuMenuItem.setSelected(sudokuPanel.isColorKu());
             for (int i = 0; i < toggleButtons.length; i++) {
 //                if (i == sudokuPanel.getShowHintCellValue() - 1) {
                 if (sudokuPanel.getShowHintCellValues()[i + 1]) {
@@ -3606,7 +3684,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
     public synchronized void setCurrentScore(int currentScore) {
         this.currentScore = currentScore;
     }
-    
+
     /**
      * Handles the display of the hint buttons in the toolbar.
      * If they are made visible the first time, they have to be created.
@@ -3625,6 +3703,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
             vageHintToggleButton = new javax.swing.JButton();
             vageHintToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/vageHint.png")));
             vageHintToggleButton.addActionListener(new java.awt.event.ActionListener() {
+
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     hintToggleButtonActionPerformed(true);
@@ -3633,11 +3712,12 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
             vageHintToggleButton.setToolTipText(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.vageHintToolButton.toolTipText")); // NOI18N
             vageHintToggleButton.setVisible(false);
             jToolBar1.add(vageHintToggleButton);
-            
+
 //            concreteHintToggleButton = new javax.swing.JToggleButton();
             concreteHintToggleButton = new javax.swing.JButton();
             concreteHintToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/concreteHint.png")));
             concreteHintToggleButton.addActionListener(new java.awt.event.ActionListener() {
+
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     hintToggleButtonActionPerformed(false);
@@ -3646,10 +3726,11 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
             concreteHintToggleButton.setVisible(false);
             concreteHintToggleButton.setToolTipText(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.concreteHintToolButton.toolTipText")); // NOI18N
             jToolBar1.add(concreteHintToggleButton);
-            
+
             showNextStepToggleButton = new javax.swing.JButton();
             showNextStepToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/nextHint.png")));
             showNextStepToggleButton.addActionListener(new java.awt.event.ActionListener() {
+
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     lösungsSchrittMenuItemActionPerformed(null);
@@ -3658,10 +3739,11 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
             showNextStepToggleButton.setToolTipText(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.neuerHinweisButton.toolTipText")); // NOI18N
             showNextStepToggleButton.setVisible(false);
             jToolBar1.add(showNextStepToggleButton);
-            
+
             executeStepToggleButton = new javax.swing.JButton();
             executeStepToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/executeHint.png")));
             executeStepToggleButton.addActionListener(new java.awt.event.ActionListener() {
+
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     hinweisAusführenButtonActionPerformed(null);
@@ -3670,10 +3752,11 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
             executeStepToggleButton.setToolTipText(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.hinweisAusführenButton.toolTipText")); // NOI18N
             executeStepToggleButton.setVisible(false);
             jToolBar1.add(executeStepToggleButton);
-            
+
             abortStepToggleButton = new javax.swing.JButton();
             abortStepToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/abortHint.png")));
             abortStepToggleButton.addActionListener(new java.awt.event.ActionListener() {
+
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     hinweisAbbrechenButtonActionPerformed(null);
@@ -3703,7 +3786,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
         check();
         fixFocus();
     }
-    
+
     /**
      * Action event for hint buttons
      * @param isVage 
@@ -3715,11 +3798,10 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
             mediumHintMenuItemActionPerformed(null);
         }
     }
-    
+
     public boolean isEingabeModus() {
         return eingabeModus;
     }
-
 
     class MyFileFilter extends FileFilter {
 
@@ -3802,7 +3884,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
                     return java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.unknown_file_type");
             }
         }
-        
+
         public int getType() {
             return type;
         }
@@ -3971,6 +4053,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
     private javax.swing.JMenuItem seiteEinrichtenMenuItem;
     private javax.swing.JMenuItem setGivensMenuItem;
     private javax.swing.JCheckBoxMenuItem showCandidatesMenuItem;
+    private javax.swing.JMenuItem showColorKuMenuItem;
     private javax.swing.JCheckBoxMenuItem showDeviationsMenuItem;
     private javax.swing.JCheckBoxMenuItem showHintButtonsCheckBoxMenuItem;
     private javax.swing.JCheckBoxMenuItem showHintPanelMenuItem;
