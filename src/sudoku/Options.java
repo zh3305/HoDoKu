@@ -382,6 +382,8 @@ public final class Options {
         new Color(0.7f, 1.0f, 1.0f), // sky blue
         new Color(1.0f, 0.8f, 1.0f) // light purple (fuchsia)
     };
+    public static final Color COLORKU_INVALID_COLOR = Color.BLACK;
+    public static final Color COLORKU_DEVIATION_COLOR = new Color(128, 128, 128);
     public static final Color[] HINT_CANDIDATE_ALS_COLORS = { // Zeichenfarbe für ALS-Candidaten
         Color.BLACK,
         Color.BLACK,
@@ -420,6 +422,8 @@ public final class Options {
     private Color hintCandidateEndoFinColor = HINT_CANDIDATE_ENDO_FIN_COLOR;
     private Color[] hintCandidateAlsBackColors = null;
     private Color[] hintCandidateAlsColors = null;
+    private Color colorKuInvalidColor = COLORKU_INVALID_COLOR;
+    private Color colorKuDeviationColor = COLORKU_DEVIATION_COLOR;
     private Color[] colorKuColors = null;
     private Color arrowColor = ARROW_COLOR;
     private double valueFontFactor = VALUE_FONT_FACTOR;
@@ -2061,5 +2065,33 @@ public final class Options {
      */
     public void setShowColorKu(boolean showColorKu) {
         this.showColorKu = showColorKu;
+    }
+
+    /**
+     * @return the colorKuInvalidColor
+     */
+    public Color getColorKuInvalidColor() {
+        return colorKuInvalidColor;
+    }
+
+    /**
+     * @param colorKuInvalidColor the colorKuInvalidColor to set
+     */
+    public void setColorKuInvalidColor(Color colorKuInvalidColor) {
+        this.colorKuInvalidColor = colorKuInvalidColor;
+    }
+
+    /**
+     * @return the colorKuDeviationColor
+     */
+    public Color getColorKuDeviationColor() {
+        return colorKuDeviationColor;
+    }
+
+    /**
+     * @param colorKuDeviationColor the colorKuDeviationColor to set
+     */
+    public void setColorKuDeviationColor(Color colorKuDeviationColor) {
+        this.colorKuDeviationColor = colorKuDeviationColor;
     }
 }

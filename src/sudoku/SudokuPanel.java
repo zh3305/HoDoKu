@@ -2098,17 +2098,17 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                 // Wert zeichnen
                 int startX = getX(line, col);
                 int startY = getY(line, col);
-                boolean offcolor = false;
+                Color offColor = null;
                 if (sudoku.getValue(cellIndex) != 0) {
                     // Wert vorhanden: zeichnen
                     setColor(g2, allBlack, Options.getInstance().getCellValueColor());
                     if (sudoku.isFixed(cellIndex)) {
                         setColor(g2, allBlack, Options.getInstance().getCellFixedValueColor());
                     } else if (isShowWrongValues() == true && !sudoku.isValidValue(line, col, sudoku.getValue(cellIndex))) {
-                        offcolor = true;
+                        offColor = Options.getInstance().getColorKuInvalidColor();
                         setColor(g2, allBlack, Options.getInstance().getWrongValueColor());
                     } else if (isShowDeviations() && sudoku.isSolutionSet() && sudoku.getValue(cellIndex) != sudoku.getSolution(cellIndex)) {
-                        offcolor = true;
+                        offColor = Options.getInstance().getColorKuDeviationColor();
                         setColor(g2, allBlack, Options.getInstance().getDeviationColor());
                     }
                     g2.setFont(valueFont);
@@ -2118,8 +2118,8 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                     if (showColorKu) {
                         drawColorBox(value,g2,getX(line, col),getY(line, col),cellSize, true);
 //                        drawColorBox(value, g2, startX + 3, startY + 2, cellSize - 4);
-                        if (offcolor) {
-                            setColor(g2, allBlack, Color.black);
+                        if (offColor != null) {
+                            setColor(g2, allBlack, offColor);
                             g2.drawString("X", (int) (startX + dx), (int) (startY + dy));
                         }
                     } else {
