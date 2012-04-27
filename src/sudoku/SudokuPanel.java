@@ -3797,6 +3797,13 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
         setColorkuInPopupMenu(val);
     }
 
+    public void resetColorKuImages() {
+        for (int i = 0; i < colorKuImagesLarge.length; i++) {
+            colorKuImagesLarge[i] = null;
+            colorKuImagesSmall[i] = null;
+        }
+    }
+    
     private void drawColorBox(int n, Graphics gc, int cx, int cy, int boxSize, boolean large) {
         BufferedImage[] images = null;
         if (large) {

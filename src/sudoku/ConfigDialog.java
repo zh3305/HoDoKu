@@ -46,6 +46,7 @@ public class ConfigDialog extends javax.swing.JDialog {
     private ConfigProgressPanel myConfigProgressPanel;
     private ConfigTrainigPanel myConfigTrainingPanel;
     private ConfigGeneratorPanel myConfigGeneratorPanel;
+    private ConfigColorkuPanel myConfigColorkuPanel;
 
     /** Creates new form ConfigDialog
      * @param parent
@@ -98,6 +99,9 @@ public class ConfigDialog extends javax.swing.JDialog {
         // temporarily remove the pattern tab - not suitable for production use yet
         tabbedPane.remove(8);
         
+        myConfigColorkuPanel = new ConfigColorkuPanel(parent);
+        colorKuPanel.add(myConfigColorkuPanel, BorderLayout.CENTER);
+        
         if (tabIndex != -1) {
             tabbedPane.setSelectedIndex(tabIndex);
         }
@@ -121,6 +125,7 @@ public class ConfigDialog extends javax.swing.JDialog {
         trainingPanel = new javax.swing.JPanel();
         colorPanel = new javax.swing.JPanel();
         generatorPanel = new javax.swing.JPanel();
+        colorKuPanel = new javax.swing.JPanel();
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
 
@@ -159,6 +164,9 @@ public class ConfigDialog extends javax.swing.JDialog {
 
         generatorPanel.setLayout(new java.awt.BorderLayout());
         tabbedPane.addTab(bundle.getString("ConfigDialog.generatorPanel.TabConstraints.tabTitle"), generatorPanel); // NOI18N
+
+        colorKuPanel.setLayout(new java.awt.BorderLayout());
+        tabbedPane.addTab(bundle.getString("ConfigDialog.colorKuPanel.TabConstraints.tabTitle"), colorKuPanel); // NOI18N
 
         okButton.setMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigDialog").getString("ConfigDialog.okButton.mnemonic").charAt(0));
         okButton.setText(bundle.getString("ConfigDialog.okButton.text")); // NOI18N
@@ -218,6 +226,7 @@ public class ConfigDialog extends javax.swing.JDialog {
         myConfigProgressPanel.okPressed();
         myConfigTrainingPanel.okPressed();
         myConfigGeneratorPanel.okPressed();
+        myConfigColorkuPanel.okPressed();
         try {
             Options.getInstance().writeOptions();
         } catch (FileNotFoundException ex) {
@@ -269,6 +278,7 @@ public class ConfigDialog extends javax.swing.JDialog {
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
+    private javax.swing.JPanel colorKuPanel;
     private javax.swing.JPanel colorPanel;
     private javax.swing.JPanel findAllStepsPanel;
     private javax.swing.JPanel generalPanel;

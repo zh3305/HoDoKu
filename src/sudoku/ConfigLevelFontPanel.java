@@ -52,15 +52,11 @@ public class ConfigLevelFontPanel extends javax.swing.JPanel {
     private double candidateFactor;
     private double hintFactor;
 
-    private Component mainFrame;
-
     /**
      * Creates new form ConfigGeneralPanel
      * @param mainFrame 
      */
     public ConfigLevelFontPanel(Component mainFrame) {
-        this.mainFrame = mainFrame;
-        
         initComponents();
 
         levelFGButtons = new JButton[Options.getInstance().getDifficultyLevels().length];
@@ -151,19 +147,19 @@ public class ConfigLevelFontPanel extends javax.swing.JPanel {
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("intl/ConfigLevelFontPanel"); // NOI18N
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("ConfigLevelFontPanel.jPanel1.border.title_1"))); // NOI18N
 
-        easyLabel.setDisplayedMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigGeneralPanel").getString("ConfigGeneralPanel.easyLabel.mnemonic").charAt(0));
+        easyLabel.setDisplayedMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigLevelFontPanel").getString("ConfigLevelFontPanel.easyLabel.mnemonic").charAt(0));
         easyLabel.setLabelFor(easyTextField);
         easyLabel.setText(bundle.getString("ConfigLevelFontPanel.easyLabel.text_1")); // NOI18N
 
-        mediumLabel.setDisplayedMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigGeneralPanel").getString("ConfigGeneralPanel.mediumLabel.mnemonic").charAt(0));
+        mediumLabel.setDisplayedMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigLevelFontPanel").getString("ConfigLevelFontPanel.mediumLabel.mnemonic").charAt(0));
         mediumLabel.setLabelFor(mediumTextField);
         mediumLabel.setText(bundle.getString("ConfigLevelFontPanel.mediumLabel.text_1")); // NOI18N
 
-        hardLabel.setDisplayedMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigGeneralPanel").getString("ConfigGeneralPanel.hardLabel.mnemonic").charAt(0));
+        hardLabel.setDisplayedMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigLevelFontPanel").getString("ConfigLevelFontPanel.hardLabel.mnemonic").charAt(0));
         hardLabel.setLabelFor(hardTextField);
         hardLabel.setText(bundle.getString("ConfigLevelFontPanel.hardLabel.text_1")); // NOI18N
 
-        unfairLabel.setDisplayedMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigGeneralPanel").getString("ConfigGeneralPanel.unfairLabel.mnemonic").charAt(0));
+        unfairLabel.setDisplayedMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigLevelFontPanel").getString("ConfigLevelFontPanel.unfairLabel.mnemonic").charAt(0));
         unfairLabel.setLabelFor(unfairTextField);
         unfairLabel.setText(bundle.getString("ConfigLevelFontPanel.unfairLabel.text_1")); // NOI18N
 
@@ -435,15 +431,15 @@ public class ConfigLevelFontPanel extends javax.swing.JPanel {
             }
         });
 
-        valueFactorLabel.setDisplayedMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigGeneralPanel").getString("ConfigGeneralPanel.valueFactorLabel.mnemonic").charAt(0));
+        valueFactorLabel.setDisplayedMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigLevelFontPanel").getString("ConfigLevelFontPanel.valueFactorLabel.mnemonic").charAt(0));
         valueFactorLabel.setLabelFor(valueFactorTextField);
         valueFactorLabel.setText(bundle.getString("ConfigLevelFontPanel.valueFactorLabel.text_1")); // NOI18N
 
-        candidatesFactorLabel.setDisplayedMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigGeneralPanel").getString("ConfigGeneralPanel.candidatesFactorLabel.mnemonic").charAt(0));
+        candidatesFactorLabel.setDisplayedMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigLevelFontPanel").getString("ConfigLevelFontPanel.candidatesFactorLabel.mnemonic").charAt(0));
         candidatesFactorLabel.setLabelFor(candidateFactorTextField);
         candidatesFactorLabel.setText(bundle.getString("ConfigLevelFontPanel.candidatesFactorLabel.text_1")); // NOI18N
 
-        hintFactorLabel.setDisplayedMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigGeneralPanel").getString("ConfigGeneralPanel.hintFactorLabel.mnemonic").charAt(0));
+        hintFactorLabel.setDisplayedMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigLevelFontPanel").getString("ConfigLevelFontPanel.hintFactorLabel.mnemonic").charAt(0));
         hintFactorLabel.setLabelFor(hintFactorTextField);
         hintFactorLabel.setText(bundle.getString("ConfigLevelFontPanel.hintFactorLabel.text_1")); // NOI18N
 
@@ -525,7 +521,7 @@ public class ConfigLevelFontPanel extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        resetButton.setMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigGeneralPanel").getString("ConfigGeneralPanel.resetButton.mnemonic").charAt(0));
+        resetButton.setMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigLevelFontPanel").getString("ConfigLevelFontPanel.resetButton.mnemonic").charAt(0));
         resetButton.setText(bundle.getString("ConfigLevelFontPanel.resetButton.text_1")); // NOI18N
         resetButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -728,7 +724,7 @@ public class ConfigLevelFontPanel extends javax.swing.JPanel {
     }
     
     private void chooseFont(int index) {
-        Font font = MyFontChooser.showDialog(null, java.util.ResourceBundle.getBundle("intl/ConfigGeneralPanel").getString("ConfigGeneralPanel.choose_font"), fonts[index]);
+        Font font = MyFontChooser.showDialog(null, java.util.ResourceBundle.getBundle("intl/ConfigLevelFontPanel").getString("ConfigLevelFontPanel.choose_font"), fonts[index]);
         if (font != null) {
             fonts[index] = font;
             setFont(fonts[index], fontLabels[index]);
@@ -739,17 +735,17 @@ public class ConfigLevelFontPanel extends javax.swing.JPanel {
         int style = font.getStyle();
         String styleStr = "";
         switch (style) {
-            case Font.PLAIN: styleStr = java.util.ResourceBundle.getBundle("intl/ConfigGeneralPanel").getString("ConfigGeneralPanel.regular"); break;
-            case Font.BOLD: styleStr = java.util.ResourceBundle.getBundle("intl/ConfigGeneralPanel").getString("ConfigGeneralPanel.bold"); break;
-            case Font.ITALIC: styleStr = java.util.ResourceBundle.getBundle("intl/ConfigGeneralPanel").getString("ConfigGeneralPanel.italic"); break;
-            case Font.BOLD + Font.ITALIC: styleStr = java.util.ResourceBundle.getBundle("intl/ConfigGeneralPanel").getString("ConfigGeneralPanel.bold_italic"); break;
+            case Font.PLAIN: styleStr = java.util.ResourceBundle.getBundle("intl/ConfigLevelFontPanel").getString("ConfigLevelFontPanel.regular"); break;
+            case Font.BOLD: styleStr = java.util.ResourceBundle.getBundle("intl/ConfigLevelFontPanel").getString("ConfigLevelFontPanel.bold"); break;
+            case Font.ITALIC: styleStr = java.util.ResourceBundle.getBundle("intl/ConfigLevelFontPanel").getString("ConfigLevelFontPanel.italic"); break;
+            case Font.BOLD + Font.ITALIC: styleStr = java.util.ResourceBundle.getBundle("intl/ConfigLevelFontPanel").getString("ConfigLevelFontPanel.bold_italic"); break;
         }
         label.setText(font.getName() + " " + font.getSize() + " " + styleStr);
     }
     
     private void chooseColor(int index, boolean foreGround) {
         Color init = foreGround ? levels[index].getForegroundColor() : levels[index].getBackgroundColor();
-        Color color = JColorChooser.showDialog(this, java.util.ResourceBundle.getBundle("intl/ConfigGeneralPanel").getString("ConfigGeneralPanel.choose_color"), init);
+        Color color = JColorChooser.showDialog(this, java.util.ResourceBundle.getBundle("intl/ConfigLevelFontPanel").getString("ConfigLevelFontPanel.choose_color"), init);
         if (color != null) {
             if (foreGround) {
                 levels[index].setForegroundColor(color);

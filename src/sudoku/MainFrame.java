@@ -3808,7 +3808,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
     public boolean isEingabeModus() {
         return eingabeModus;
     }
-
+    
     class MyFileFilter extends FileFilter {
 
         private int type;

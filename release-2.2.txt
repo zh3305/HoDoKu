@@ -42,6 +42,7 @@ Features added:
   - #3387347: Switching to "Show all candidates" retains eliminations
   - #3510435: Clear cells using the mouse
   - #3515456: Locked candidates separation
+  - #3520336: Reorganize preferences dialog
 
 Bugs fixed:
 
