@@ -39,6 +39,7 @@ public class ConfigDialog extends javax.swing.JDialog {
     private static final long serialVersionUID = 1L;
     private ConfigSolverPanel myConfigSolverPanel;
     private ConfigGeneralPanel myGeneralPanel;
+    private ConfigLevelFontPanel myLevelFontPanel;
     private ConfigStepPanel myConfigStepPanel;
     private ConfigColorPanel myConfigColorPanel;
     private ConfigFindAllStepsPanel myConfigFindAllStepsPanel;
@@ -74,6 +75,9 @@ public class ConfigDialog extends javax.swing.JDialog {
         myGeneralPanel = new ConfigGeneralPanel(parent);
         generalPanel.add(myGeneralPanel, BorderLayout.CENTER);
         
+        myLevelFontPanel = new ConfigLevelFontPanel(parent);
+        levelFontPanel.add(myLevelFontPanel, BorderLayout.CENTER);
+        
         myConfigStepPanel = new ConfigStepPanel();
         stepConfigPanel.add(myConfigStepPanel, BorderLayout.CENTER);
         
@@ -92,7 +96,7 @@ public class ConfigDialog extends javax.swing.JDialog {
         myConfigGeneratorPanel = new ConfigGeneratorPanel();
         generatorPanel.add(myConfigGeneratorPanel, BorderLayout.CENTER);
         // temporarily remove the pattern tab - not suitable for production use yet
-        tabbedPane.remove(7);
+        tabbedPane.remove(8);
         
         if (tabIndex != -1) {
             tabbedPane.setSelectedIndex(tabIndex);
@@ -109,6 +113,7 @@ public class ConfigDialog extends javax.swing.JDialog {
 
         tabbedPane = new javax.swing.JTabbedPane();
         generalPanel = new javax.swing.JPanel();
+        levelFontPanel = new javax.swing.JPanel();
         solverPanel = new javax.swing.JPanel();
         findAllStepsPanel = new javax.swing.JPanel();
         heuristicsPanel = new javax.swing.JPanel();
@@ -130,6 +135,9 @@ public class ConfigDialog extends javax.swing.JDialog {
 
         generalPanel.setLayout(new java.awt.BorderLayout());
         tabbedPane.addTab(bundle.getString("ConfigDialog.generalPanel.TabConstraints.tabTitle"), generalPanel); // NOI18N
+
+        levelFontPanel.setLayout(new java.awt.BorderLayout());
+        tabbedPane.addTab(bundle.getString("ConfigDialog.levelFontPanel.TabConstraints.tabTitle"), levelFontPanel); // NOI18N
 
         solverPanel.setLayout(new java.awt.BorderLayout());
         tabbedPane.addTab(bundle.getString("ConfigDialog.solverPanel.TabConstraints.tabTitle"), solverPanel); // NOI18N
@@ -203,6 +211,7 @@ public class ConfigDialog extends javax.swing.JDialog {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         myConfigSolverPanel.okPressed();
         myGeneralPanel.okPressed();
+        myLevelFontPanel.okPressed();
         myConfigStepPanel.okPressed();
         myConfigColorPanel.okPressed();
         myConfigFindAllStepsPanel.okPressed();
@@ -265,6 +274,7 @@ public class ConfigDialog extends javax.swing.JDialog {
     private javax.swing.JPanel generalPanel;
     private javax.swing.JPanel generatorPanel;
     private javax.swing.JPanel heuristicsPanel;
+    private javax.swing.JPanel levelFontPanel;
     private javax.swing.JButton okButton;
     private javax.swing.JPanel solverPanel;
     private javax.swing.JPanel stepConfigPanel;
