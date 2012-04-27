@@ -95,10 +95,9 @@ import solver.SudokuStepFinder;
  * @author  hobiwan
  */
 public class SudokuPanel extends javax.swing.JPanel implements Printable {
+
     private static final long serialVersionUID = 1L;
     // Konstante
-
-    private boolean colorKu = Options.getInstance().isShowColorKu();
     /** Translation of KeyChars in KeyCodes for laptops that use special key combinations for number */
     private static final int[] KEY_CODES = new int[]{
         KeyEvent.VK_0, KeyEvent.VK_1, KeyEvent.VK_2, KeyEvent.VK_3, KeyEvent.VK_4,
@@ -106,12 +105,16 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
     };
     private static final int DELTA = 5; // Abstand zwischen den Quadraten in Pixel
     private static final int DELTA_RAND = 5; // Abstand zu den Rändern
+    
+    private static BufferedImage[] colorKuImagesSmall = new BufferedImage[Sudoku2.UNITS];
+    private static BufferedImage[] colorKuImagesLarge = new BufferedImage[Sudoku2.UNITS];
     // Konfigurationseigenschaften
     private boolean showCandidates = Options.getInstance().isShowCandidates(); // Alle möglichen Kandidaten anzeigen
     private boolean showWrongValues = Options.getInstance().isShowWrongValues();    // falsche Werte mit anderer Farbe
     private boolean showDeviations = Options.getInstance().isShowDeviations();  // Werte und Kandidaten, die von der Lösung abweichen
     private boolean invalidCells = Options.getInstance().isInvalidCells(); // true: ungültige Zellen, false: mögliche Zellen
     private boolean showInvalidOrPossibleCells = false;  // Ungültige/Mögliche Zellen für showHintCellValue mit anderem Hintergrund
+    private boolean showColorKu = Options.getInstance().isShowColorKu();
     /** An array for every candidate for which a filter is set; index 10 stands for "filter bivalue cells" */
     private boolean[] showHintCellValues = new boolean[11];
     //private int showHintCellValue = 0;
@@ -2112,8 +2115,9 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                     dx = (cellSize - g2.getFontMetrics().stringWidth("8")) / 2.0;
                     dy = (cellSize + g2.getFontMetrics().getAscent() - g2.getFontMetrics().getDescent()) / 2.0;
                     int value = sudoku.getValue(cellIndex);
-                    if (colorKu) {
-                        drawColorBox(value, g2, startX + 3, startY + 2, cellSize - 4);
+                    if (showColorKu) {
+                        drawColorBox(value,g2,getX(line, col),getY(line, col),cellSize, true);
+//                        drawColorBox(value, g2, startX + 3, startY + 2, cellSize - 4);
                         if (offcolor) {
                             setColor(g2, allBlack, Color.black);
                             g2.drawString("X", (int) (startX + dx), (int) (startY + dy));
@@ -2237,8 +2241,10 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                             }
                             Color oldColor = g2.getColor();
 
-                            if (colorKu) {
-                                drawColorBox(i, g2, (int) (startX + shiftX + 1), (int) (startY + shiftY + 1), (int) ddy - 1);
+                            if (showColorKu) {
+                                drawColorBox(i, g2, (int) Math.round(startX + shiftX + third / 2.0 - ddy / 2.0), 
+                                        (int) Math.round(startY + shiftY + third / 2.0 - ddy / 2.0), (int) Math.round(ddy), false);
+//                                drawColorBox(i, g2, (int) (startX + shiftX + 1), (int) (startY + shiftY + 1), (int) ddy - 1);
                             }
 
                             if (coloringColor != null) {
@@ -2257,7 +2263,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                             }
                             //g2.setColor(candColor);
                             setColor(g2, allBlack, oldColor);
-                            if (!colorKu) {
+                            if (!showColorKu) {
                                 g2.drawString(Integer.toString(i), (int) Math.round(startX + dcx + shiftX), (int) Math.round(startY + dcy + shiftY));
                             }
                         }
@@ -3169,8 +3175,8 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
         return showDeviations;
     }
 
-    public boolean isColorKu() {
-        return colorKu;
+    public boolean isShowColorKu() {
+        return showColorKu;
     }
 
     public void setShowDeviations(boolean showDeviations) {
@@ -3784,18 +3790,33 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
         }
     }
 
-    public void setColorKu(boolean val) {
-        colorKu = val;
+    public void setShowColorKu(boolean val) {
+        showColorKu = val;
         repaint();
         mainFrame.prepareToggleButtonsForColorku(val);
         setColorkuInPopupMenu(val);
     }
 
-    private void drawColorBox(int n, Graphics gc, int cx, int cy, int boxsize) {
-        Color cc = Options.getInstance().getColorKuColor(n);
-        Color old = gc.getColor();
-        gc.setColor(cc);
-        gc.fillRect(cx, cy, boxsize, boxsize);
-        gc.setColor(old);
+    private void drawColorBox(int n, Graphics gc, int cx, int cy, int boxSize, boolean large) {
+        BufferedImage[] images = null;
+        if (large) {
+            images = colorKuImagesLarge;
+        } else {
+            images = colorKuImagesSmall;
+        }
+        if (images[0] == null || images[0].getWidth() != boxSize) {
+            for (int i = 0; i < images.length; i++) {
+                images[i] = new ColorKuImage(boxSize, Options.getInstance().getColorKuColor(i + 1));
+            }
+        }
+//        double drawFactor = 0.9;
+//        int rand = (int)(boxSize * (1.0 - drawFactor));
+//        Color cc = Options.getInstance().getColorKuColor(n);
+//        Color old = gc.getColor();
+//        gc.setColor(cc);
+//        gc.fillOval(cx + rand / 2, cy + rand / 2, boxSize - rand, boxSize - rand);
+//        gc.fillRect(cx + delta / 2, cy + delta / 2, boxSize - delta, boxSize - delta);
+        gc.drawImage(images[n - 1], cx, cy, null);
+//        gc.setColor(old);
     }
 }

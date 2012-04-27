@@ -2559,7 +2559,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
     }//GEN-LAST:event_savePuzzleMenuItemActionPerformed
 
     private void showColorKuMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showColorKuMenuItemActionPerformed
-        sudokuPanel.setColorKu(showColorKuMenuItem.isSelected());
+        sudokuPanel.setShowColorKu(showColorKuMenuItem.isSelected());
         check();
         fixFocus();
     }//GEN-LAST:event_showColorKuMenuItemActionPerformed
@@ -3477,7 +3477,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
             showCandidatesMenuItem.setSelected(sudokuPanel.isShowCandidates());
             showWrongValuesMenuItem.setSelected(sudokuPanel.isShowWrongValues());
             showDeviationsMenuItem.setSelected(sudokuPanel.isShowDeviations());
-            showColorKuMenuItem.setSelected(sudokuPanel.isColorKu());
+            showColorKuMenuItem.setSelected(sudokuPanel.isShowColorKu());
             for (int i = 0; i < toggleButtons.length; i++) {
 //                if (i == sudokuPanel.getShowHintCellValue() - 1) {
                 if (sudokuPanel.getShowHintCellValues()[i + 1]) {
