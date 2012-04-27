@@ -33,7 +33,7 @@ public class ColorKuImage extends BufferedImage {
     /** Size of largest overlay in pixel */
     private static final int IMG_MAX = 98;
     /** Increment for overlay sizes in pixel */
-    private static final int IMG_FACTOR = 8;
+    private static final int IMG_FACTOR = 4;
     /** The latest overlay loaded, for caching */
     private static BufferedImage lastOverlay = null;
 
