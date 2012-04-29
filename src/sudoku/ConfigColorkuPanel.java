@@ -104,9 +104,10 @@ public class ConfigColorkuPanel extends javax.swing.JPanel {
             }
         });
 
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("jPanel2.txt"))); // NOI18N
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
-        v1Button.setText("...");
+        v1Button.setText(bundle.getString("ConfigColorkuPanel.v1Button.text")); // NOI18N
         v1Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 v1ButtonActionPerformed(evt);
@@ -115,10 +116,11 @@ public class ConfigColorkuPanel extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipady = 16;
         gridBagConstraints.insets = new java.awt.Insets(6, 2, 6, 2);
         jPanel2.add(v1Button, gridBagConstraints);
 
-        v2Button.setText("...");
+        v2Button.setText(bundle.getString("ConfigColorkuPanel.v2Button.text")); // NOI18N
         v2Button.setActionCommand(bundle.getString("ConfigColorkuPanel.v2Button.actionCommand")); // NOI18N
         v2Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -128,10 +130,11 @@ public class ConfigColorkuPanel extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipady = 16;
         gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 2);
         jPanel2.add(v2Button, gridBagConstraints);
 
-        v3Button.setText("...");
+        v3Button.setText(bundle.getString("ConfigColorkuPanel.v3Button.text")); // NOI18N
         v3Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 v3ButtonActionPerformed(evt);
@@ -140,10 +143,11 @@ public class ConfigColorkuPanel extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipady = 16;
         gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 2);
         jPanel2.add(v3Button, gridBagConstraints);
 
-        v4Button.setText("...");
+        v4Button.setText(bundle.getString("ConfigColorkuPanel.v4Button.text")); // NOI18N
         v4Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 v4ButtonActionPerformed(evt);
@@ -152,10 +156,11 @@ public class ConfigColorkuPanel extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.ipady = 16;
         gridBagConstraints.insets = new java.awt.Insets(6, 2, 6, 2);
         jPanel2.add(v4Button, gridBagConstraints);
 
-        v5Button.setText("...");
+        v5Button.setText(bundle.getString("ConfigColorkuPanel.v5Button.text")); // NOI18N
         v5Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 v5ButtonActionPerformed(evt);
@@ -164,10 +169,11 @@ public class ConfigColorkuPanel extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.ipady = 16;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel2.add(v5Button, gridBagConstraints);
 
-        v6Button.setText("...");
+        v6Button.setText(bundle.getString("ConfigColorkuPanel.v6Button.text")); // NOI18N
         v6Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 v6ButtonActionPerformed(evt);
@@ -176,10 +182,11 @@ public class ConfigColorkuPanel extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.ipady = 16;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel2.add(v6Button, gridBagConstraints);
 
-        v7Button.setText("...");
+        v7Button.setText(bundle.getString("ConfigColorkuPanel.v7Button.text")); // NOI18N
         v7Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 v7ButtonActionPerformed(evt);
@@ -188,10 +195,11 @@ public class ConfigColorkuPanel extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.ipady = 16;
         gridBagConstraints.insets = new java.awt.Insets(6, 2, 6, 2);
         jPanel2.add(v7Button, gridBagConstraints);
 
-        v8Button.setText("...");
+        v8Button.setText(bundle.getString("ConfigColorkuPanel.v8Button.text")); // NOI18N
         v8Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 v8ButtonActionPerformed(evt);
@@ -200,10 +208,11 @@ public class ConfigColorkuPanel extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.ipady = 16;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel2.add(v8Button, gridBagConstraints);
 
-        v9Button.setText("...");
+        v9Button.setText(bundle.getString("ConfigColorkuPanel.v9Button.text")); // NOI18N
         v9Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 v9ButtonActionPerformed(evt);
@@ -212,6 +221,7 @@ public class ConfigColorkuPanel extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.ipady = 16;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel2.add(v9Button, gridBagConstraints);
 
@@ -264,7 +274,7 @@ public class ConfigColorkuPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(325, Short.MAX_VALUE))
+                .addContainerGap(349, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(389, Short.MAX_VALUE)
                 .addComponent(resetButton)
@@ -275,7 +285,7 @@ public class ConfigColorkuPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 130, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 101, Short.MAX_VALUE)
                 .addComponent(resetButton)
                 .addContainerGap())
         );
@@ -335,7 +345,7 @@ public class ConfigColorkuPanel extends javax.swing.JPanel {
         Color color = JColorChooser.showDialog(this, java.util.ResourceBundle.getBundle("intl/ConfigColorPanel").getString("ConfigColorPanel.choose_color"), init);
         if (color != null) {
             colors[index] = color;
-            initButton(buttons[index], color);
+            initButton(buttons[index], color, index > 1 ? true : false);
         }
     }
 
@@ -395,17 +405,23 @@ public class ConfigColorkuPanel extends javax.swing.JPanel {
             colors[10] = Options.getInstance().getColorKuColor(9);
         }
 
-        for (int i = 0; i < buttons.length; i++) {
-            initButton(buttons[i], colors[i]);
+        initButton(buttons[0], colors[0], false);
+        initButton(buttons[1], colors[1], false);
+        for (int i = 2; i < buttons.length; i++) {
+            initButton(buttons[i], colors[i], true);
         }
     }
 
-    private void initButton(JButton button, Color color) {
+    private void initButton(JButton button, Color color, boolean cand) {
+        int size = 10;
+        if (cand) {
+            size = 30;
+        }
         //button.setText(" ");
-        Image img = new BufferedImage(10, 10, BufferedImage.TYPE_INT_RGB);
+        Image img = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
         Graphics g = img.getGraphics();
         g.setColor(color);
-        g.fillRect(0, 0, 10, 10);
+        g.fillRect(0, 0, img.getWidth(null) - 1, img.getHeight(null) - 1);
         button.setIcon(new ImageIcon(img));
         if (UIManager.getLookAndFeel().getName().equals("CDE/Motif")) {
             button.setBackground(color);

@@ -3529,6 +3529,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                 undoStack.pop();
             }
             updateCellZoomPanel();
+            mainFrame.check();
             mainFrame.fixFocus();
             repaint();
         }
@@ -3640,6 +3641,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
             }
             updateCellZoomPanel();
             mainFrame.check();
+            mainFrame.fixFocus();
             repaint();
         }
     }
