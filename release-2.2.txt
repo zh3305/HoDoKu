@@ -43,6 +43,7 @@ Features added:
   - #3510435: Clear cells using the mouse
   - #3515456: Locked candidates separation
   - #3520336: Reorganize preferences dialog
+  - #3520334: Change UI for saving Sudokus as images
 
 Bugs fixed:
 

@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with HoDoKu. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package sudoku;
 
 import java.awt.event.ActionEvent;
@@ -29,65 +28,63 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.KeyStroke;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * 
  * @author hobiwan
  */
 public class WriteAsPNGDialog extends javax.swing.JDialog {
+
     private static final long serialVersionUID = 1L;
     private File bildFile;
     private int auflösung;
     private double bildSize;
     private int einheit;
     private boolean ok = false;
-    
     private JRadioButton[] einheiten;
-    
+
     /** Creates new form WriteAsPNGDialog
      * @param parent
      * @param modal
-     * @param bildFile
      * @param size
      * @param auflösung
      * @param einheit  
      */
-    public WriteAsPNGDialog(java.awt.Frame parent, boolean modal, File bildFile,
+    public WriteAsPNGDialog(java.awt.Frame parent, boolean modal,
             double size, int auflösung, int einheit) {
         super(parent, modal);
         initComponents();
-        
+
         this.auflösung = auflösung;
         this.bildSize = size;
         this.einheit = einheit;
-        this.bildFile = bildFile;
-        
+        this.bildFile = new File(Options.getInstance().getDefaultImageDir());
+
         einheiten = new JRadioButton[3];
         einheiten[0] = mmRadioButton;
         einheiten[1] = inchRadioButton;
         einheiten[2] = pixelRadioButton;
-        
-        if (bildFile != null) {
-            dateiNameTextField.setText(bildFile.getAbsolutePath());
-            dateiNameTextField.setCaretPosition(dateiNameTextField.getText().length());
-        }
+
         auflösungTextField.setText(Integer.toString(auflösung));
         größeTextField.setText(Double.toString(size));
         einheiten[einheit].setSelected(true);
-        
+
         getRootPane().setDefaultButton(bildSpeichernButton);
         KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, false);
         Action escapeAction = new AbstractAction() {
+
             private static final long serialVersionUID = 1L;
+
             @Override
             public void actionPerformed(ActionEvent e) {
-                setVisible( false );
+                setVisible(false);
             }
         };
         getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(escapeKeyStroke, "ESCAPE");
         getRootPane().getActionMap().put("ESCAPE", escapeAction);
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -106,9 +103,6 @@ public class WriteAsPNGDialog extends javax.swing.JDialog {
         mmRadioButton = new javax.swing.JRadioButton();
         inchRadioButton = new javax.swing.JRadioButton();
         pixelRadioButton = new javax.swing.JRadioButton();
-        dateiNameLabel = new javax.swing.JLabel();
-        dateiNameTextField = new javax.swing.JTextField();
-        durchsuchenButton = new javax.swing.JButton();
         bildSpeichernButton = new javax.swing.JButton();
         abbrechenButton = new javax.swing.JButton();
 
@@ -137,8 +131,8 @@ public class WriteAsPNGDialog extends javax.swing.JDialog {
                     .addComponent(auflösungLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(größePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(auflösungTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
-                    .addComponent(größeTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE))
+                    .addComponent(auflösungTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
+                    .addComponent(größeTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE))
                 .addContainerGap())
         );
         größePanelLayout.setVerticalGroup(
@@ -187,7 +181,7 @@ public class WriteAsPNGDialog extends javax.swing.JDialog {
                     .addComponent(mmRadioButton)
                     .addComponent(inchRadioButton)
                     .addComponent(pixelRadioButton))
-                .addContainerGap(45, Short.MAX_VALUE))
+                .addContainerGap(49, Short.MAX_VALUE))
         );
         einheitPanelLayout.setVerticalGroup(
             einheitPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -199,18 +193,6 @@ public class WriteAsPNGDialog extends javax.swing.JDialog {
                 .addComponent(pixelRadioButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        dateiNameLabel.setDisplayedMnemonic(java.util.ResourceBundle.getBundle("intl/WriteAsPNGDialog").getString("WriteAsPNGDialog.dateiNameLabel.mnemonic").charAt(0));
-        dateiNameLabel.setLabelFor(dateiNameTextField);
-        dateiNameLabel.setText(bundle.getString("WriteAsPNGDialog.dateiNameLabel.text")); // NOI18N
-
-        durchsuchenButton.setMnemonic('.');
-        durchsuchenButton.setText("..."); // NOI18N
-        durchsuchenButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                durchsuchenButtonActionPerformed(evt);
-            }
-        });
 
         bildSpeichernButton.setMnemonic(java.util.ResourceBundle.getBundle("intl/WriteAsPNGDialog").getString("WriteAsPNGDialog.bildSpeichernButton.mnemonic").charAt(0));
         bildSpeichernButton.setText(bundle.getString("WriteAsPNGDialog.bildSpeichernButton.text")); // NOI18N
@@ -239,12 +221,6 @@ public class WriteAsPNGDialog extends javax.swing.JDialog {
                         .addComponent(größePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(einheitPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(dateiNameLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dateiNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(durchsuchenButton))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(bildSpeichernButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -261,138 +237,103 @@ public class WriteAsPNGDialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(größePanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(einheitPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(14, 14, 14)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(dateiNameLabel)
-                    .addComponent(durchsuchenButton)
-                    .addComponent(dateiNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(14, 14, 14)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(bildSpeichernButton)
-                    .addComponent(abbrechenButton))
+                    .addComponent(abbrechenButton)
+                    .addComponent(bildSpeichernButton))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
+
     private void bildSpeichernButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bildSpeichernButtonActionPerformed
-        String fileName = dateiNameTextField.getText();
-        if (fileName.length() > 0) {
-            try {
-                bildFile = new File(fileName);
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("intl/WriteAsPNGDialog").getString("WriteAsPNGDialog.invalid_filename"), 
-                        java.util.ResourceBundle.getBundle("intl/WriteAsPNGDialog").getString("WriteAsPNGDialog.error"),
-                        JOptionPane.ERROR_MESSAGE);
-            }
-        }
-        if (bildFile == null) {
-            durchsuchenButtonActionPerformed(null);
-        }
-        if (bildFile == null) {
-            return;
-        }
-        try {
-            auflösung = Integer.parseInt(auflösungTextField.getText());
-            bildSize = Double.parseDouble(größeTextField.getText());
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("intl/WriteAsPNGDialog").getString("WriteAsPNGDialog.invalid_input_format"), 
-                    java.util.ResourceBundle.getBundle("intl/WriteAsPNGDialog").getString("WriteAsPNGDialog.error"),
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        for (int i = 0; i < einheiten.length; i++) {
-            if (einheiten[i].isSelected()) {
-                einheit = i;
-                break;
-            }
-        }
-        ok = true;
-        setVisible(false);
-    }//GEN-LAST:event_bildSpeichernButtonActionPerformed
-    
-    private void durchsuchenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_durchsuchenButtonActionPerformed
         JFileChooser chooser = new JFileChooser(getBildFile());
-        chooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
-            @Override
-            public boolean accept(File f) {
-                if (f.isDirectory()) {
-                    return true;
-                }
-                String[] parts = f.getName().split("\\.");
-                if (parts.length > 1) {
-                    String ext = parts[parts.length - 1];
-                    if (ext.equalsIgnoreCase("png")) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-            @Override
-            public String getDescription() {
-                return "*.png " + java.util.ResourceBundle.getBundle("intl/WriteAsPNGDialog").getString("WriteAsPNGDialog.files");
-            }
-        });
-        
-        int returnVal = chooser.showOpenDialog(this);
+        chooser.setFileFilter(new FileNameExtensionFilter(
+                "*.png " + java.util.ResourceBundle.getBundle("intl/WriteAsPNGDialog").getString("WriteAsPNGDialog.files"),
+                "png"));
+
+        int returnVal = chooser.showSaveDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             bildFile = chooser.getSelectedFile();
             String name = getBildFile().getAbsolutePath();
-            if (! name.toLowerCase().endsWith(".png")) {
+            if (!name.toLowerCase().endsWith(".png")) {
                 name += ".png";
-                bildFile = new File(name);
+                try {
+                    bildFile = new File(name);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("intl/WriteAsPNGDialog").getString("WriteAsPNGDialog.invalid_filename"),
+                            java.util.ResourceBundle.getBundle("intl/WriteAsPNGDialog").getString("WriteAsPNGDialog.error"),
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
             }
-            dateiNameTextField.setText(getBildFile().getAbsolutePath());
-            dateiNameTextField.setCaretPosition(dateiNameTextField.getText().length());
+            if (bildFile == null) {
+                // can it even happen? - beter save than sorry
+                return;
+            }
+            try {
+                auflösung = Integer.parseInt(auflösungTextField.getText());
+                bildSize = Double.parseDouble(größeTextField.getText());
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("intl/WriteAsPNGDialog").getString("WriteAsPNGDialog.invalid_input_format"),
+                        java.util.ResourceBundle.getBundle("intl/WriteAsPNGDialog").getString("WriteAsPNGDialog.error"),
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            for (int i = 0; i < einheiten.length; i++) {
+                if (einheiten[i].isSelected()) {
+                    einheit = i;
+                    break;
+                }
+            }
+            Options.getInstance().setDefaultImageDir(bildFile.getParent());
+            ok = true;
+            setVisible(false);
         }
-        bildSpeichernButton.requestFocusInWindow();
-    }//GEN-LAST:event_durchsuchenButtonActionPerformed
-    
+    }//GEN-LAST:event_bildSpeichernButtonActionPerformed
+
     private void abbrechenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_abbrechenButtonActionPerformed
         setVisible(false);
     }//GEN-LAST:event_abbrechenButtonActionPerformed
-    
+
     public File getBildFile() {
         return bildFile;
     }
-    
+
     public int getAuflösung() {
         return auflösung;
     }
-    
+
     public double getBildSize() {
         return bildSize;
     }
-    
+
     public int getEinheit() {
         return einheit;
     }
-    
+
     public boolean isOk() {
         return ok;
     }
-    
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             @Override
             public void run() {
-                new WriteAsPNGDialog(new javax.swing.JFrame(), true, null, 0, 0, 0).setVisible(true);
+                new WriteAsPNGDialog(new javax.swing.JFrame(), true, 0, 0, 0).setVisible(true);
             }
         });
     }
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton abbrechenButton;
     private javax.swing.JLabel auflösungLabel;
     private javax.swing.JTextField auflösungTextField;
     private javax.swing.JButton bildSpeichernButton;
-    private javax.swing.JLabel dateiNameLabel;
-    private javax.swing.JTextField dateiNameTextField;
-    private javax.swing.JButton durchsuchenButton;
     private javax.swing.ButtonGroup einheitButtonGroup;
     private javax.swing.JPanel einheitPanel;
     private javax.swing.JLabel größeLabel;
@@ -402,5 +343,4 @@ public class WriteAsPNGDialog extends javax.swing.JDialog {
     private javax.swing.JRadioButton mmRadioButton;
     private javax.swing.JRadioButton pixelRadioButton;
     // End of variables declaration//GEN-END:variables
-    
 }

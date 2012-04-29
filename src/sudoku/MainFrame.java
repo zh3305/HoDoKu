@@ -151,8 +151,6 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
     private JTabbedPane tabPane = new JTabbedPane();    // Ausdruck
     private PageFormat pageFormat = null;
     private PrinterJob job = null;
-    //private File bildFile = new File("C:\\0_temp\\test.png");
-    private File bildFile = new File(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.PNG_path"));
     private double bildSize = 400;
     private int bildAuflösung = 96;
     private int bildEinheit = 2;    // File/IO
@@ -213,8 +211,6 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
     private String sudokuFileName = null;
     /** The file type of the last loaded sudoku file: 1 .. hsol, 8 .. txt or 9 .. ss */
     private int sudokuFileType = -1;
-    /** ColorKu mode selected? */
-    private boolean colorKu = false;
 
     /** Incorporates the last subversion revision of this file into
      *  the version string.<br><br>
@@ -1849,10 +1845,10 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
     }//GEN-LAST:event_summaryMenuItemActionPerformed
 
     private void speichernAlsBildMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_speichernAlsBildMenuItemActionPerformed
-        WriteAsPNGDialog dlg = new WriteAsPNGDialog(this, true, bildFile, bildSize, bildAuflösung, bildEinheit);
+        WriteAsPNGDialog dlg = new WriteAsPNGDialog(this, true, bildSize, bildAuflösung, bildEinheit);
         dlg.setVisible(true);
         if (dlg.isOk()) {
-            bildFile = dlg.getBildFile();
+            File bildFile = dlg.getBildFile();
             bildAuflösung = dlg.getAuflösung();
             bildSize = dlg.getBildSize();
             bildEinheit = dlg.getEinheit();
@@ -1867,6 +1863,17 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
                 case 2:
                     size = (int) bildSize;
                     break;
+            }
+            if (bildFile.exists()) {
+                // Override warning!
+                MessageFormat msgf = new MessageFormat("");
+                Object[] args = new Object[]{bildFile.getName()};
+                msgf.applyPattern(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.file_exists"));
+                String warning = msgf.format(args);
+                String title = java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.hint");
+                if (JOptionPane.showConfirmDialog(null, warning, title, JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
+                    return;
+                }
             }
             sudokuPanel.saveSudokuAsPNG(bildFile, size, bildAuflösung);
         }
@@ -2566,7 +2573,6 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
     }//GEN-LAST:event_showColorKuMenuItemActionPerformed
 
     public final void prepareToggleButtonsForColorku(boolean on) {
-        colorKu = on;
         if (on) {
             for (int i = 0, lim = toggleButtons.length - 1; i < lim; i++) {
                 JToggleButton button = toggleButtons[i];

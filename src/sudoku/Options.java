@@ -434,7 +434,9 @@ public final class Options {
     private Font bigFont = new Font(BIG_FONT.getName(), BIG_FONT.getStyle(), BIG_FONT.getSize());
     private Font smallFont = new Font(SMALL_FONT.getName(), SMALL_FONT.getStyle(), SMALL_FONT.getSize());
     public static final String DEFAULT_FILE_DIR = System.getProperty("user.home");
+    public static final String DEFAULT_IMAGE_DIR = System.getProperty("user.home");
     private String defaultFileDir = DEFAULT_FILE_DIR;
+    private String defaultImageDir = DEFAULT_IMAGE_DIR;
     public static final String DEFAULT_LANGUAGE = "";
     private String language = DEFAULT_LANGUAGE;
     public static final String DEFAULT_LAF = "";
@@ -2093,5 +2095,19 @@ public final class Options {
      */
     public void setColorKuDeviationColor(Color colorKuDeviationColor) {
         this.colorKuDeviationColor = colorKuDeviationColor;
+    }
+
+    /**
+     * @return the defaultImageDir
+     */
+    public String getDefaultImageDir() {
+        return defaultImageDir;
+    }
+
+    /**
+     * @param defaultImageDir the defaultImageDir to set
+     */
+    public void setDefaultImageDir(String defaultImageDir) {
+        this.defaultImageDir = defaultImageDir;
     }
 }
