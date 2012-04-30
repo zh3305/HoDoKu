@@ -745,7 +745,16 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                             int showHintCellValue = getShowHintCellValue();
                             if ((cand == -1 || !sudoku.isCandidate(line, col, cand, !showCandidates))
                                     && showHintCellValue != 0) {
-                                toggleCandidateInCell(aktLine, aktCol, showHintCellValue);
+                                // if the candidate is not present, but part of the solution and
+                                // show deviations is set, it is displayed, although technically
+                                // not present: it should be toggled, even if it is not the
+                                // hint value
+                                if (showDeviations && sudoku.isSolutionSet() && 
+                                        cand == sudoku.getSolution(aktLine, aktCol)) {
+                                    toggleCandidateInCell(aktLine, aktCol, cand);
+                                } else {
+                                    toggleCandidateInCell(aktLine, aktCol, showHintCellValue);
+                                }
                             } else if (cand != -1) {
                                 toggleCandidateInCell(aktLine, aktCol, cand);
                             }
@@ -2693,10 +2702,8 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
     /**
      * Checks whether a candidate has been clicked. The correct values
      * for font metrics and candidate factors are ignored: the valid
-     * candidate region is simple the corresponding ninth of the cell.
-     * To adjust for the ignored values the "clickable region" of a candidate
-     * is reduced by a sixth in every direction.
-     *
+     * candidate region is simple the corresponding ninth of the cell.<br><br>
+     * 
      * @param p The point of a mouse click
      * @param line The line, in which p lies (may be -1 for "invalid")
      * @param col The column, in which p lies (may be -1 for "invalid")

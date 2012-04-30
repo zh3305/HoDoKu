@@ -44,6 +44,7 @@ Features added:
   - #3515456: Locked candidates separation
   - #3520336: Reorganize preferences dialog
   - #3520334: Change UI for saving Sudokus as images
+  - #3515747: Deviations, filters and alternate mouse mode
 
 Bugs fixed:
 
