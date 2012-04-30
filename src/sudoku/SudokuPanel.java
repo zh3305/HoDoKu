@@ -105,7 +105,6 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
     };
     private static final int DELTA = 5; // Abstand zwischen den Quadraten in Pixel
     private static final int DELTA_RAND = 5; // Abstand zu den Rändern
-    
     private static BufferedImage[] colorKuImagesSmall = new BufferedImage[Sudoku2.UNITS];
     private static BufferedImage[] colorKuImagesLarge = new BufferedImage[Sudoku2.UNITS];
     // Konfigurationseigenschaften
@@ -205,6 +204,8 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
     private long lastClickedTime = 0;
     /** The AWT double click speed (depends on system settings) */
     private long doubleClickSpeed = -1;
+    /** <code>true</code> for every candidate that can still be filtered */
+    private boolean[] remainingCandidates = new boolean[Sudoku2.UNITS];
 
     /** Creates new form SudokuPanel
      * @param mf 
@@ -749,8 +750,8 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                                 // show deviations is set, it is displayed, although technically
                                 // not present: it should be toggled, even if it is not the
                                 // hint value
-                                if (showDeviations && sudoku.isSolutionSet() && 
-                                        cand == sudoku.getSolution(aktLine, aktCol)) {
+                                if (showDeviations && sudoku.isSolutionSet()
+                                        && cand == sudoku.getSolution(aktLine, aktCol)) {
                                     toggleCandidateInCell(aktLine, aktCol, cand);
                                 } else {
                                     toggleCandidateInCell(aktLine, aktCol, showHintCellValue);
@@ -1469,6 +1470,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                 // doesnt work on all keyboards :-(
                 // more precisely: doesnt work, if the keyboard layout in the OS
                 // doesnt match the physical layout of the keyboard
+                short rem = sudoku.getRemainingCandidates();
                 char ch = evt.getKeyChar();
                 if (ch == '<' || ch == '>' || ch == ',' || ch == '.') {
                     boolean isUp = ch == '>' || ch == '.';
@@ -1483,19 +1485,27 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                                 }
                             }
                         }
-                        if (isUp) {
-                            cand++;
-                            if (cand > 9) {
-                                cand = 1;
+                        int count = 0;
+                        do {
+                            if (isUp) {
+                                cand++;
+                                if (cand > 9) {
+                                    cand = 1;
+                                }
+                            } else {
+                                cand--;
+                                if (cand < 1) {
+                                    cand = 9;
+                                }
                             }
-                        } else {
-                            cand--;
-                            if (cand < 1) {
-                                cand = 9;
-                            }
+                            count++;
+                        } while (count < 8 && (Sudoku2.MASKS[cand] & rem) == 0);
+                        if (count < 8) {
+                            // if only one candidate is left for filtering,
+                            // it would be toggled without this check
+                            setShowHintCellValue(cand);
+                            checkIsShowInvalidOrPossibleCells();
                         }
-                        setShowHintCellValue(cand);
-                        checkIsShowInvalidOrPossibleCells();
                     }
                 }
                 break;
@@ -2125,7 +2135,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                     dy = (cellSize + g2.getFontMetrics().getAscent() - g2.getFontMetrics().getDescent()) / 2.0;
                     int value = sudoku.getValue(cellIndex);
                     if (showColorKu) {
-                        drawColorBox(value,g2,getX(line, col),getY(line, col),cellSize, true);
+                        drawColorBox(value, g2, getX(line, col), getY(line, col), cellSize, true);
 //                        drawColorBox(value, g2, startX + 3, startY + 2, cellSize - 4);
                         if (offColor != null) {
                             setColor(g2, allBlack, offColor);
@@ -2251,7 +2261,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                             Color oldColor = g2.getColor();
 
                             if (showColorKu) {
-                                drawColorBox(i, g2, (int) Math.round(startX + shiftX + third / 2.0 - ddy / 2.0), 
+                                drawColorBox(i, g2, (int) Math.round(startX + shiftX + third / 2.0 - ddy / 2.0),
                                         (int) Math.round(startY + shiftY + third / 2.0 - ddy / 2.0), (int) Math.round(ddy), false);
 //                                drawColorBox(i, g2, (int) (startX + shiftX + 1), (int) (startY + shiftY + 1), (int) ddy - 1);
                             }
@@ -3812,7 +3822,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
             colorKuImagesSmall[i] = null;
         }
     }
-    
+
     private void drawColorBox(int n, Graphics gc, int cx, int cy, int boxSize, boolean large) {
         BufferedImage[] images = null;
         if (large) {
@@ -3834,5 +3844,30 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
 //        gc.fillRect(cx + delta / 2, cy + delta / 2, boxSize - delta, boxSize - delta);
         gc.drawImage(images[n - 1], cx, cy, null);
 //        gc.setColor(old);
+    }
+
+    /**
+     * Returns an array, that controls the display of the filter buttons in the toolbar.
+     * For every candidate, that is still present as candidate and thus can be
+     * filtered, the appropriate array element is <code>true</code>.<br><br>
+     * 
+     * Care has to be taken with prerequisites: 
+     * <ul>
+     * <li>If "Show all candidates" is disabled, filtering is not possible</li>
+     * <li>...</li>
+     * </ul>
+     * @return 
+     */
+    public boolean[] getRemainingCandidates() {
+        for (int i = 0; i < remainingCandidates.length; i++) {
+            remainingCandidates[i] = false;
+        }
+        if (isShowCandidates()) {
+            final int[] cands = Sudoku2.POSSIBLE_VALUES[sudoku.getRemainingCandidates()];
+            for (int i = 0; i < cands.length; i++) {
+                remainingCandidates[cands[i] - 1] = true;
+            }
+        }
+        return remainingCandidates;
     }
 }

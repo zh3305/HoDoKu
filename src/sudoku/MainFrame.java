@@ -94,6 +94,7 @@ import solver.SudokuSolverFactory;
  * @author  hobiwan
  */
 public class MainFrame extends javax.swing.JFrame implements FlavorListener {
+
     private static final long serialVersionUID = 1L;
 
     class ColorKuIcon implements Icon {
@@ -127,7 +128,6 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             return h;
         }
     }
-    
     public static final String VERSION = "HoDoKu - v2.2.0 beta";
 //    public static final String BUILD = "Build 16";
     public static final String BUILD;
@@ -135,7 +135,10 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
     private SudokuPanel sudokuPanel;
     //private DifficultyLevel level = Options.getInstance().getDifficultyLevels()[DifficultyType.EASY.ordinal()];
     private JToggleButton[] toggleButtons = new JToggleButton[10];
+    /** Icons for the filter toggle buttons in the toolbar */
     private Icon toggleButtonIcons[] = new Icon[10];
+    /** One empty icon for disabled filter buttons */
+    private Icon emptyToggleButtonIcon = new ImageIcon(getClass().getResource("/img/f_0c.png"));
     private JRadioButtonMenuItem[] levelMenuItems = new JRadioButtonMenuItem[5];
     private JRadioButtonMenuItem[] modeMenuItems;
     private boolean oldShowDeviations = true;
@@ -445,7 +448,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
 
         // initialize colorKuMeniItem
         showColorKuMenuItem.setSelected(Options.getInstance().isShowColorKu());
-        
+
         // Caret-Listener for display of Forcing Chains
         hinweisTextArea.addCaretListener(caretListener);
 
@@ -2579,8 +2582,9 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
                 Icon icon = button.getIcon();
                 int w = icon.getIconWidth();
                 int h = icon.getIconHeight();
-                Icon newicon = new ColorKuIcon(w, h, Options.getInstance().getColorKuColor(1 + i));
-                button.setIcon(newicon);
+                Icon newIcon = new ColorKuIcon(w, h, Options.getInstance().getColorKuColor(1 + i));
+                toggleButtonIcons[i] = newIcon;
+                button.setIcon(newIcon);
                 //button.repaint();
             }
         } else {
@@ -3485,14 +3489,29 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
             showWrongValuesMenuItem.setSelected(sudokuPanel.isShowWrongValues());
             showDeviationsMenuItem.setSelected(sudokuPanel.isShowDeviations());
             showColorKuMenuItem.setSelected(sudokuPanel.isShowColorKu());
+            boolean[] remainingCandidates = sudokuPanel.getRemainingCandidates();
+            for (int i = 0; i < remainingCandidates.length; i++) {
+                if (toggleButtons[i] != null) {
+                    if (remainingCandidates[i]) {
+                        if (!toggleButtons[i].isEnabled()) {
+                            toggleButtons[i].setEnabled(true);
+                            toggleButtons[i].setIcon(toggleButtonIcons[i]);
+                        }
+                    } else {
+                        if (toggleButtons[i].isEnabled()) {
+                            toggleButtons[i].setSelected(false);
+                            toggleButtons[i].setEnabled(false);
+                            toggleButtons[i].setIcon(emptyToggleButtonIcon);
+                        }
+                    }
+                }
+            }
             for (int i = 0; i < toggleButtons.length; i++) {
 //                if (i == sudokuPanel.getShowHintCellValue() - 1) {
-                if (sudokuPanel.getShowHintCellValues()[i + 1]) {
-                    if (toggleButtons[i] != null) {
+                if (toggleButtons[i] != null && toggleButtons[i].isEnabled()) {
+                    if (sudokuPanel.getShowHintCellValues()[i + 1]) {
                         toggleButtons[i].setSelected(true);
-                    }
-                } else {
-                    if (toggleButtons[i] != null) {
+                    } else {
                         toggleButtons[i].setSelected(false);
                     }
                 }
@@ -3814,7 +3833,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
     public boolean isEingabeModus() {
         return eingabeModus;
     }
-    
+
     class MyFileFilter extends FileFilter {
 
         private int type;

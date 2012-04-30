@@ -2644,4 +2644,19 @@ public class Sudoku2 implements Cloneable {
         System.out.println("Hidden Singles:\r\n");
         System.out.println(hsQueue);
     }
+    
+    /**
+     * Calculates, which candidates are still present in the unset cells
+     * of the sudoku.
+     * @return 
+     */
+    public short getRemainingCandidates() {
+        short result = 0;
+        for (int i = 0; i < cells.length; i++) {
+            if (values[i] == 0) {
+                result |= cells[i];
+            }
+        }
+        return result;
+    }
 }
