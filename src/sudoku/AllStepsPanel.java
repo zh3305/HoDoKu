@@ -266,7 +266,7 @@ public final class AllStepsPanel extends javax.swing.JPanel implements TreeSelec
     }//GEN-LAST:event_findButtonActionPerformed
 
     private void configureButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_configureButtonActionPerformed
-        new ConfigDialog(mainFrame, true, 2).setVisible(true);
+        new ConfigDialog(mainFrame, true, 3).setVisible(true);
     }//GEN-LAST:event_configureButtonActionPerformed
 
     private void directSingleSortToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_directSingleSortToggleButtonActionPerformed
