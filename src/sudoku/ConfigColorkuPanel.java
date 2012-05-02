@@ -416,13 +416,14 @@ public class ConfigColorkuPanel extends javax.swing.JPanel {
         int size = 10;
         if (cand) {
             size = 30;
+            button.setIcon(new ImageIcon(new ColorKuImage(size, color)));
+        } else {
+            Image img = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
+            Graphics g = img.getGraphics();
+            g.setColor(color);
+            g.fillRect(0, 0, img.getWidth(null) - 1, img.getHeight(null) - 1);
+            button.setIcon(new ImageIcon(img));
         }
-        //button.setText(" ");
-        Image img = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
-        Graphics g = img.getGraphics();
-        g.setColor(color);
-        g.fillRect(0, 0, img.getWidth(null) - 1, img.getHeight(null) - 1);
-        button.setIcon(new ImageIcon(img));
         if (UIManager.getLookAndFeel().getName().equals("CDE/Motif")) {
             button.setBackground(color);
         }

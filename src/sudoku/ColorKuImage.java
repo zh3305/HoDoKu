@@ -36,11 +36,15 @@ public class ColorKuImage extends BufferedImage {
     private static final int IMG_FACTOR = 4;
     /** The latest overlay loaded, for caching */
     private static BufferedImage lastOverlay = null;
+    
+    /** The color of the image */
+    private Color color = null;
 
     public ColorKuImage(int size, Color color) {
         super(size, size, BufferedImage.TYPE_4BYTE_ABGR);
-        createImage(color);
-    }
+        this.color = color;
+        createImage();
+}
 
     /**
      * Get the overlay that fits best and load it into
@@ -50,10 +54,8 @@ public class ColorKuImage extends BufferedImage {
      * 
      * Pixels, that are white in <code>lastOverlay</code>, become
      * completely transparent in <code>this</code>.
-     * 
-     * @param color 
      */
-    private void createImage(Color color) {
+    private void createImage() {
         // get the overlay that fits best
         long ticks = System.nanoTime();
         int sizeR = ((getWidth() - IMG_MIN) / IMG_FACTOR) * IMG_FACTOR + IMG_MIN;
@@ -116,5 +118,19 @@ public class ColorKuImage extends BufferedImage {
         
         ticks = System.nanoTime() - ticks;
 //        System.out.println("createImage(): " + (ticks / 1000000) + "ms");
+    }
+
+    /**
+     * @return the color
+     */
+    public Color getColor() {
+        return color;
+    }
+
+    /**
+     * @param color the color to set
+     */
+    public void setColor(Color color) {
+        this.color = color;
     }
 }

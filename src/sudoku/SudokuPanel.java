@@ -3812,7 +3812,6 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
     public void setShowColorKu(boolean val) {
         showColorKu = val;
         repaint();
-        mainFrame.prepareToggleButtonsForColorku(val);
         setColorkuInPopupMenu(val);
     }
 

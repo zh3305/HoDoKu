@@ -34,9 +34,11 @@ import solver.SudokuSolver;
  *
  * @author hobiwan
  */
+@SuppressWarnings("serial")
 public class BackdoorSearchDialog extends javax.swing.JDialog implements Runnable {
 
     private static final int MAX_FOUND = 100;
+    private static final long serialVersionUID = 1L;
     private DefaultListModel singlesListModel;
     private DefaultListModel progressListModel;
     private SudokuPanel sudokuPanel;
@@ -70,7 +72,11 @@ public class BackdoorSearchDialog extends javax.swing.JDialog implements Runnabl
     private int progressBarMax = 100;
     private int progressBarAct = 0;
 
-    /** Creates new form BackdoorSearchDialog */
+    /** Creates new form BackdoorSearchDialog
+     * @param parent
+     * @param modal
+     * @param sudokuPanel  
+     */
     public BackdoorSearchDialog(java.awt.Frame parent, boolean modal, SudokuPanel sudokuPanel) {
         super(parent, modal);
         initComponents();

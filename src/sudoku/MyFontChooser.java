@@ -54,6 +54,7 @@ import javax.swing.event.ListSelectionListener;
  * 
  * @author hobiwan
  */
+@SuppressWarnings("serial")
 public class MyFontChooser extends javax.swing.JDialog implements ListSelectionListener {
 
     /**

@@ -44,7 +44,6 @@ package sudoku;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
@@ -54,12 +53,12 @@ import java.util.SortedMap;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
 
 /**
  *
  * @author hobiwan
  */
+@SuppressWarnings("serial")
 public class CellZoomPanel extends javax.swing.JPanel {
 
     private static final int X_OFFSET = 10;
@@ -71,7 +70,6 @@ public class CellZoomPanel extends javax.swing.JPanel {
     private static final String[] NUMBERS = new String[]{
         "1", "2", "3", "4", "5", "6", "7", "8", "9"
     };
-    private static final long serialVersionUID = 1L;
     private MainFrame mainFrame;
     private Font buttonFont = null;
     private Font iconFont = null;
@@ -1241,18 +1239,18 @@ public class CellZoomPanel extends javax.swing.JPanel {
         }
     }
 
-    private void initButton(JButton button, Color color) {
-        //button.setText(" ");
-        Image img = new BufferedImage(10, 10, BufferedImage.TYPE_INT_RGB);
-        Graphics g = img.getGraphics();
-        g.setColor(color);
-        g.fillRect(0, 0, 10, 10);
-        button.setIcon(new ImageIcon(img));
-        if (UIManager.getLookAndFeel().getName().equals("CDE/Motif")) {
-            button.setBackground(color);
-        }
-    }
-
+//    private void initButton(JButton button, Color color) {
+//        //button.setText(" ");
+//        Image img = new BufferedImage(10, 10, BufferedImage.TYPE_INT_RGB);
+//        Graphics g = img.getGraphics();
+//        g.setColor(color);
+//        g.fillRect(0, 0, 10, 10);
+//        button.setIcon(new ImageIcon(img));
+//        if (UIManager.getLookAndFeel().getName().equals("CDE/Motif")) {
+//            button.setBackground(color);
+//        }
+//    }
+//
     private void printSize() {
 //        System.out.println(getDimensions(this, "cellZoomPanel"));
 //

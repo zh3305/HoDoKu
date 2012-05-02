@@ -59,6 +59,7 @@ import solver.SudokuSolverFactory;
  *
  * @author hobiwan
  */
+@SuppressWarnings("serial")
 public class PrintSolutionDialog extends javax.swing.JDialog implements Printable {
     private static final double LINE_HEIGHT = 1.2;
     private static final long serialVersionUID = 1L;

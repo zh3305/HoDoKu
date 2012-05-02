@@ -20,11 +20,9 @@ package sudoku;
 
 import generator.BackgroundGeneratorThread;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
@@ -96,47 +94,23 @@ import solver.SudokuSolverFactory;
 public class MainFrame extends javax.swing.JFrame implements FlavorListener {
 
     private static final long serialVersionUID = 1L;
-
-    class ColorKuIcon implements Icon {
-
-        int w;
-        int h;
-        Color color;
-        // constructor
-
-        ColorKuIcon(int width, int height, Color c) {
-            w = width;
-            h = height;
-            color = c;
-        }
-
-        @Override
-        public void paintIcon(Component c, Graphics gc, int x, int y) {
-            gc.setColor(color);
-            gc.fillRect(x, y, w, h);
-            gc.setColor(Color.black);
-            gc.drawRect(x, y, w, h);
-        }
-
-        @Override
-        public int getIconWidth() {
-            return w;
-        }
-
-        @Override
-        public int getIconHeight() {
-            return h;
-        }
-    }
     public static final String VERSION = "HoDoKu - v2.2.0 beta";
 //    public static final String BUILD = "Build 16";
     public static final String BUILD;
     public static final String REV = "$LastChangedRevision$";
+    /** The size of the toggle button icons */
+    private static final int TOGGLE_BUTTON_ICON_SIZE = 32;
     private SudokuPanel sudokuPanel;
     //private DifficultyLevel level = Options.getInstance().getDifficultyLevels()[DifficultyType.EASY.ordinal()];
     private JToggleButton[] toggleButtons = new JToggleButton[10];
-    /** Icons for the filter toggle buttons in the toolbar */
-    private Icon toggleButtonIcons[] = new Icon[10];
+    /** Icons for the filter toggle buttons in the toolbar (original version) */
+    private Icon[] toggleButtonIconsOrg = new Icon[10];
+    /** Images for the filter toggle button icons (ColorKu version) */
+    private ColorKuImage[] toggleButtonImagesColorKu = new ColorKuImage[10];
+    /** Icons for the filter toggle buttons in the toolbar (ColorKu version) */
+    private Icon[] toggleButtonIconsColorKu = new Icon[10];
+    /** Icons for the filter toggle buttons in the toolbar (currently displayed) */
+    private Icon[] toggleButtonIcons = new Icon[10];
     /** One empty icon for disabled filter buttons */
     private Icon emptyToggleButtonIcon = new ImageIcon(getClass().getResource("/img/f_0c.png"));
     private JRadioButtonMenuItem[] levelMenuItems = new JRadioButtonMenuItem[5];
@@ -441,10 +415,11 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         toggleButtons[8] = f9ToggleButton;
         toggleButtons[9] = fxyToggleButton;
         for (int i = 0, lim = toggleButtons.length; i < lim; i++) {
+            toggleButtonIconsOrg[i] = toggleButtons[i].getIcon();
             toggleButtonIcons[i] = toggleButtons[i].getIcon();
         }
         setToggleButton(null, false);
-        prepareToggleButtonsForColorku(Options.getInstance().isShowColorKu());
+        prepareToggleButtonIcons(Options.getInstance().isShowColorKu());
 
         // initialize colorKuMeniItem
         showColorKuMenuItem.setSelected(Options.getInstance().isShowColorKu());
@@ -1808,6 +1783,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             statusPanelColorResult.setBackground(Options.getInstance().getColoringColors()[sudokuPanel.getActiveColor()]);
         }
         sudokuPanel.setColorIconsInPopupMenu();
+        check();
         fixFocus();
         sudokuPanel.repaint();
         repaint();
@@ -2575,22 +2551,25 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
         fixFocus();
     }//GEN-LAST:event_showColorKuMenuItemActionPerformed
 
-    public final void prepareToggleButtonsForColorku(boolean on) {
+    /**
+     * Adjusts icons for hint toggle buttons according to the mode (normal/ColorKu) and according
+     * to the colors (necessary for color changes). Icons are created on the fly
+     * as necessary.
+     * @param on
+     */
+    private void prepareToggleButtonIcons(boolean on) {
         if (on) {
             for (int i = 0, lim = toggleButtons.length - 1; i < lim; i++) {
-                JToggleButton button = toggleButtons[i];
-                Icon icon = button.getIcon();
-                int w = icon.getIconWidth();
-                int h = icon.getIconHeight();
-                Icon newIcon = new ColorKuIcon(w, h, Options.getInstance().getColorKuColor(1 + i));
-                toggleButtonIcons[i] = newIcon;
-                button.setIcon(newIcon);
-                //button.repaint();
+                if (toggleButtonImagesColorKu[i] == null || !toggleButtonImagesColorKu[i].getColor().equals(Options.getInstance().getColorKuColor(i + 1))) {
+                    // create a new image (we need the image to access the color without needing yet another class)
+                    toggleButtonImagesColorKu[i] = new ColorKuImage(TOGGLE_BUTTON_ICON_SIZE, Options.getInstance().getColorKuColor(i + 1));
+                    toggleButtonIconsColorKu[i] = new ImageIcon(toggleButtonImagesColorKu[i]);
+                }
+                toggleButtonIcons[i] = toggleButtonIconsColorKu[i];
             }
         } else {
             for (int i = 0, lim = toggleButtons.length - 1; i < lim; i++) {
-                JToggleButton button = toggleButtons[i];
-                button.setIcon(toggleButtonIcons[i]);
+                toggleButtonIcons[i] = toggleButtonIconsOrg[i];
             }
         }
     }
@@ -3489,30 +3468,36 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
             showWrongValuesMenuItem.setSelected(sudokuPanel.isShowWrongValues());
             showDeviationsMenuItem.setSelected(sudokuPanel.isShowDeviations());
             showColorKuMenuItem.setSelected(sudokuPanel.isShowColorKu());
-            boolean[] remainingCandidates = sudokuPanel.getRemainingCandidates();
-            for (int i = 0; i < remainingCandidates.length; i++) {
-                if (toggleButtons[i] != null) {
+            prepareToggleButtonIcons(showColorKuMenuItem.isSelected());
+            // either all ToggleButtons are set or none is
+            if (toggleButtons[0] != null) {
+                boolean[] remainingCandidates = sudokuPanel.getRemainingCandidates();
+                for (int i = 0; i < remainingCandidates.length; i++) {
+                    JToggleButton button = toggleButtons[i];
+                    // change the standard icons
+                    if (button.getIcon() != emptyToggleButtonIcon && button.getIcon() != toggleButtonIcons[i]) {
+                        button.setIcon(toggleButtonIcons[i]);
+                    }
                     if (remainingCandidates[i]) {
-                        if (!toggleButtons[i].isEnabled()) {
-                            toggleButtons[i].setEnabled(true);
-                            toggleButtons[i].setIcon(toggleButtonIcons[i]);
+                        if (!button.isEnabled()) {
+                            button.setEnabled(true);
+                            button.setIcon(toggleButtonIcons[i]);
                         }
                     } else {
-                        if (toggleButtons[i].isEnabled()) {
-                            toggleButtons[i].setSelected(false);
-                            toggleButtons[i].setEnabled(false);
-                            toggleButtons[i].setIcon(emptyToggleButtonIcon);
+                        if (button.isEnabled()) {
+                            button.setSelected(false);
+                            button.setEnabled(false);
+                            button.setIcon(emptyToggleButtonIcon);
                         }
                     }
                 }
-            }
-            for (int i = 0; i < toggleButtons.length; i++) {
-//                if (i == sudokuPanel.getShowHintCellValue() - 1) {
-                if (toggleButtons[i] != null && toggleButtons[i].isEnabled()) {
-                    if (sudokuPanel.getShowHintCellValues()[i + 1]) {
-                        toggleButtons[i].setSelected(true);
-                    } else {
-                        toggleButtons[i].setSelected(false);
+                for (int i = 0; i < toggleButtons.length; i++) {
+                    if (toggleButtons[i].isEnabled()) {
+                        if (sudokuPanel.getShowHintCellValues()[i + 1]) {
+                            toggleButtons[i].setSelected(true);
+                        } else {
+                            toggleButtons[i].setSelected(false);
+                        }
                     }
                 }
             }
