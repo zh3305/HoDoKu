@@ -615,10 +615,11 @@ implements ListDragAndDropChange {
                 // only steps with difficulty EASY - UNFAIR are allowed
                 continue;
             }
-            Enumeration en = root.children();
+            @SuppressWarnings("unchecked")
+            Enumeration<CheckNode> en = (Enumeration<CheckNode>)root.children();
             CheckNode act = null;
             while (en.hasMoreElements()) {
-                act = (CheckNode)en.nextElement();
+                act = en.nextElement();
                 if (act.getCategory() == steps[i].getCategory()) {
                     break;
                 }
@@ -751,13 +752,13 @@ implements ListDragAndDropChange {
     private javax.swing.JButton upButton;
     // End of variables declaration//GEN-END:variables
     
-}
-class SSTSConfig {
+static class SSTSConfig {
     SolutionType type;
     int progressIndex;
 
-    public SSTSConfig(SolutionType type, int progressIndex) {
+    SSTSConfig(SolutionType type, int progressIndex) {
         this.type = type;
         this.progressIndex = progressIndex;
     }
+}
 }

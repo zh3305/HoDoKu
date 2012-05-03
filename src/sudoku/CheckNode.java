@@ -83,9 +83,10 @@ public class CheckNode extends DefaultMutableTreeNode {
             // HALF -> FULL
             // FULL -> NONE
             selectionState = selectionState == FULL ? NONE : FULL;
-            Enumeration enumeration = children.elements();
+            @SuppressWarnings("unchecked")
+            Enumeration<CheckNode> enumeration = (Enumeration<CheckNode>)children.elements();
             while (enumeration.hasMoreElements()) {
-                CheckNode node = (CheckNode) enumeration.nextElement();
+                CheckNode node = enumeration.nextElement();
                 node.selectionState = selectionState;
                 adjustModel(node);
             }

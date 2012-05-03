@@ -1240,7 +1240,7 @@ public class AlsSolver extends AbstractSolver {
         /**
          * creates a new instance.
          */
-        public RCForDeathBlossom() {
+        RCForDeathBlossom() {
         }
 
         /**

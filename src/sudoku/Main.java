@@ -47,9 +47,6 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
-import javax.swing.LookAndFeel;
-import javax.swing.UIManager;
-import javax.swing.plaf.FontUIResource;
 import solver.SudokuSolver;
 import solver.SudokuSolverFactory;
 
@@ -894,20 +891,21 @@ public class Main {
      * @param fontSize
      * @return 
      */
-    private static boolean initializeNimbusLaF(String className, String fontName, int fontStyle, int fontSize) {
-        ClassLoader classLoader = Main.class.getClassLoader();
-
-        try {
-            Class aClass = classLoader.loadClass(className);
-            LookAndFeel laf = (LookAndFeel) aClass.newInstance();
-            UIManager.setLookAndFeel(laf);
-            laf.getDefaults().put("defaultFont",
-                    new FontUIResource(fontName, fontStyle, fontSize)); // supersize me
-            return true;
-        } catch (Exception ex) {
-            return false;
-        }
-    }
+//    private static boolean initializeNimbusLaF(String className, String fontName, int fontStyle, int fontSize) {
+//        ClassLoader classLoader = Main.class.getClassLoader();
+//
+//        try {
+//            @SuppressWarnings("unchecked")
+//            Class<LookAndFeel> aClass = (Class<LookAndFeel>)classLoader.loadClass(className);
+//            LookAndFeel laf = aClass.newInstance();
+//            UIManager.setLookAndFeel(laf);
+//            laf.getDefaults().put("defaultFont",
+//                    new FontUIResource(fontName, fontStyle, fontSize)); // supersize me
+//            return true;
+//        } catch (Exception ex) {
+//            return false;
+//        }
+//    }
 
     /**
      * Prints all remaining (unused) options in argMap except "option"
@@ -1086,7 +1084,7 @@ class SearchForTypeThread extends Thread {
     private int anzFound = 0;
     private String outFile = null;
 
-    public SearchForTypeThread(Main m, List<StepType> typeList,
+    SearchForTypeThread(Main m, List<StepType> typeList,
             DifficultyLevel level, String outFile) {
         this.m = m;
         this.typeList = typeList;
@@ -2013,7 +2011,7 @@ class StepStatistic {
     int anzInvalidSet;
     int anzInvalidCandDel;
 
-    public StepStatistic(SolutionType type) {
+    StepStatistic(SolutionType type) {
         this.type = type;
     }
 }

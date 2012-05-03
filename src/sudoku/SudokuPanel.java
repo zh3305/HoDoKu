@@ -966,6 +966,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
      * @param state
      * @param copy
      */
+    @SuppressWarnings("unchecked")
     public void getState(GuiState state, boolean copy) {
         // items that dont have to be copied
         state.setChainIndex(chainIndex);

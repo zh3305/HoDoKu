@@ -602,6 +602,7 @@ public class SudokuSolver {
      * @param state
      * @param copy
      */
+    @SuppressWarnings("unchecked")
     public void getState(GuiState state, boolean copy) {
         if (copy) {
             state.setAnzSteps(anzSteps.clone());

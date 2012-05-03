@@ -112,7 +112,7 @@ public class SudokuStepFinder {
     /** One template per candidate with all positions from which the candidate can be eliminated immediately. */
     private SudokuSet[] delCandTemplates = new SudokuSet[10];
     /** The lists with all valid templates for each candidate. */
-    private List<SudokuSetBase>[] candTemplates;
+    private List<List<SudokuSetBase>> candTemplates;
     /** Dirty flag for templates (without refinements). */
     private boolean templatesDirty = true;
     /** Dirty flag for templates (with refinements). */
@@ -201,11 +201,11 @@ public class SudokuStepFinder {
             candidatesAllowed[i] = new SudokuSet();
         }
         // Create all templates
-        candTemplates = new List[10];
+        candTemplates = new ArrayList<List<SudokuSetBase>>(10);
         for (int i = 0; i < setValueTemplates.length; i++) {
             setValueTemplates[i] = new SudokuSet();
             delCandTemplates[i] = new SudokuSet();
-            candTemplates[i] = new LinkedList<SudokuSetBase>();
+            candTemplates.add(i, new LinkedList<SudokuSetBase>());
         }
         // Create the solvers
         simpleSolver = new SimpleSolver(this);
@@ -878,7 +878,7 @@ public class SudokuStepFinder {
             for (int i = 1; i <= 9; i++) {
                 setValueTemplates[i].setAll();
                 delCandTemplates[i].clear();
-                candTemplates[i].clear();
+                candTemplates.get(i).clear();
 
                 // eine 1 an jeder verbotenen Position ~(positions | allowedPositions)
                 forbiddenPositions[i] = new SudokuSetBase();
@@ -900,7 +900,7 @@ public class SudokuStepFinder {
                     setValueTemplates[j].and(templates[i]);
                     delCandTemplates[j].or(templates[i]);
                     if (initLists) {
-                        candTemplates[j].add(templates[i]);
+                        candTemplates.get(j).add(templates[i]);
                     }
                 }
             }
@@ -913,7 +913,7 @@ public class SudokuStepFinder {
                     for (int j = 1; j <= 9; j++) {
                         setValueTemplates[j].setAll();
                         delCandTemplates[j].clear();
-                        ListIterator<SudokuSetBase> it = candTemplates[j].listIterator();
+                        ListIterator<SudokuSetBase> it = candTemplates.get(j).listIterator();
                         while (it.hasNext()) {
                             SudokuSetBase template = it.next();
                             boolean removed = false;

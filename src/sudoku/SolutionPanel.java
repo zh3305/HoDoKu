@@ -721,6 +721,7 @@ private void tabPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//
      * @param state
      * @param copy
      */
+    @SuppressWarnings("unchecked")
     public void getState(GuiState state, boolean copy) {
         if (copy) {
             state.setTitels((List<String>) ((ArrayList)titels).clone());
@@ -743,7 +744,7 @@ private void tabPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//
     class SolutionListRenderer extends JLabel implements ListCellRenderer {
         private static final long serialVersionUID = 1L;
         
-        public SolutionListRenderer() {
+        SolutionListRenderer() {
             setOpaque(true);
         }
         

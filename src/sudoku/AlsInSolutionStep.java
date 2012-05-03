@@ -44,6 +44,7 @@ public class AlsInSolutionStep implements Cloneable {
     }
     
     @Override
+    @SuppressWarnings("unchecked")
     public Object clone()
     throws CloneNotSupportedException {
         AlsInSolutionStep newAls = (AlsInSolutionStep) super.clone();

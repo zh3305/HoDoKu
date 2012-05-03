@@ -42,7 +42,6 @@ package solver;
 import sudoku.SolutionStep;
 import sudoku.SolutionType;
 import sudoku.Sudoku2;
-import sudoku.SudokuSet;
 
 /**
  *
@@ -54,7 +53,7 @@ public abstract class AbstractSolver {
     /** Every solver needs the sudoku... */
     protected Sudoku2 sudoku;
 
-    private SudokuSet tmpSet = new SudokuSet();
+//    private SudokuSet tmpSet = new SudokuSet();
     
     /** Creates a new instance of AbstractSolver
      * @param finder 

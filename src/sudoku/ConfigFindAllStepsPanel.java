@@ -641,10 +641,11 @@ private void krakenFishCandidatesButtonActionPerformed(java.awt.event.ActionEven
             if (steps[i].getType() == SolutionType.BRUTE_FORCE) {
                 continue;
             }
-            Enumeration en = root.children();
+            @SuppressWarnings("unchecked")
+            Enumeration<CheckNode> en = (Enumeration<CheckNode>)root.children();
             CheckNode act = null;
             while (en.hasMoreElements()) {
-                act = (CheckNode)en.nextElement();
+                act = en.nextElement();
                 if (act.getCategory() == steps[i].getCategory()) {
                     break;
                 }

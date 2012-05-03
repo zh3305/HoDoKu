@@ -731,7 +731,7 @@ public class PrintSolutionDialog extends javax.swing.JDialog implements Printabl
 class CheckBoxRenderer extends JCheckBox implements ListCellRenderer {
         private static final long serialVersionUID = 1L;
 
-        public CheckBoxRenderer() {
+        CheckBoxRenderer() {
         }
 
         @Override

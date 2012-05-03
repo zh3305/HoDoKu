@@ -83,6 +83,7 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Object clone() {
         SolutionStep newStep = null;
         try {
@@ -1562,6 +1563,7 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
 
     private void getCandidatesToDelete(StringBuffer tmp) {
         tmp.append(" => ");
+        @SuppressWarnings("unchecked")
         ArrayList<Candidate> tmpList = (ArrayList<Candidate>) ((ArrayList<Candidate>) candidatesToDelete).clone();
         boolean first = true;
         ArrayList<Integer> candList = new ArrayList<Integer>();

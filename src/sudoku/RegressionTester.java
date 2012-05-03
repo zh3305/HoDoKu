@@ -156,7 +156,7 @@ public class RegressionTester {
         int variant = 0;
         boolean failCase = false;
         if (parts[1].contains("-")) {
-            int vIndex = parts[1].indexOf("-");
+            int vIndex = parts[1].indexOf('-');
             if (parts[1].charAt(vIndex + 1) == 'x') {
                 failCase = true;
             } else {
@@ -657,8 +657,8 @@ public class RegressionTester {
                 if (!result.equals(testCase)) {
                     if (exactMatch == true) {
                         // test for everything but <comment>
-                        int index1 = testCase.lastIndexOf(":");
-                        int index2 = result.lastIndexOf(":");
+                        int index1 = testCase.lastIndexOf(':');
+                        int index2 = result.lastIndexOf(':');
                         if (testCase.substring(0, index1).equals(result.substring(0, index2))) {
                             // does not constitue a fail case!
                             continue;

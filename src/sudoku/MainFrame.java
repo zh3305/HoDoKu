@@ -3253,7 +3253,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
      * @param path
      * @param fileType 0 .. options, 1 .. sudoku from hsol, 8 .. sudoku from text file
      */
-    @SuppressWarnings("CallToThreadDumpStack")
+    @SuppressWarnings({"CallToThreadDumpStack", "unchecked"})
     private void loadFromFile(String path, int fileType) {
         try {
             sudokuFileName = path;

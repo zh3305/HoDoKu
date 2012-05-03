@@ -303,10 +303,11 @@ public class ConfigTrainigPanel extends javax.swing.JPanel {
                 // find a suitable puzzle)
                 continue;
             }
-            Enumeration en = root.children();
+            @SuppressWarnings("unchecked")
+            Enumeration<CheckNode> en = (Enumeration<CheckNode>)root.children();
             CheckNode act = null;
             while (en.hasMoreElements()) {
-                act = (CheckNode)en.nextElement();
+                act = en.nextElement();
                 if (act.getCategory() == steps[i].getCategory()) {
                     break;
                 }
@@ -363,7 +364,7 @@ public class ConfigTrainigPanel extends javax.swing.JPanel {
     class CheckBoxRenderer extends JCheckBox implements ListCellRenderer {
         private static final long serialVersionUID = 1L;
         
-        public CheckBoxRenderer() {
+        CheckBoxRenderer() {
         }
         
         @Override

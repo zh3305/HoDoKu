@@ -293,6 +293,7 @@ public class ConfigGeneratorPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jButtonChangeNameActionPerformed
 
+    @SuppressWarnings("unchecked")
 private void jButtonLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoadActionPerformed
     String extension = java.util.ResourceBundle.getBundle("intl/ConfigGeneratorPanel").getString("ConfigGeneratorPanel.extension");
     String description = java.util.ResourceBundle.getBundle("intl/ConfigGeneratorPanel").getString("ConfigGeneratorPanel.description");

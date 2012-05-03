@@ -183,7 +183,7 @@ public class SummaryPanel extends javax.swing.JPanel {
         private static final long serialVersionUID = 1L;
         private Color backColor;
         
-        public SummaryTableRenderer() {
+        SummaryTableRenderer() {
             setOpaque(true);
             backColor = getBackground();
         }

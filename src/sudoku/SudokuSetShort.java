@@ -44,7 +44,7 @@ public final class SudokuSetShort implements Cloneable, Serializable {
     // und zu jeder Zahl die Länge des Arrays
     private static int[] anzValues = new int[0x200];
     private short mask = 0; //  0 - 9
-    protected boolean initialized = true;
+    boolean initialized = true;
     private int[] values = null;
     private int anz = 0;
 
@@ -228,7 +228,7 @@ public final class SudokuSetShort implements Cloneable, Serializable {
         initialized = false;
     }
 
-    protected String pM(long mask) {
+    String pM(long mask) {
         return Long.toHexString(mask);
     }
 

@@ -1256,8 +1256,8 @@ public class FishSolver extends AbstractSolver {
         if (Options.getInstance().isOnlyOneFishPerStep()) {
             //String del = globalStep.getCandidateString() + " " + globalStep.getValues().get(0);
             String delOrg = globalStep.getCandidateString();
-            int startIndex = delOrg.indexOf(")");
-            startIndex = delOrg.indexOf("(", startIndex);
+            int startIndex = delOrg.indexOf(')');
+            startIndex = delOrg.indexOf('(', startIndex);
             String del = delOrg.substring(0, startIndex);
             Integer oldIndex = deletesMap.get(del);
             SolutionStep tmpStep = null;
@@ -1751,6 +1751,7 @@ public class FishSolver extends AbstractSolver {
 //        }
         try {
             XMLDecoder in = new XMLDecoder(new BufferedInputStream(new FileInputStream("C:\\Sudoku\\Sonstiges\\Bug reports\\20111208 Comparison Exception\\fishse1326274402326.dat")));
+            @SuppressWarnings("unchecked")
             List<SolutionStep> steps = (List<SolutionStep>) in.readObject();
             in.close();
             System.out.println("anz: " + steps.size());
