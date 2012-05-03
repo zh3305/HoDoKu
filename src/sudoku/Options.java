@@ -314,6 +314,8 @@ public final class Options {
     private boolean showWrongValues = SHOW_WRONG_VALUES;
     private boolean showDeviations = SHOW_DEVIATIONS;
     private boolean showColorKu = SHOW_COLORKU;
+    /** Current state, set by {@link MainFrame}. */
+    private boolean showColorKuAct = SHOW_COLORKU;
     private boolean invalidCells = INVALID_CELLS;
     private boolean saveWindowLayout = SAVE_WINDOW_LAYOUT;
     private boolean useShiftForRegionSelect = USE_SHIFT_FOR_REGION_SELECT;
@@ -2109,5 +2111,19 @@ public final class Options {
      */
     public void setDefaultImageDir(String defaultImageDir) {
         this.defaultImageDir = defaultImageDir;
+    }
+
+    /**
+     * @return the showColorKuAct
+     */
+    public boolean isShowColorKuAct() {
+        return showColorKuAct;
+    }
+
+    /**
+     * @param showColorKuAct the showColorKuAct to set
+     */
+    public void setShowColorKuAct(boolean showColorKuAct) {
+        this.showColorKuAct = showColorKuAct;
     }
 }

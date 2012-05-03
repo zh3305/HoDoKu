@@ -266,6 +266,11 @@ public class SudokuGenerator {
                     }
                 }
                 level++;
+                // missing candidates lead to exception -> avoid that
+                if (index < 0) {
+                    solutionCount = 0;
+                    return;
+                }
                 stack[level].index = (short) index;
                 stack[level].candidates = Sudoku2.POSSIBLE_VALUES[stack[level - 1].sudoku.getCell(index)];
                 stack[level].candIndex = 0;

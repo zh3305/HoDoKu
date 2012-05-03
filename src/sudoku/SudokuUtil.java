@@ -509,6 +509,29 @@ public class SudokuUtil {
         tmp.append(NEW_LINE);
     }
     
+    /**
+     * STUB!!
+     * 
+     * Is meant for replacing candidate numbers with colors for colorKu.
+     * Doesnt do anything meaningful right now.
+     * 
+     * @param candidate
+     * @return 
+     */
+    public static String getCandString(int candidate) {
+        if (Options.getInstance().isShowColorKuAct()) {
+            // return some color name here
+            return String.valueOf(candidate);
+        } else {
+            return String.valueOf(candidate);
+        }
+    }
+    
+    /**
+     * testing...
+     * 
+     * @param args 
+     */
     public static void main(String[] args) {
         String grid = 
             ".---------------.------------.-------------." +

@@ -343,7 +343,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         showHintPanelMenuItem.setSelected(Options.getInstance().isShowHintPanel());
         showToolBarMenuItem.setSelected(Options.getInstance().isShowToolBar());
 
-        // Level-Menüs und Combo-Box
+        // Level-MenÃ¼s und Combo-Box
         levelMenuItems[0] = levelLeichtMenuItem;
         levelMenuItems[1] = levelMittelMenuItem;
         levelMenuItems[2] = levelKniffligMenuItem;
@@ -399,11 +399,11 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         // set back the saved difficulty level
         Options.getInstance().setActLevel(actLevel);
 
-        // Menüzustand prüfen, übernimmt Werte von SudokuPanel; muss am Anfang stehen,
-        // weil die Werte später in der Methode verwendet werden
+        // MenÃ¼zustand prÃ¼fen, Ã¼bernimmt Werte von SudokuPanel; muss am Anfang stehen,
+        // weil die Werte spÃ¤ter in der Methode verwendet werden
         check();
 
-        // Die ToggleButtons in ein Array stecken, ist später einfacher
+        // Die ToggleButtons in ein Array stecken, ist spÃ¤ter einfacher
         toggleButtons[0] = f1ToggleButton;
         toggleButtons[1] = f2ToggleButton;
         toggleButtons[2] = f3ToggleButton;
@@ -423,6 +423,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
 
         // initialize colorKuMeniItem
         showColorKuMenuItem.setSelected(Options.getInstance().isShowColorKu());
+        Options.getInstance().setShowColorKuAct(Options.getInstance().isShowColorKu());
 
         // Caret-Listener for display of Forcing Chains
         hinweisTextArea.addCaretListener(caretListener);
@@ -1935,7 +1936,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
     }//GEN-LAST:event_showDeviationsMenuItemActionPerformed
 
     private void neuesSpielToolButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_neuesSpielToolButtonActionPerformed
-        // neues Spiel in der gew�nschten Schwierigkeitsstufe erzeugen
+        // neues Spiel in der gewï¿½nschten Schwierigkeitsstufe erzeugen
         int actLevel = Options.getInstance().getActLevel();
         DifficultyLevel actDiffLevel = Options.getInstance().getDifficultyLevel(actLevel);
         if (Options.getInstance().getGameMode() == GameMode.LEARNING) {
@@ -2281,7 +2282,7 @@ private void hintPanelPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-
 }//GEN-LAST:event_hintPanelPropertyChange
 
 private void spielEingebenMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spielEingebenMenuItemActionPerformed
-    // bestehendes Sudoku2 kann gel�scht werden, muss aber nicht
+    // bestehendes Sudoku2 kann gelï¿½scht werden, muss aber nicht
     if (sudokuPanel.getSolvedCellsAnz() != 0) {
         int antwort = JOptionPane.showConfirmDialog(this, java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.delete_sudoku"),
                 java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.new_input"),
@@ -2546,7 +2547,8 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
     }//GEN-LAST:event_savePuzzleMenuItemActionPerformed
 
     private void showColorKuMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showColorKuMenuItemActionPerformed
-        sudokuPanel.setShowColorKu(showColorKuMenuItem.isSelected());
+        Options.getInstance().setShowColorKuAct(showColorKuMenuItem.isSelected());
+        sudokuPanel.setShowColorKu();
         check();
         fixFocus();
     }//GEN-LAST:event_showColorKuMenuItemActionPerformed
@@ -3141,7 +3143,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
             // Options
             writeOptionsWithWindowState(path);
         } else {
-            // Sudoku2 und L�sung
+            // Sudoku2 und Lï¿½sung
             String newLine = System.getProperty("line.separator");
             if (filterType == 1) {
                 sudokuFileType = 1;
@@ -3467,8 +3469,8 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
             showCandidatesMenuItem.setSelected(sudokuPanel.isShowCandidates());
             showWrongValuesMenuItem.setSelected(sudokuPanel.isShowWrongValues());
             showDeviationsMenuItem.setSelected(sudokuPanel.isShowDeviations());
-            showColorKuMenuItem.setSelected(sudokuPanel.isShowColorKu());
-            prepareToggleButtonIcons(showColorKuMenuItem.isSelected());
+            showColorKuMenuItem.setSelected(Options.getInstance().isShowColorKuAct());
+            prepareToggleButtonIcons(Options.getInstance().isShowColorKuAct());
             // either all ToggleButtons are set or none is
             if (toggleButtons[0] != null) {
                 boolean[] remainingCandidates = sudokuPanel.getRemainingCandidates();

@@ -113,7 +113,6 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
     private boolean showDeviations = Options.getInstance().isShowDeviations();  // Werte und Kandidaten, die von der Lösung abweichen
     private boolean invalidCells = Options.getInstance().isInvalidCells(); // true: ungültige Zellen, false: mögliche Zellen
     private boolean showInvalidOrPossibleCells = false;  // Ungültige/Mögliche Zellen für showHintCellValue mit anderem Hintergrund
-    private boolean showColorKu = Options.getInstance().isShowColorKu();
     /** An array for every candidate for which a filter is set; index 10 stands for "filter bivalue cells" */
     private boolean[] showHintCellValues = new boolean[11];
     //private int showHintCellValue = 0;
@@ -1970,13 +1969,13 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
             lastCursorChanged = System.currentTimeMillis();
         }
 
-        // Gr��e bestimmen und quadratisch machen
+        // Größe bestimmen und quadratisch machen
         width = totalWidth;
         height = totalHeight;
         width = (height < width) ? height : width;
         height = (width < height) ? width : height;
 
-        // Zwischenr�ume nicht mehr konstant
+        // Zwischenräume nicht mehr konstant
         float strokeWidth = 2.0f / 1000.0f * width;
         if (width > 1000) {
             strokeWidth *= 1.5f;
@@ -1992,7 +1991,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
             delta = 0;
         }
 
-        // Gr��e der einzelnen Zellen bestimmen und Ma�e anpassen (Rundungsfehler!)
+        // Gr��e der einzelnen Zellen bestimmen und Maße anpassen (Rundungsfehler!)
         if (mitRand) {
             cellSize = (width - 4 * delta - 2 * deltaRand) / 9;
         } else {
@@ -2007,7 +2006,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
         }
 
         // Fonts festlegen
-        // ACHTUNG: Bei jeder �nderung Fonts neu setzen!
+        // ACHTUNG: Bei jeder Änderung Fonts neu setzen!
         Font tmpFont = Options.getInstance().getDefaultValueFont();
         if (valueFont != null) {
             if (!valueFont.getName().equals(tmpFont.getName())
@@ -2135,7 +2134,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                     dx = (cellSize - g2.getFontMetrics().stringWidth("8")) / 2.0;
                     dy = (cellSize + g2.getFontMetrics().getAscent() - g2.getFontMetrics().getDescent()) / 2.0;
                     int value = sudoku.getValue(cellIndex);
-                    if (showColorKu) {
+                    if (Options.getInstance().isShowColorKuAct()) {
                         drawColorBox(value, g2, getX(line, col), getY(line, col), cellSize, true);
 //                        drawColorBox(value, g2, startX + 3, startY + 2, cellSize - 4);
                         if (offColor != null) {
@@ -2147,8 +2146,8 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                     }
                 } else {
                     g2.setFont(candidateFont);
-                    // alle vorhandenen Kandidaten gleichm��ig �ber die Zelle verteilen
-                    // wird auch aufgerufen, wenn hoDrawMode gesetzt ist und <Shift>+<Ctrl> gedr�ckt
+                    // alle vorhandenen Kandidaten gleichmäßig über die Zelle verteilen
+                    // wird auch aufgerufen, wenn hoDrawMode gesetzt ist und <Shift>+<Ctrl> gedrückt
                     // ist; muss in diesem Fall alle Kandidaten anzeigen
                     ///*K*/ HIer werden nicht mehr alle Kandidaten angezeigt, wenn showCandidates true ist!
                     boolean userCandidates = !showCandidates;
@@ -2161,14 +2160,17 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
 //                    ddx = g2.getFontMetrics().stringWidth("8") * Options.getInstance().getHintBackFactor();
                     ddy = (g2.getFontMetrics().getAscent() - g2.getFontMetrics().getDescent()) * Options.getInstance().getHintBackFactor();
                     for (int i = 1; i <= 9; i++) {
+                        offColor = null;
                         if (sudoku.isCandidate(cellIndex, i, userCandidates)
                                 || (showCandidates && showDeviations && sudoku.isSolutionSet() && i == sudoku.getSolution(cellIndex))) {
                             setColor(g2, allBlack, Options.getInstance().getCandidateColor());
                             if (isShowWrongValues() == true && !sudoku.isCandidateValid(cellIndex, i, userCandidates)) {
+                                offColor = Options.getInstance().getColorKuInvalidColor();
                                 setColor(g2, allBlack, Options.getInstance().getWrongValueColor());
                             }
                             if (!sudoku.isCandidate(cellIndex, i, userCandidates) && isShowDeviations() && sudoku.isSolutionSet()
                                     && i == sudoku.getSolution(cellIndex)) {
+                                offColor = Options.getInstance().getColorKuDeviationColor();
                                 setColor(g2, allBlack, Options.getInstance().getDeviationColor());
                             }
                             double shiftX = ((i - 1) % 3) * third;
@@ -2261,12 +2263,6 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                             }
                             Color oldColor = g2.getColor();
 
-                            if (showColorKu) {
-                                drawColorBox(i, g2, (int) Math.round(startX + shiftX + third / 2.0 - ddy / 2.0),
-                                        (int) Math.round(startY + shiftY + third / 2.0 - ddy / 2.0), (int) Math.round(ddy), false);
-//                                drawColorBox(i, g2, (int) (startX + shiftX + 1), (int) (startY + shiftY + 1), (int) ddy - 1);
-                            }
-
                             if (coloringColor != null) {
                                 setColor(g2, allBlack, coloringColor);
                                 //g2.fillRect(startX + shiftX + dcx - 2 * (ddy - ddx) / 3, startY + shiftY + dcy - 4 * ddy / 5 - 1, ddy, ddy);
@@ -2283,9 +2279,20 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                             }
                             //g2.setColor(candColor);
                             setColor(g2, allBlack, oldColor);
-                            if (!showColorKu) {
+                            if (!Options.getInstance().isShowColorKuAct()) {
                                 g2.drawString(Integer.toString(i), (int) Math.round(startX + dcx + shiftX), (int) Math.round(startY + dcy + shiftY));
+                            } else {
+                                int ccx = (int) Math.round(startX + shiftX + third / 2.0 - ddy / 2.0);
+                                int ccy = (int) Math.round(startY + shiftY + third / 2.0 - ddy / 2.0);
+                                int ccs = (int) Math.round(ddy);
+                                drawColorBox(i, g2, ccx, ccy, ccs, false);
+//                                drawColorBox(i, g2, (int) (startX + shiftX + 1), (int) (startY + shiftY + 1), (int) ddy - 1);
+                                if (offColor != null) {
+                                    setColor(g2, allBlack, offColor);
+                                    g2.drawString("x", ccx + ccs / 4, ccy + ccs * 3 / 4);
+                                }
                             }
+
                         }
                     }
                 }
@@ -3193,10 +3200,6 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
         return showDeviations;
     }
 
-    public boolean isShowColorKu() {
-        return showColorKu;
-    }
-
     public void setShowDeviations(boolean showDeviations) {
         this.showDeviations = showDeviations;
         mainFrame.check();
@@ -3344,61 +3347,63 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
      * Sets all the color icons in the popup menu.
      */
     public final void setColorIconsInPopupMenu() {
-        setColorIconInPopupMenu(color1aMenuItem, Options.getInstance().getColoringColors()[0]);
-        setColorIconInPopupMenu(color1bMenuItem, Options.getInstance().getColoringColors()[1]);
-        setColorIconInPopupMenu(color2aMenuItem, Options.getInstance().getColoringColors()[2]);
-        setColorIconInPopupMenu(color2bMenuItem, Options.getInstance().getColoringColors()[3]);
-        setColorIconInPopupMenu(color3aMenuItem, Options.getInstance().getColoringColors()[4]);
-        setColorIconInPopupMenu(color3bMenuItem, Options.getInstance().getColoringColors()[5]);
-        setColorIconInPopupMenu(color4aMenuItem, Options.getInstance().getColoringColors()[6]);
-        setColorIconInPopupMenu(color4bMenuItem, Options.getInstance().getColoringColors()[7]);
-        setColorIconInPopupMenu(color5aMenuItem, Options.getInstance().getColoringColors()[8]);
-        setColorIconInPopupMenu(color5bMenuItem, Options.getInstance().getColoringColors()[9]);
+        setColorIconInPopupMenu(color1aMenuItem, Options.getInstance().getColoringColors()[0], false);
+        setColorIconInPopupMenu(color1bMenuItem, Options.getInstance().getColoringColors()[1], false);
+        setColorIconInPopupMenu(color2aMenuItem, Options.getInstance().getColoringColors()[2], false);
+        setColorIconInPopupMenu(color2bMenuItem, Options.getInstance().getColoringColors()[3], false);
+        setColorIconInPopupMenu(color3aMenuItem, Options.getInstance().getColoringColors()[4], false);
+        setColorIconInPopupMenu(color3bMenuItem, Options.getInstance().getColoringColors()[5], false);
+        setColorIconInPopupMenu(color4aMenuItem, Options.getInstance().getColoringColors()[6], false);
+        setColorIconInPopupMenu(color4bMenuItem, Options.getInstance().getColoringColors()[7], false);
+        setColorIconInPopupMenu(color5aMenuItem, Options.getInstance().getColoringColors()[8], false);
+        setColorIconInPopupMenu(color5bMenuItem, Options.getInstance().getColoringColors()[9], false);
     }
 
     public void setColorkuInPopupMenu(boolean on) {
         if (on) {
-            setColorIconInPopupMenu(make1MenuItem, Options.getInstance().getColorKuColor(1));
-            setColorIconInPopupMenu(make2MenuItem, Options.getInstance().getColorKuColor(2));
-            setColorIconInPopupMenu(make3MenuItem, Options.getInstance().getColorKuColor(3));
-            setColorIconInPopupMenu(make4MenuItem, Options.getInstance().getColorKuColor(4));
-            setColorIconInPopupMenu(make5MenuItem, Options.getInstance().getColorKuColor(5));
-            setColorIconInPopupMenu(make6MenuItem, Options.getInstance().getColorKuColor(6));
-            setColorIconInPopupMenu(make7MenuItem, Options.getInstance().getColorKuColor(7));
-            setColorIconInPopupMenu(make8MenuItem, Options.getInstance().getColorKuColor(8));
-            setColorIconInPopupMenu(make9MenuItem, Options.getInstance().getColorKuColor(9));
+            setColorIconInPopupMenu(make1MenuItem, Options.getInstance().getColorKuColor(1), true);
+            setColorIconInPopupMenu(make2MenuItem, Options.getInstance().getColorKuColor(2), true);
+            setColorIconInPopupMenu(make3MenuItem, Options.getInstance().getColorKuColor(3), true);
+            setColorIconInPopupMenu(make4MenuItem, Options.getInstance().getColorKuColor(4), true);
+            setColorIconInPopupMenu(make5MenuItem, Options.getInstance().getColorKuColor(5), true);
+            setColorIconInPopupMenu(make6MenuItem, Options.getInstance().getColorKuColor(6), true);
+            setColorIconInPopupMenu(make7MenuItem, Options.getInstance().getColorKuColor(7), true);
+            setColorIconInPopupMenu(make8MenuItem, Options.getInstance().getColorKuColor(8), true);
+            setColorIconInPopupMenu(make9MenuItem, Options.getInstance().getColorKuColor(9), true);
 
-            setColorIconInPopupMenu(exclude1MenuItem, Options.getInstance().getColorKuColor(1));
-            setColorIconInPopupMenu(exclude2MenuItem, Options.getInstance().getColorKuColor(2));
-            setColorIconInPopupMenu(exclude3MenuItem, Options.getInstance().getColorKuColor(3));
-            setColorIconInPopupMenu(exclude4MenuItem, Options.getInstance().getColorKuColor(4));
-            setColorIconInPopupMenu(exclude5MenuItem, Options.getInstance().getColorKuColor(5));
-            setColorIconInPopupMenu(exclude6MenuItem, Options.getInstance().getColorKuColor(6));
-            setColorIconInPopupMenu(exclude7MenuItem, Options.getInstance().getColorKuColor(7));
-            setColorIconInPopupMenu(exclude8MenuItem, Options.getInstance().getColorKuColor(8));
-            setColorIconInPopupMenu(exclude9MenuItem, Options.getInstance().getColorKuColor(9));
+            setColorIconInPopupMenu(exclude1MenuItem, Options.getInstance().getColorKuColor(1), true);
+            setColorIconInPopupMenu(exclude2MenuItem, Options.getInstance().getColorKuColor(2), true);
+            setColorIconInPopupMenu(exclude3MenuItem, Options.getInstance().getColorKuColor(3), true);
+            setColorIconInPopupMenu(exclude4MenuItem, Options.getInstance().getColorKuColor(4), true);
+            setColorIconInPopupMenu(exclude5MenuItem, Options.getInstance().getColorKuColor(5), true);
+            setColorIconInPopupMenu(exclude6MenuItem, Options.getInstance().getColorKuColor(6), true);
+            setColorIconInPopupMenu(exclude7MenuItem, Options.getInstance().getColorKuColor(7), true);
+            setColorIconInPopupMenu(exclude8MenuItem, Options.getInstance().getColorKuColor(8), true);
+            setColorIconInPopupMenu(exclude9MenuItem, Options.getInstance().getColorKuColor(9), true);
 
+            excludeSeveralMenuItem.setEnabled(false);
         } else {
-            setColorIconInPopupMenu(make1MenuItem, null);
-            setColorIconInPopupMenu(make2MenuItem, null);
-            setColorIconInPopupMenu(make3MenuItem, null);
-            setColorIconInPopupMenu(make4MenuItem, null);
-            setColorIconInPopupMenu(make5MenuItem, null);
-            setColorIconInPopupMenu(make6MenuItem, null);
-            setColorIconInPopupMenu(make7MenuItem, null);
-            setColorIconInPopupMenu(make8MenuItem, null);
-            setColorIconInPopupMenu(make9MenuItem, null);
+            setColorIconInPopupMenu(make1MenuItem, null, false);
+            setColorIconInPopupMenu(make2MenuItem, null, false);
+            setColorIconInPopupMenu(make3MenuItem, null, false);
+            setColorIconInPopupMenu(make4MenuItem, null, false);
+            setColorIconInPopupMenu(make5MenuItem, null, false);
+            setColorIconInPopupMenu(make6MenuItem, null, false);
+            setColorIconInPopupMenu(make7MenuItem, null, false);
+            setColorIconInPopupMenu(make8MenuItem, null, false);
+            setColorIconInPopupMenu(make9MenuItem, null, false);
 
-            setColorIconInPopupMenu(exclude1MenuItem, null);
-            setColorIconInPopupMenu(exclude2MenuItem, null);
-            setColorIconInPopupMenu(exclude3MenuItem, null);
-            setColorIconInPopupMenu(exclude4MenuItem, null);
-            setColorIconInPopupMenu(exclude5MenuItem, null);
-            setColorIconInPopupMenu(exclude6MenuItem, null);
-            setColorIconInPopupMenu(exclude7MenuItem, null);
-            setColorIconInPopupMenu(exclude8MenuItem, null);
-            setColorIconInPopupMenu(exclude9MenuItem, null);
+            setColorIconInPopupMenu(exclude1MenuItem, null, false);
+            setColorIconInPopupMenu(exclude2MenuItem, null, false);
+            setColorIconInPopupMenu(exclude3MenuItem, null, false);
+            setColorIconInPopupMenu(exclude4MenuItem, null, false);
+            setColorIconInPopupMenu(exclude5MenuItem, null, false);
+            setColorIconInPopupMenu(exclude6MenuItem, null, false);
+            setColorIconInPopupMenu(exclude7MenuItem, null, false);
+            setColorIconInPopupMenu(exclude8MenuItem, null, false);
+            setColorIconInPopupMenu(exclude9MenuItem, null, false);
 
+            excludeSeveralMenuItem.setEnabled(true);
         }
     }
 
@@ -3407,12 +3412,22 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
      * @param item
      * @param color
      */
-    private void setColorIconInPopupMenu(JMenuItem item, Color color) {
+    private void setColorIconInPopupMenu(JMenuItem item, Color color, boolean colorKu) {
+        if (color == null) {
+            // delete the icon
+            item.setIcon(null);
+            return;
+        }
         try {
-            BufferedImage img = ImageIO.read(getClass().getResource("/img/c_icon.png"));
-            Graphics2D gImg = (Graphics2D) img.getGraphics();
-            gImg.setColor(color);
-            gImg.fillRect(1, 1, 12, 12);
+            BufferedImage img = null;
+            if (colorKu) {
+                img = new ColorKuImage(12, color);
+            } else {
+                img = ImageIO.read(getClass().getResource("/img/c_icon.png"));
+                Graphics2D gImg = (Graphics2D) img.getGraphics();
+                gImg.setColor(color);
+                gImg.fillRect(1, 1, 12, 12);
+            }
             item.setIcon(new ImageIcon(img));
         } catch (Exception ex) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error setting color icons in popup menu", ex);
@@ -3810,10 +3825,11 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
         }
     }
 
-    public void setShowColorKu(boolean val) {
-        showColorKu = val;
+    public void setShowColorKu() {
+        setColorkuInPopupMenu(Options.getInstance().isShowColorKuAct());
+        cellZoomPanel.calculateLayout();
+        updateCellZoomPanel();
         repaint();
-        setColorkuInPopupMenu(val);
     }
 
     public void resetColorKuImages() {
