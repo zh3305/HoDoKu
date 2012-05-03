@@ -154,11 +154,11 @@ public final class Options {
         new StepConfig(3120, SolutionType.TURBOT_FISH, DifficultyType.HARD.ordinal(), SolutionCategory.SINGLE_DIGIT_PATTERNS, 120, 0, true, true, 3120, false, false),
         new StepConfig(1210, SolutionType.LOCKED_CANDIDATES_2, DifficultyType.MEDIUM.ordinal(), SolutionCategory.INTERSECTIONS, 50, 0, true, true, 1210, true, false)
     };
-    // nicht sortierte steps mit allen Änderungen -> wird so in *.cfg-File geschrieben
+    // nicht sortierte steps mit allen Ã„nderungen -> wird so in *.cfg-File geschrieben
     private StepConfig[] orgSolverSteps = null;
     // sortierte Kopie, wird intern verwendet, darf aber nicht im *.cfg-File landen
     public StepConfig[] solverSteps = null;
-    // sortierte Kopie für Step-Progress, wird intern verwendet, darf aber nicht im *.cfg-File landen
+    // sortierte Kopie fÃ¼r Step-Progress, wird intern verwendet, darf aber nicht im *.cfg-File landen
     public StepConfig[] solverStepsProgress = null;
     // internal cache for background creation
     public static final int CACHE_SIZE = 10;
@@ -167,9 +167,9 @@ public final class Options {
     private String[] practisingPuzzles = new String[CACHE_SIZE];  // 10 puzzles for practising
     private int practisingPuzzlesLevel = -1;                      // the DifficultyLevel, for which the practising puzzles have been created
     // ChainSolver
-    public static final int RESTRICT_CHAIN_LENGTH = 20;      // maximale Länge von X-/XY-Chains, wenn restrictChainSize gesetzt ist
-    public static final int RESTRICT_NICE_LOOP_LENGTH = 10;  // maximale Länge von Nice-Loops, wenn restrictChainSize gesetzt ist
-    public static final boolean RESTRICT_CHAIN_SIZE = true;  // Länge der chains beschränken?
+    public static final int RESTRICT_CHAIN_LENGTH = 20;      // maximale LÃ¤nge von X-/XY-Chains, wenn restrictChainSize gesetzt ist
+    public static final int RESTRICT_NICE_LOOP_LENGTH = 10;  // maximale LÃ¤nge von Nice-Loops, wenn restrictChainSize gesetzt ist
+    public static final boolean RESTRICT_CHAIN_SIZE = true;  // LÃ¤nge der chains beschrÃ¤nken?
     private int restrictChainLength = RESTRICT_CHAIN_LENGTH;
     private int restrictNiceLoopLength = RESTRICT_NICE_LOOP_LENGTH;
     private boolean restrictChainSize = RESTRICT_CHAIN_SIZE;
@@ -197,11 +197,11 @@ public final class Options {
     // FishSolver
     public static final int MAX_FINS = 5;                 // Maximale Anzahl Fins
     public static final int MAX_ENDO_FINS = 2;            // Maximale Anzahl Endo-Fins
-    public static final boolean CHECK_TEMPLATES = true;   // Template-Check um Kandidaten von der Suche auszuschließen
+    public static final boolean CHECK_TEMPLATES = true;   // Template-Check um Kandidaten von der Suche auszuschlieÃŸen
     public static final int KRAKEN_MAX_FISH_TYPE = 1;     // 0: nur basic, 1: basic+franken, 2: basic+franken+mutant
     public static final int KRAKEN_MAX_FISH_SIZE = 4;     // number of units in base/cover sets
-    public static final int MAX_KRAKEN_FINS = 2;          // Maximale Anzahl Fins für Kraken-Suche
-    public static final int MAX_KRAKEN_ENDO_FINS = 0;     // Maximale Anzahl Endo-Fins für Kraken-Suche
+    public static final int MAX_KRAKEN_FINS = 2;          // Maximale Anzahl Fins fÃ¼r Kraken-Suche
+    public static final int MAX_KRAKEN_ENDO_FINS = 0;     // Maximale Anzahl Endo-Fins fÃ¼r Kraken-Suche
     public static final boolean ONLY_ONE_FISH_PER_STEP = true; // only the smallest fish for every elimination
     public static final int FISH_DISPLAY_MODE = 0;        // 0: normal; 1: statistics numbers; 2: statistics cells
     private int maxFins = MAX_FINS;
@@ -220,12 +220,12 @@ public final class Options {
     public static final int ALL_STEPS_MAX_FISH_SIZE = 4;     // number of units in base/cover sets
     public static final int ALL_STEPS_MAX_FINS = 5;                 // Maximale Anzahl Fins
     public static final int ALL_STEPS_MAX_ENDO_FINS = 2;            // Maximale Anzahl Endo-Fins
-    public static final boolean ALL_STEPS_CHECK_TEMPLATES = true;   // Template-Check um Kandidaten von der Suche auszuschließen
+    public static final boolean ALL_STEPS_CHECK_TEMPLATES = true;   // Template-Check um Kandidaten von der Suche auszuschlieÃŸen
     public static final int ALL_STEPS_MAX_KRAKEN_FISH_TYPE = 1;     // 0: nur basic, 1: basic+franken, 2: basic+franken+mutant
     public static final int ALL_STEPS_MIN_KRAKEN_FISH_SIZE = 2;     // number of units in base/cover sets
     public static final int ALL_STEPS_MAX_KRAKEN_FISH_SIZE = 4;     // number of units in base/cover sets
-    public static final int ALL_STEPS_MAX_KRAKEN_FINS = 2;          // Maximale Anzahl Fins für Kraken-Suche
-    public static final int ALL_STEPS_MAX_KRAKEN_ENDO_FINS = 0;     // Maximale Anzahl Endo-Fins für Kraken-Suche
+    public static final int ALL_STEPS_MAX_KRAKEN_FINS = 2;          // Maximale Anzahl Fins fÃ¼r Kraken-Suche
+    public static final int ALL_STEPS_MAX_KRAKEN_ENDO_FINS = 0;     // Maximale Anzahl Endo-Fins fÃ¼r Kraken-Suche
     public static final String ALL_STEPS_FISH_CANDIDATES = "111111111";        // 1 for every candidate that should be searched, 0 otherwise
     public static final String ALL_STEPS_KRAKEN_FISH_CANDIDATES = "111111111"; // see above
     public static final int ALL_STEPS_SORT_MODE = 4; // sort by StepType
@@ -283,8 +283,8 @@ public final class Options {
     private boolean allowUniquenessMissingCandidates = ALLOW_UNIQUENESS_MISSING_CANDIDATES;
     // Allgemeines
     public static final boolean SHOW_CANDIDATES = true;    // alle Kandidaten anzeigen
-    public static final boolean SHOW_WRONG_VALUES = true;  // Ungültige Zellen-/Kandidatenwerte anzeigen (Constraint-Verletzungen)
-    public static final boolean SHOW_DEVIATIONS = true;    // Abweichungen von der richtigen Lösung anzeigen
+    public static final boolean SHOW_WRONG_VALUES = true;  // UngÃ¼ltige Zellen-/Kandidatenwerte anzeigen (Constraint-Verletzungen)
+    public static final boolean SHOW_DEVIATIONS = true;    // Abweichungen von der richtigen LÃ¶sung anzeigen
     public static final boolean SHOW_COLORKU = false;	   // use colors instead of numbers
     public static final boolean INVALID_CELLS = false;     // show possible cells
     public static final boolean SAVE_WINDOW_LAYOUT = true; // save window layout at shutdown
@@ -339,29 +339,29 @@ public final class Options {
     public static final boolean USE_ZERO_INSTEAD_OF_DOT = false; // as the name says...
     private boolean useZeroInsteadOfDot = USE_ZERO_INSTEAD_OF_DOT;
     // Farben und Fonts
-    public static final Color GRID_COLOR = Color.BLACK;                                       // Zeichenfarbe für den Rahmen
+    public static final Color GRID_COLOR = Color.BLACK;                                       // Zeichenfarbe fÃ¼r den Rahmen
     public static final Color INNER_GRID_COLOR = Color.LIGHT_GRAY;                            // Linien innerhalb des Rahmens
-    public static final Color WRONG_VALUE_COLOR = Color.RED;                                  // Wert oder Kandidat an dieser Stelle nicht möglich
-    public static final Color DEVIATION_COLOR = new Color(255, 185, 185);                     // Wert oder Kandidat stimmt nicht mit Lösung überein
+    public static final Color WRONG_VALUE_COLOR = Color.RED;                                  // Wert oder Kandidat an dieser Stelle nicht mÃ¶glich
+    public static final Color DEVIATION_COLOR = new Color(255, 185, 185);                     // Wert oder Kandidat stimmt nicht mit LÃ¶sung Ã¼berein
     public static final Color CELL_FIXED_VALUE_COLOR = Color.BLACK;                           // vorgegebene Werte
     public static final Color CELL_VALUE_COLOR = Color.BLUE;                                  // korrekte selbst eingegebene Zellenwerte
     public static final Color CANDIDATE_COLOR = new Color(100, 100, 100);                     // korrekte Kandidaten
     public static final Color DEFAULT_CELL_COLOR = Color.WHITE;                               // Hintergrund normale Zelle
     public static final Color ALTERNATE_CELL_COLOR = Color.WHITE;                             // Hintergrund normale Zelle in jedem zweiten Block
     public static final Color AKT_CELL_COLOR = new Color(255, 255, 150);                      // Hintergrund aktuell markierte Zelle
-    public static final Color INVALID_CELL_COLOR = new Color(255, 185, 185);                  // Hintergrund Zelle mit ungültigen Wert
-    public static final Color POSSIBLE_CELL_COLOR = new Color(185, 255, 185);                 // Hintergrund Zelle mit möglichem Wert
+    public static final Color INVALID_CELL_COLOR = new Color(255, 185, 185);                  // Hintergrund Zelle mit ungÃ¼ltigen Wert
+    public static final Color POSSIBLE_CELL_COLOR = new Color(185, 255, 185);                 // Hintergrund Zelle mit mÃ¶glichem Wert
     public static final Color HINT_CANDIDATE_BACK_COLOR = new Color(113, 221, 137);           // Hintergrund Kandidat in Hinweis
-    public static final Color HINT_CANDIDATE_DELETE_BACK_COLOR = new Color(249, 147, 162);    // Hintergrund für zu löschende Kandidaten
-    public static final Color HINT_CANDIDATE_CANNIBALISTIC_BACK_COLOR = new Color(255, 0, 0); // Hintergrund für zu löschende Kandidaten
-    public static final Color HINT_CANDIDATE_FIN_BACK_COLOR = new Color(140, 198, 255);       // Hintergrund für Fins
-    public static final Color HINT_CANDIDATE_ENDO_FIN_BACK_COLOR = new Color(205, 171, 255);  // Hintergrund für Endo-Fins
+    public static final Color HINT_CANDIDATE_DELETE_BACK_COLOR = new Color(249, 147, 162);    // Hintergrund fÃ¼r zu lÃ¶schende Kandidaten
+    public static final Color HINT_CANDIDATE_CANNIBALISTIC_BACK_COLOR = new Color(255, 0, 0); // Hintergrund fÃ¼r zu lÃ¶schende Kandidaten
+    public static final Color HINT_CANDIDATE_FIN_BACK_COLOR = new Color(140, 198, 255);       // Hintergrund fÃ¼r Fins
+    public static final Color HINT_CANDIDATE_ENDO_FIN_BACK_COLOR = new Color(205, 171, 255);  // Hintergrund fÃ¼r Endo-Fins
     public static final Color HINT_CANDIDATE_COLOR = Color.BLACK;                             // Zeichenfarbe Kandidat in Hinweis
-    public static final Color HINT_CANDIDATE_DELETE_COLOR = Color.BLACK;                      // Zeichenfarbe für zu löschende Kandidaten
-    public static final Color HINT_CANDIDATE_CANNIBALISTIC_COLOR = Color.BLACK;               // Zeichenfarbe für zu löschende Kandidaten
-    public static final Color HINT_CANDIDATE_FIN_COLOR = Color.BLACK;                         // Zeichenfarbe für Fins
-    public static final Color HINT_CANDIDATE_ENDO_FIN_COLOR = Color.BLACK;                    // Zeichenfarbe für Endo-Fins
-    public static final Color[] HINT_CANDIDATE_ALS_BACK_COLORS = { // Hintergrund für ALS (verschieden wegen Chains und Wings)
+    public static final Color HINT_CANDIDATE_DELETE_COLOR = Color.BLACK;                      // Zeichenfarbe fÃ¼r zu lÃ¶schende Kandidaten
+    public static final Color HINT_CANDIDATE_CANNIBALISTIC_COLOR = Color.BLACK;               // Zeichenfarbe fÃ¼r zu lÃ¶schende Kandidaten
+    public static final Color HINT_CANDIDATE_FIN_COLOR = Color.BLACK;                         // Zeichenfarbe fÃ¼r Fins
+    public static final Color HINT_CANDIDATE_ENDO_FIN_COLOR = Color.BLACK;                    // Zeichenfarbe fÃ¼r Endo-Fins
+    public static final Color[] HINT_CANDIDATE_ALS_BACK_COLORS = { // Hintergrund fÃ¼r ALS (verschieden wegen Chains und Wings)
         new Color(215, 255, 215),
         new Color(255, 210, 210),
         new Color(206, 251, 237),
@@ -384,20 +384,20 @@ public final class Options {
     };
     public static final Color COLORKU_INVALID_COLOR = Color.BLACK;
     public static final Color COLORKU_DEVIATION_COLOR = new Color(128, 128, 128);
-    public static final Color[] HINT_CANDIDATE_ALS_COLORS = { // Zeichenfarbe für ALS-Candidaten
+    public static final Color[] HINT_CANDIDATE_ALS_COLORS = { // Zeichenfarbe fÃ¼r ALS-Candidaten
         Color.BLACK,
         Color.BLACK,
         Color.BLACK,
         Color.BLACK
     };
-    public static final Color ARROW_COLOR = Color.RED;                                        // Farbe für Pfeile
-    public static final double VALUE_FONT_FACTOR = 0.6;      // Zellengröße * valueFontFactor gibt Schriftgröße für Zellenwerte
-    public static final double CANDIDATE_FONT_FACTOR = 0.25; // Zellengröße * candidateFontFactor gibt Schriftgröße für Kandidaten
-    public static final double HINT_BACK_FACTOR = 1.6;       // um wie viel der Kreis beim Hint größer ist als die Zahl
-    public static Font DEFAULT_VALUE_FONT = new Font("Tahoma", Font.PLAIN, 10);     // Standard für Zellenwerte (Größe wird ignoriert)
-    public static Font DEFAULT_CANDIDATE_FONT = new Font("Tahoma", Font.PLAIN, 10); // Standard für Kandidaten (Größe wird ignoriert)
-    public static Font BIG_FONT = new Font("Arial", Font.BOLD, 16);    // Font für Ausdruck Überschrift
-    public static Font SMALL_FONT = new Font("Arial", Font.PLAIN, 10); // Font für Ausdruck Rating
+    public static final Color ARROW_COLOR = Color.RED;                                        // Farbe fÃ¼r Pfeile
+    public static final double VALUE_FONT_FACTOR = 0.6;      // ZellengrÃ¶ÃŸe * valueFontFactor gibt SchriftgrÃ¶ÃŸe fÃ¼r Zellenwerte
+    public static final double CANDIDATE_FONT_FACTOR = 0.25; // ZellengrÃ¶ÃŸe * candidateFontFactor gibt SchriftgrÃ¶ÃŸe fÃ¼r Kandidaten
+    public static final double HINT_BACK_FACTOR = 1.6;       // um wie viel der Kreis beim Hint grÃ¶ÃŸer ist als die Zahl
+    public static Font DEFAULT_VALUE_FONT = new Font("Tahoma", Font.PLAIN, 10);     // Standard fÃ¼r Zellenwerte (GrÃ¶ÃŸe wird ignoriert)
+    public static Font DEFAULT_CANDIDATE_FONT = new Font("Tahoma", Font.PLAIN, 10); // Standard fÃ¼r Kandidaten (GrÃ¶ÃŸe wird ignoriert)
+    public static Font BIG_FONT = new Font("Arial", Font.BOLD, 16);    // Font fÃ¼r Ausdruck Ãœberschrift
+    public static Font SMALL_FONT = new Font("Arial", Font.PLAIN, 10); // Font fÃ¼r Ausdruck Rating
     private Color gridColor = GRID_COLOR;
     private Color innerGridColor = INNER_GRID_COLOR;
     private Color wrongValueColor = WRONG_VALUE_COLOR;
@@ -498,10 +498,10 @@ public final class Options {
             colorKuColors[i] = new Color(COLORKU_COLORS[i].getRGB());
         }
 
-//    public static final Font DEFAULT_VALUE_FONT = new Font("Tahoma", Font.PLAIN, 10);     // Standard für Zellenwerte (Größe wird ignoriert)
-//    public static final Font DEFAULT_CANDIDATE_FONT = new Font("Tahoma", Font.PLAIN, 10); // Standard für Kandidaten (Größe wird ignoriert)
-//    public static final Font BIG_FONT = new Font("Arial", Font.BOLD, 16);    // Font für Ausdruck Überschrift
-//    public static final Font SMALL_FONT = new Font("Arial", Font.PLAIN, 10); // Font für Ausdruck Rating
+//    public static final Font DEFAULT_VALUE_FONT = new Font("Tahoma", Font.PLAIN, 10);     // Standard fÃ¼r Zellenwerte (GrÃ¶ÃŸe wird ignoriert)
+//    public static final Font DEFAULT_CANDIDATE_FONT = new Font("Tahoma", Font.PLAIN, 10); // Standard fÃ¼r Kandidaten (GrÃ¶ÃŸe wird ignoriert)
+//    public static final Font BIG_FONT = new Font("Arial", Font.BOLD, 16);    // Font fÃ¼r Ausdruck Ãœberschrift
+//    public static final Font SMALL_FONT = new Font("Arial", Font.PLAIN, 10); // Font fÃ¼r Ausdruck Rating
         // allow for different fonts in different OSes
         if (!checkFont(DEFAULT_CANDIDATE_FONT)) {
             DEFAULT_CANDIDATE_FONT = new Font(Font.SANS_SERIF, DEFAULT_CANDIDATE_FONT.getStyle(), DEFAULT_CANDIDATE_FONT.getSize());
@@ -583,7 +583,7 @@ public final class Options {
 
     public StepConfig[] copyStepConfigs(StepConfig[] src, boolean noLastTwo,
             boolean addLastTwo, boolean noSort, boolean sortProgress) {
-        // Wenn noLastTwo oder addLastTwo gesetzt sind, ist src bereits sortiert, das heißt
+        // Wenn noLastTwo oder addLastTwo gesetzt sind, ist src bereits sortiert, das heiÃŸt
         // INCOMPLETE und GIVE_UP stehen ganz hinten
         // That's not true if src == DEFAULT_SOLVER_STEPS! (reset in ConfigSolverPanel)
         int length = src.length;
@@ -633,8 +633,8 @@ public final class Options {
     }
 
     /**
-     * Alle Änderungen in solverSteps werden in orgSolverSteps übernommen, orgSolverSteps bleibt
-     * allerdings weiterhin unsortiert (für XmlWriter)
+     * Alle Ã„nderungen in solverSteps werden in orgSolverSteps Ã¼bernommen, orgSolverSteps bleibt
+     * allerdings weiterhin unsortiert (fÃ¼r XmlWriter)
      */
     public void adjustOrgSolverSteps() {
         boolean somethingChanged = false;

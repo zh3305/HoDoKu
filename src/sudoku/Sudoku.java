@@ -42,17 +42,17 @@ public class Sudoku {
     };
     private static final int CPL = 9;
     
-    // Ein Template pro Kandidat mit allen prinzipiell noch möglichen Positionen
-    // (ohne Berücksichtigung der gesetzten Zellen)
+    // Ein Template pro Kandidat mit allen prinzipiell noch mÃ¶glichen Positionen
+    // (ohne BerÃ¼cksichtigung der gesetzten Zellen)
 
     private SudokuSetBase[] possiblePositions = new SudokuSetBase[10];
-    // Ein Template pro Kandidat mit allen noch möglichen Positionen
+    // Ein Template pro Kandidat mit allen noch mÃ¶glichen Positionen
     private SudokuSetBase[] allowedPositions = new SudokuSetBase[10];
     // Ein Template pro Kandidat mit allen gesetzten Positionen
     private SudokuSet[] positions = new SudokuSet[10];    // 9x9 Sudoku, linearer Zugriff (ist leichter)
     private SudokuCell[] cells = new SudokuCell[81];    // Schwierigkeits-Level dieses Sudokus
     private DifficultyLevel level;
-    private int score;    // Ausgangspunkt für dieses Sudoku (für reset)
+    private int score;    // Ausgangspunkt fÃ¼r dieses Sudoku (fÃ¼r reset)
     private String initialState = null;
 
     /** Creates a new instance of Sudoku */
@@ -311,7 +311,7 @@ public class Sudoku {
             }
         }
         if (mode == ClipboardMode.LIBRARY) {
-            // gelöschte Kandidaten anhängen
+            // gelÃ¶schte Kandidaten anhÃ¤ngen
             int type = SudokuCell.PLAY;
             boolean first = true;
             out.append(":");

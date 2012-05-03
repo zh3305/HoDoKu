@@ -225,8 +225,8 @@ public class ConfigTrainigPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_stepListMouseClicked
     
     public void okPressed() {
-        // Alle Werte übernehmen
-        // Alle Werte übernehmen
+        // Alle Werte Ã¼bernehmen
+        // Alle Werte Ã¼bernehmen
         // Caution: steps[] is shared by ConfigSolverPanel and ConfigFindAllStepsPanel
         // okPressed() in ConfigSolverPanel has to be called first, here only the values
         // for enabledTraining are set
@@ -258,7 +258,7 @@ public class ConfigTrainigPanel extends javax.swing.JPanel {
     }
     
     private void initAll(boolean setDefault) {
-        // Zuerst die Daten zurücksetzen
+        // Zuerst die Daten zurÃ¼cksetzen
         if (setDefault) {
             // CAUTION: Reset to default resets only enabledProgress and indexProgress
             steps = Options.getInstance().copyStepConfigs(Options.getInstance().solverSteps, true, false, false, false);

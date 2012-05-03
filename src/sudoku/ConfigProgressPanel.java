@@ -563,7 +563,7 @@ implements ListDragAndDropChange {
     }
     
     private void initAll(boolean setDefault) {
-        // Zuerst die Daten zurücksetzen
+        // Zuerst die Daten zurÃ¼cksetzen
         if (setDefault) {
             // CAUTION: Reset to default resets only enabledProgress and indexProgress
             steps = Options.getInstance().copyStepConfigs(Options.getInstance().solverStepsProgress, true, false, false, true);

@@ -518,7 +518,7 @@
                           </Group>
                       </Group>
                   </Group>
-                  <EmptySpace pref="36" max="32767" attributes="0"/>
+                  <EmptySpace pref="33" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -619,7 +619,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="valuesButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="&#x2026;" noResource="true"/>
+            <Property name="text" type="java.lang.String" value="..." noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="valuesButtonActionPerformed"/>
@@ -627,7 +627,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="candidatesButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="&#x2026;" noResource="true"/>
+            <Property name="text" type="java.lang.String" value="..." noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="candidatesButtonActionPerformed"/>
@@ -635,7 +635,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="printLargeButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="&#x2026;" noResource="true"/>
+            <Property name="text" type="java.lang.String" value="..." noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="printLargeButtonActionPerformed"/>
@@ -643,7 +643,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="printSmallButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="&#x2026;" noResource="true"/>
+            <Property name="text" type="java.lang.String" value="..." noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="printSmallButtonActionPerformed"/>

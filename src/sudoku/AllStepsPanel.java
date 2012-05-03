@@ -654,7 +654,7 @@ public final class AllStepsPanel extends javax.swing.JPanel implements TreeSelec
         DefaultMutableTreeNode lastCat = null;
         DefaultMutableTreeNode lastEntry = null;
         for (SolutionStep step : steps) {
-            // Singles kommen immer ganz oben hin (jedes Single in eine eigene Kategorie); das gleiche gilt für Forcing Chains, die Werte setzen
+            // Singles kommen immer ganz oben hin (jedes Single in eine eigene Kategorie); das gleiche gilt fÃ¼r Forcing Chains, die Werte setzen
             // (eigener Durchlauf!)
             //System.out.println(step.toString(2));
             if (step.isSingle() || (step.isForcingChainSet())) {
@@ -671,14 +671,14 @@ public final class AllStepsPanel extends javax.swing.JPanel implements TreeSelec
             } else {
                 // normaler Betrieb, mitten im Baum
                 if (step.isEqual(lastStep)) {
-                    // gleich -> darunterhängen
+                    // gleich -> darunterhÃ¤ngen
                     lastEntry.add(new DefaultMutableTreeNode(step));
                 } else if (step.isEquivalent(lastStep)) {
-                    // äquivalent: neuer Eintrag unter lastCat
+                    // Ã¤quivalent: neuer Eintrag unter lastCat
                     lastEntry = new DefaultMutableTreeNode(step);
                     lastCat.add(lastEntry);
                 } else {
-                    // neue Kategorie: prüfen, ob es ein Subset eines bestehenden Eintrags ist
+                    // neue Kategorie: prÃ¼fen, ob es ein Subset eines bestehenden Eintrags ist
                     Logger.getLogger(AllStepsPanel.class.getName()).log(Level.FINER, step.getCandidateString());
                     lastCat = new DefaultMutableTreeNode(step.getCandidateString());
                     lastEntry = new DefaultMutableTreeNode(step);
@@ -686,15 +686,15 @@ public final class AllStepsPanel extends javax.swing.JPanel implements TreeSelec
                     //DefaultMutableTreeNode tmp = getParent(root, step);
                     DefaultMutableTreeNode tmp = null;
                     if (tmp == null) {
-                        // in oberster Ebene einhängen: richtigen Index suchen
-                        // (soll schließlich nach Anzahl zu löschender Kandidaten sortiert sein)
+                        // in oberster Ebene einhÃ¤ngen: richtigen Index suchen
+                        // (soll schlieÃŸlich nach Anzahl zu lÃ¶schender Kandidaten sortiert sein)
                         root.insert(lastCat, getTopLevelIndex(root, step));
                         //root.add(lastCat);
                         } else {
-                        // ist entweder äquivalent oder Subset
+                        // ist entweder Ã¤quivalent oder Subset
                         SolutionStep tmpStep = getStepFromNode(tmp);
                         if (tmpStep.isEquivalent(step)) {
-                            // hinter dem äquivalenten Step in parent einfügen
+                            // hinter dem Ã¤quivalenten Step in parent einfÃ¼gen
                             DefaultMutableTreeNode parent = (DefaultMutableTreeNode) tmp.getParent();
                             parent.insert(lastCat, parent.getIndex(tmp) + 1);
                         } else {
@@ -708,13 +708,13 @@ public final class AllStepsPanel extends javax.swing.JPanel implements TreeSelec
         }
         for (SolutionStep step : steps) {
             // Singles kommen immer ganz oben hin (jedes Single in eine eigene Kategorie)
-            // ACHTUNG: Forcing Chains: Alle Setzoperationen für eine Zelle in eine Kategorie
+            // ACHTUNG: Forcing Chains: Alle Setzoperationen fÃ¼r eine Zelle in eine Kategorie
             // (eigener Durchlauf!)
             if (!step.isSingle() && !step.isForcingChainSet()) {
                 continue;
             }
             if (step.isForcingChainSet() && step.isEqual(lastStep)) {
-                // gleich -> darunterhängen
+                // gleich -> darunterhÃ¤ngen
                 lastEntry.add(new DefaultMutableTreeNode(step));
             } else {
                 lastCat = new DefaultMutableTreeNode(step.getSingleCandidateString());
@@ -733,7 +733,7 @@ public final class AllStepsPanel extends javax.swing.JPanel implements TreeSelec
 //        while (children.hasMoreElements()) {
 //            DefaultMutableTreeNode act = (DefaultMutableTreeNode) children.nextElement();
 //            if (act.getUserObject() instanceof String) {
-//                // Ist ein Knoten für einen Step -> ersten Step suchen
+//                // Ist ein Knoten fÃ¼r einen Step -> ersten Step suchen
 //                boolean found = false;
 //                Enumeration nodes = act.children();
 //                while (nodes.hasMoreElements()) {
@@ -769,9 +769,9 @@ public final class AllStepsPanel extends javax.swing.JPanel implements TreeSelec
      * kleinste Fisch angezeigt wird; daher wird das in einem eigenen
      * Durchlauf erledigt:
      *
-     *  - Auf jeder Ebene wird zunächst jeder Knoten mit Kindern rekursiv behandelt
-     *    (stellt sicher, dass jeder Knoten den kleinsten Step enthält)
-     *  - Anschließend werden alle nicht-String-Knoten durchgegangen, der Knoten
+     *  - Auf jeder Ebene wird zunÃ¤chst jeder Knoten mit Kindern rekursiv behandelt
+     *    (stellt sicher, dass jeder Knoten den kleinsten Step enthÃ¤lt)
+     *  - AnschlieÃŸend werden alle nicht-String-Knoten durchgegangen, der Knoten
      *    mit dem kleinsten Step-Typ wird mit dem ersten Knoten vertauscht,
      *    der String-Knoten wird angepasst
      */
@@ -792,7 +792,7 @@ public final class AllStepsPanel extends javax.swing.JPanel implements TreeSelec
 //        if (((DefaultMutableTreeNode)root.getChildAt(0)).getUserObject() instanceof String) {
 //            return;
 //        }
-//        // ok, jeder Knoten enthält den kleinsten Fish -> aktuelle Ebene bereinigen
+//        // ok, jeder Knoten enthÃ¤lt den kleinsten Fish -> aktuelle Ebene bereinigen
 //        int typeOrdinal = -1;
 //        boolean isString = false;
 //        if (root.getUserObject() instanceof String) {
@@ -818,7 +818,7 @@ public final class AllStepsPanel extends javax.swing.JPanel implements TreeSelec
 //            }
 //            index++;
 //        }
-//        // ok, gefunden -> wenn nötig anpassen
+//        // ok, gefunden -> wenn nÃ¶tig anpassen
 //        if (smallestIndex > -1) {
 //            SolutionStep step = (SolutionStep)((DefaultMutableTreeNode)root.getChildAt(smallestIndex)).getUserObject();
 //            if (isString) {
@@ -838,7 +838,7 @@ public final class AllStepsPanel extends javax.swing.JPanel implements TreeSelec
 
     /**
      * Sucht die richtige Position in der obersten Ebene des Baumes (hinter dem letzten
-     * Step mit gleich viel zu löschenden Kandidaten)
+     * Step mit gleich viel zu lÃ¶schenden Kandidaten)
      */
     private int getTopLevelIndex(DefaultMutableTreeNode root, SolutionStep step) {
         int index = 0;

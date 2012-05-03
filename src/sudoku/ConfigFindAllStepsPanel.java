@@ -489,7 +489,7 @@ private void krakenFishCandidatesButtonActionPerformed(java.awt.event.ActionEven
 }//GEN-LAST:event_krakenFishCandidatesButtonActionPerformed
 
     public void okPressed() {
-        // Alle Werte übernehmen
+        // Alle Werte Ã¼bernehmen
         // Caution: steps[] is shared by ConfigSolverPanel and ConfigFindAllStepsPanel
         // okPressed() in ConfigSolverPanel has to be called first, here only the values
         // for allStepsEnabled are set
@@ -534,7 +534,7 @@ private void krakenFishCandidatesButtonActionPerformed(java.awt.event.ActionEven
     }
 
     private void initAll(boolean setDefault) {
-        // Zuerst die Daten zurücksetzen
+        // Zuerst die Daten zurÃ¼cksetzen
         if (setDefault) {
             steps = Options.getInstance().copyStepConfigs(Options.DEFAULT_SOLVER_STEPS, true, false);
             

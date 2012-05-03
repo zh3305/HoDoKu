@@ -39,19 +39,19 @@ import sudoku.SudokuSet;
  *
  * Erweiterungen:
  *    - C muss nicht alle Zellen der Intersection enthalten
- *    - VB und VR dürfen zusätzlich Kandidaten enthalten, es muss allerdings dann eine zusätzliche Zelle
- *      pro zusätzlichem Kandidaten geben (Naked Subset)
+ *    - VB und VR dÃ¼rfen zusÃ¤tzlich Kandidaten enthalten, es muss allerdings dann eine zusÃ¤tzliche Zelle
+ *      pro zusÃ¤tzlichem Kandidaten geben (Naked Subset)
  *
- * - Finde ungelöste Zellen am Schnittpunkt zwischen Zeile/Spalte und Block
- * - Für alle Kombinationen aus diesen Zellen:
- *     - Ermittle die Kandidaten -> Anzahl muss um mindestens 2 (N) größer sein als Anzahl Zellen
+ * - Finde ungelÃ¶ste Zellen am Schnittpunkt zwischen Zeile/Spalte und Block
+ * - FÃ¼r alle Kombinationen aus diesen Zellen:
+ *     - Ermittle die Kandidaten -> Anzahl muss um mindestens 2 (N) grÃ¶ÃŸer sein als Anzahl Zellen
  *     - Finde N Zellen in der Zeile/Spalte und N Zellen im Block, die nicht Teil der Intersection sind,
  *       die jeweils nur Kandidaten enthalten, die in der Intersection enthalten sind
- *       (die Kandidaten-Sets aus Zeile/Spalte und Block dürfen sich nicht überschneiden)
+ *       (die Kandidaten-Sets aus Zeile/Spalte und Block dÃ¼rfen sich nicht Ã¼berschneiden)
  *     - Wenn in den N Zellen Kandidaten enthalten sind, die nicht Teil der Intersection sind, muss es
- *       eine zusätzliche Zelle pro zusätzlichem Kandidaten geben (am Besten alle Kombinationen durchgehen)
- *     - In den Zellen der Zeile/Spalte, die bis jetzt noch nicht verwendet wurden, können alle Kandidaten
- *       gelöscht werden, die in der Intersection, aber nicht im Set des Blocks vorkommen.
+ *       eine zusÃ¤tzliche Zelle pro zusÃ¤tzlichem Kandidaten geben (am Besten alle Kombinationen durchgehen)
+ *     - In den Zellen der Zeile/Spalte, die bis jetzt noch nicht verwendet wurden, kÃ¶nnen alle Kandidaten
+ *       gelÃ¶scht werden, die in der Intersection, aber nicht im Set des Blocks vorkommen.
  *     - Analog im Block
  *
  * @author hobiwan

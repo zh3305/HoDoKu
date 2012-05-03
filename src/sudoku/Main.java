@@ -306,7 +306,7 @@ public class Main {
      * @throws IOException  
      */
     public static void main(String[] args) throws IOException {
-        // Logging: Standardm‰ﬂig auf die Console, ins Logfile nur Exceptions
+        // Logging: Standardm√§√üig auf die Console, ins Logfile nur Exceptions
         Handler fh = new FileHandler("%t/hodoku.log", false);
         fh.setFormatter(new SimpleFormatter());
         fh.setLevel(Level.SEVERE);

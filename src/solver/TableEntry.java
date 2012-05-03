@@ -199,7 +199,7 @@ public class TableEntry {
     }
     
     /**
-     * Einträge werden nur hinzugefügt, wenn sie nicht schon existieren
+     * EintrÃ¤ge werden nur hinzugefÃ¼gt, wenn sie nicht schon existieren
      */
     /**
      * Adds entries to the table.
@@ -506,7 +506,7 @@ public class TableEntry {
     }
     
     /**
-     * Prüft, ob der Eintrag aus einer anderen Tabelle stammt. Wenn ja,
+     * PrÃ¼ft, ob der Eintrag aus einer anderen Tabelle stammt. Wenn ja,
      * ist getRetIndex( index, 0) der Index der Tabelle und ON_TABLE bestimmt,
      * ob es aus onTables oder aus offTables kommt
      */

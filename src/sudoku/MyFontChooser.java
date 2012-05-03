@@ -41,12 +41,12 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 /**
- * <p>Einfacher Font-Auswahldialog (der Xte). Wird über
+ * <p>Einfacher Font-Auswahldialog (der Xte). Wird Ã¼ber
  * {@link #showDialog(Dialog,String,Font) showDialog()}
  * aufgerufen.</p>
  *
- * <p>Der Dialog enthält ein einfaches Preview-Panel, in dem
- * das Ergebnis der Auswahl in konstanter Größe angezeigt wird.</p>
+ * <p>Der Dialog enthÃ¤lt ein einfaches Preview-Panel, in dem
+ * das Ergebnis der Auswahl in konstanter GrÃ¶ÃŸe angezeigt wird.</p>
  *
  * <p>Der Dialog verwendet NullLayout, es kann daher zu Anzeigeproblemen
  * kommen, wenn nicht das aktuelle Windows-PlugAndFeel des JRE 1.5
@@ -58,18 +58,18 @@ import javax.swing.event.ListSelectionListener;
 public class MyFontChooser extends javax.swing.JDialog implements ListSelectionListener {
 
     /**
-     * Nur eine Instanz für alle Aufrufe.
+     * Nur eine Instanz fÃ¼r alle Aufrufe.
      */
     static MyFontChooser chooser = null;
     private static final long serialVersionUID = 1L;
     /**
-     * Der aktuelle gewählte Font. Wird im Konstruktor mit einem vorgegebenen Font
-     * initialisiert. Wird "Abbrechen" gedrückt, wird er mit <CODE>null</CODE> überschrieben.
+     * Der aktuelle gewÃ¤hlte Font. Wird im Konstruktor mit einem vorgegebenen Font
+     * initialisiert. Wird "Abbrechen" gedrÃ¼ckt, wird er mit <CODE>null</CODE> Ã¼berschrieben.
      */
     private Font font;
     /**
-     * Statisches Array, das die Fontnamen aller im System installierten Schriften enthält.
-     * Das Array wird befüllt, wenn der Dialog zum ersten Mal aufgerufen wird.
+     * Statisches Array, das die Fontnamen aller im System installierten Schriften enthÃ¤lt.
+     * Das Array wird befÃ¼llt, wenn der Dialog zum ersten Mal aufgerufen wird.
      */
     static private String[] fontNames = null;
     /**
@@ -83,7 +83,7 @@ public class MyFontChooser extends javax.swing.JDialog implements ListSelectionL
         java.util.ResourceBundle.getBundle("intl/MyFontChooser").getString("MyFontChooser.bold_italic")
     };
     /**
-     * Array mit vorgegebenen Größen. Derzeit kann nur aus diesen Größen gewählt werden.
+     * Array mit vorgegebenen GrÃ¶ÃŸen. Derzeit kann nur aus diesen GrÃ¶ÃŸen gewÃ¤hlt werden.
      */
     static private String[] size = {"6", "7", "8", "9", "10", "11", "12", "14", "16", "18", "20", "22", "24", "26", "28", "30", "36", "40", "50", "60"};
 
@@ -123,8 +123,8 @@ public class MyFontChooser extends javax.swing.JDialog implements ListSelectionL
 
     /**
      * Initialisiert die statische Instanz {@link chooser} mit den Werten des
-     * übergebenen Fonts und zeigt den Dialog an.
-     * @param font Font, der beim Öffnen des Dialogs angezeigt werden soll.
+     * Ã¼bergebenen Fonts und zeigt den Dialog an.
+     * @param font Font, der beim Ã–ffnen des Dialogs angezeigt werden soll.
      */
     private void showFontChooser(Font font) {
         this.font = font;
@@ -285,16 +285,16 @@ public class MyFontChooser extends javax.swing.JDialog implements ListSelectionL
 
     /**
      * Gibt die Resourcen des Dialogs wieder frei.
-     * @param evt Auslösendes Event.
+     * @param evt AuslÃ¶sendes Event.
      */
     private void jbOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbOKActionPerformed
         setVisible(false);
     }//GEN-LAST:event_jbOKActionPerformed
 
     /**
-     * Setzt den aktuell gewählten {@link #font} auf <CODE>null</CODE> und gibt die
+     * Setzt den aktuell gewÃ¤hlten {@link #font} auf <CODE>null</CODE> und gibt die
      * Dialog-Resourcen wieder frei.
-     * @param evt Auslösendes Event.
+     * @param evt AuslÃ¶sendes Event.
      */
     private void jbCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbCancelActionPerformed
         font = null;
@@ -302,15 +302,15 @@ public class MyFontChooser extends javax.swing.JDialog implements ListSelectionL
     }//GEN-LAST:event_jbCancelActionPerformed
 
     /**
-     * <p>Über diese Methode wird ein MyFontChooser angezeigt. Da das Konstruieren eines
+     * <p>Ãœber diese Methode wird ein MyFontChooser angezeigt. Da das Konstruieren eines
      * JFonChooser-Objekts zeitaufwendig ist, existiert pro Prozess nur eine Instanz,
      * die beim ersten Aufruf erzeugt wird.</p>
      * 
      * @param owner 
      * @param title Titel des Dialogs.
-     * @param initialFont Font, der beim Öffnen des Dialogs angezeigt werden soll. Wird <CODE>null</CODE>
-     * übergeben, wird der Standard-Font für Buttons verwendet.
-     * @return Der gewählte Font bzw. <CODE>null</CODE>, wenn "Abbrechen" gedrückt wurde.
+     * @param initialFont Font, der beim Ã–ffnen des Dialogs angezeigt werden soll. Wird <CODE>null</CODE>
+     * Ã¼bergeben, wird der Standard-Font fÃ¼r Buttons verwendet.
+     * @return Der gewÃ¤hlte Font bzw. <CODE>null</CODE>, wenn "Abbrechen" gedrÃ¼ckt wurde.
      */
     public static Font showDialog(Frame owner, String title, Font initialFont) {
         if (initialFont == null) {
@@ -327,7 +327,7 @@ public class MyFontChooser extends javax.swing.JDialog implements ListSelectionL
     /**
      * Passt {@link #font} und das Demo-Panel an, wenn in einer Liste eine Selektion
      * vorgenommen wurde.
-     * @param e Auslösendes Event.
+     * @param e AuslÃ¶sendes Event.
      */
     @Override
     public void valueChanged(ListSelectionEvent e) {
@@ -362,11 +362,11 @@ public class MyFontChooser extends javax.swing.JDialog implements ListSelectionL
 
     /**
      * <p>{@link jpDemoPanel} wird mit einer anonymen Klasse instantiiert, die
-     * <CODE>paintComponent()</CODE> so überschreibt, das <CODE>updateDemoPanel()</CODE>
+     * <CODE>paintComponent()</CODE> so Ã¼berschreibt, das <CODE>updateDemoPanel()</CODE>
      * aufgerufen wird, wenn das Demo-Panel neu gezeichnet werden soll.</p>
      *
-     * <p>Zeichnet eine Linie, die die Baseline des aktuellen Fonts repräsentiert, und
-     * gibt den Namen des Fonts im aktuell gewählten Schriftschnitt aus.</p>
+     * <p>Zeichnet eine Linie, die die Baseline des aktuellen Fonts reprÃ¤sentiert, und
+     * gibt den Namen des Fonts im aktuell gewÃ¤hlten Schriftschnitt aus.</p>
      * @param g <CODE>Graphics2D</CODE> zum Zeichnen des Panels.
      */
     private void updateDemoPanel(Graphics g) {

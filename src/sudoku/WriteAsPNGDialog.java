@@ -38,7 +38,7 @@ public class WriteAsPNGDialog extends javax.swing.JDialog {
 
     private static final long serialVersionUID = 1L;
     private File bildFile;
-    private int auflösung;
+    private int aufloesung;
     private double bildSize;
     private int einheit;
     private boolean ok = false;
@@ -48,15 +48,15 @@ public class WriteAsPNGDialog extends javax.swing.JDialog {
      * @param parent
      * @param modal
      * @param size
-     * @param auflösung
+     * @param auflï¿½sung
      * @param einheit  
      */
     public WriteAsPNGDialog(java.awt.Frame parent, boolean modal,
-            double size, int auflösung, int einheit) {
+            double size, int aufloesung, int einheit) {
         super(parent, modal);
         initComponents();
 
-        this.auflösung = auflösung;
+        this.aufloesung = aufloesung;
         this.bildSize = size;
         this.einheit = einheit;
         this.bildFile = new File(Options.getInstance().getDefaultImageDir());
@@ -66,8 +66,8 @@ public class WriteAsPNGDialog extends javax.swing.JDialog {
         einheiten[1] = inchRadioButton;
         einheiten[2] = pixelRadioButton;
 
-        auflösungTextField.setText(Integer.toString(auflösung));
-        größeTextField.setText(Double.toString(size));
+        resolutionTextField.setText(Integer.toString(aufloesung));
+        sizeTextField.setText(Double.toString(size));
         einheiten[einheit].setSelected(true);
 
         getRootPane().setDefaultButton(bildSpeichernButton);
@@ -94,11 +94,11 @@ public class WriteAsPNGDialog extends javax.swing.JDialog {
     private void initComponents() {
 
         einheitButtonGroup = new javax.swing.ButtonGroup();
-        größePanel = new javax.swing.JPanel();
-        größeLabel = new javax.swing.JLabel();
-        auflösungLabel = new javax.swing.JLabel();
-        größeTextField = new javax.swing.JTextField();
-        auflösungTextField = new javax.swing.JTextField();
+        sizePanel = new javax.swing.JPanel();
+        sizeLabel = new javax.swing.JLabel();
+        resolutionLabel = new javax.swing.JLabel();
+        sizeTextField = new javax.swing.JTextField();
+        resolutionTextField = new javax.swing.JTextField();
         einheitPanel = new javax.swing.JPanel();
         mmRadioButton = new javax.swing.JRadioButton();
         inchRadioButton = new javax.swing.JRadioButton();
@@ -110,42 +110,42 @@ public class WriteAsPNGDialog extends javax.swing.JDialog {
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("intl/WriteAsPNGDialog"); // NOI18N
         setTitle(bundle.getString("WriteAsPNGDialog.title")); // NOI18N
 
-        größePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("WriteAsPNGDialog.größePanel.border.title"))); // NOI18N
+        sizePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("WriteAsPNGDialog.sizePanel.border.title"))); // NOI18N
 
-        größeLabel.setDisplayedMnemonic(java.util.ResourceBundle.getBundle("intl/WriteAsPNGDialog").getString("WriteAsPNGDialog.größeLabel.mnemonic").charAt(0));
-        größeLabel.setLabelFor(größeTextField);
-        größeLabel.setText(bundle.getString("WriteAsPNGDialog.größeLabel.text")); // NOI18N
+        sizeLabel.setDisplayedMnemonic(java.util.ResourceBundle.getBundle("intl/WriteAsPNGDialog").getString("WriteAsPNGDialog.sizeLabel.mnemonic").charAt(0));
+        sizeLabel.setLabelFor(sizeTextField);
+        sizeLabel.setText(bundle.getString("WriteAsPNGDialog.sizeLabel.text")); // NOI18N
 
-        auflösungLabel.setDisplayedMnemonic(java.util.ResourceBundle.getBundle("intl/WriteAsPNGDialog").getString("WriteAsPNGDialog.auflösungLabel.mnemonic").charAt(0));
-        auflösungLabel.setLabelFor(auflösungTextField);
-        auflösungLabel.setText(bundle.getString("WriteAsPNGDialog.auflösungLabel.text")); // NOI18N
+        resolutionLabel.setDisplayedMnemonic(java.util.ResourceBundle.getBundle("intl/WriteAsPNGDialog").getString("WriteAsPNGDialog.resolutionLabel.mnemonic").charAt(0));
+        resolutionLabel.setLabelFor(resolutionTextField);
+        resolutionLabel.setText(bundle.getString("WriteAsPNGDialog.resolutionLabel.text")); // NOI18N
 
-        javax.swing.GroupLayout größePanelLayout = new javax.swing.GroupLayout(größePanel);
-        größePanel.setLayout(größePanelLayout);
-        größePanelLayout.setHorizontalGroup(
-            größePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(größePanelLayout.createSequentialGroup()
+        javax.swing.GroupLayout sizePanelLayout = new javax.swing.GroupLayout(sizePanel);
+        sizePanel.setLayout(sizePanelLayout);
+        sizePanelLayout.setHorizontalGroup(
+            sizePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(sizePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(größePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(größeLabel)
-                    .addComponent(auflösungLabel))
+                .addGroup(sizePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(sizeLabel)
+                    .addComponent(resolutionLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(größePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(auflösungTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
-                    .addComponent(größeTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE))
+                .addGroup(sizePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(resolutionTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
+                    .addComponent(sizeTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        größePanelLayout.setVerticalGroup(
-            größePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(größePanelLayout.createSequentialGroup()
+        sizePanelLayout.setVerticalGroup(
+            sizePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(sizePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(größePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
-                    .addComponent(größeLabel)
-                    .addComponent(größeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(sizePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
+                    .addComponent(sizeLabel)
+                    .addComponent(sizeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(größePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
-                    .addComponent(auflösungLabel)
-                    .addComponent(auflösungTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(sizePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
+                    .addComponent(resolutionLabel)
+                    .addComponent(resolutionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -218,7 +218,7 @@ public class WriteAsPNGDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(größePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(sizePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(einheitPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -235,7 +235,7 @@ public class WriteAsPNGDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(größePanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(sizePanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(einheitPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -273,8 +273,8 @@ public class WriteAsPNGDialog extends javax.swing.JDialog {
                 return;
             }
             try {
-                auflösung = Integer.parseInt(auflösungTextField.getText());
-                bildSize = Double.parseDouble(größeTextField.getText());
+                aufloesung = Integer.parseInt(resolutionTextField.getText());
+                bildSize = Double.parseDouble(sizeTextField.getText());
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("intl/WriteAsPNGDialog").getString("WriteAsPNGDialog.invalid_input_format"),
                         java.util.ResourceBundle.getBundle("intl/WriteAsPNGDialog").getString("WriteAsPNGDialog.error"),
@@ -301,8 +301,8 @@ public class WriteAsPNGDialog extends javax.swing.JDialog {
         return bildFile;
     }
 
-    public int getAuflösung() {
-        return auflösung;
+    public int getAufloesung() {
+        return aufloesung;
     }
 
     public double getBildSize() {
@@ -331,16 +331,16 @@ public class WriteAsPNGDialog extends javax.swing.JDialog {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton abbrechenButton;
-    private javax.swing.JLabel auflösungLabel;
-    private javax.swing.JTextField auflösungTextField;
     private javax.swing.JButton bildSpeichernButton;
     private javax.swing.ButtonGroup einheitButtonGroup;
     private javax.swing.JPanel einheitPanel;
-    private javax.swing.JLabel größeLabel;
-    private javax.swing.JPanel größePanel;
-    private javax.swing.JTextField größeTextField;
     private javax.swing.JRadioButton inchRadioButton;
     private javax.swing.JRadioButton mmRadioButton;
     private javax.swing.JRadioButton pixelRadioButton;
+    private javax.swing.JLabel resolutionLabel;
+    private javax.swing.JTextField resolutionTextField;
+    private javax.swing.JLabel sizeLabel;
+    private javax.swing.JPanel sizePanel;
+    private javax.swing.JTextField sizeTextField;
     // End of variables declaration//GEN-END:variables
 }

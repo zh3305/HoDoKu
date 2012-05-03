@@ -43,7 +43,7 @@ public class SudokuCell {
     private static final short[] masks = { M_1, M_2, M_3, M_4, M_5, M_6, M_7, M_8, M_9 };
     
     private byte value = 0;
-    private boolean isFixed = false; // vorgegebene Zahl, kann nicht ver‰ndert werden!
+    private boolean isFixed = false; // vorgegebene Zahl, kann nicht ver√§ndert werden!
     private short[] candidates = new short[3];
     
     /** Creates a new instance of SudokuCell */

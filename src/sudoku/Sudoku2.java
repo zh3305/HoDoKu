@@ -799,7 +799,7 @@ public class Sudoku2 implements Cloneable {
             int[] cands1 = new int[10];
             for (int row = 0; row < cands.length; row++) {
                 for (int col = 0; col < cands[row].length; col++) {
-                    // Es dürfen nur die angegebenen Kandidaten gesetzt sein
+                    // Es dÃ¼rfen nur die angegebenen Kandidaten gesetzt sein
                     Arrays.fill(cands1, 0);
                     int sum = cands[row][col];
                     while (sum > 0) {
@@ -1316,7 +1316,7 @@ public class Sudoku2 implements Cloneable {
             }
         }
         if (mode == ClipboardMode.LIBRARY) {
-            // gelöschte Kandidaten anhängen
+            // gelÃ¶schte Kandidaten anhÃ¤ngen
             boolean first = true;
             out.append(":");
             for (int i = 0; i < cells.length; i++) {
@@ -2052,7 +2052,7 @@ public class Sudoku2 implements Cloneable {
             buddiesM2[i] = buddies[i].getMask2();
         }
 
-        // Ein Set für jedes Haus mit allen Zellen des Hauses
+        // Ein Set fÃ¼r jedes Haus mit allen Zellen des Hauses
         for (int i = 0; i < UNITS; i++) {
             LINE_TEMPLATES[i] = new SudokuSet();
             for (int j = 0; j < LINES[i].length; j++) {
@@ -2201,7 +2201,7 @@ public class Sudoku2 implements Cloneable {
      */
     @SuppressWarnings("CallToThreadDumpStack")
     private static void initTemplates() {
-        // alle 46656 möglichen Templates anlegen
+        // alle 46656 mÃ¶glichen Templates anlegen
         try {
             //System.out.println("Start Templates lesen...");
             long ticks = System.currentTimeMillis();
@@ -2234,7 +2234,7 @@ public class Sudoku2 implements Cloneable {
 //            ex.printStackTrace();
 //        }
 
-        // jetzt noch die Templates für die Häuser
+        // jetzt noch die Templates fÃ¼r die HÃ¤user
         for (int i = 0; i < LINES.length; i++) {
             for (int j = 0; j < LINES[i].length; j++) {
                 LINE_TEMPLATES[i].add(LINES[i][j]);

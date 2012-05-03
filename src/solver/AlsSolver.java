@@ -1294,7 +1294,7 @@ public class AlsSolver extends AbstractSolver {
 //        sudoku.setSudoku(":0901-2:12357:9..17....4.1....7..7...31..14...6.98.9248173.38.5.......48...2.......6.7....6...3:793:172 244 385 571 572 796::");
         // ALS-Chain not found: 127- r1c156789 {1234679} -9- r3c4 {49} -4- r9c4 {49} -9- r2359c3 {12679} -127 => r1c3<>1, r1c3<>2, r1c3<>7
 //        sudoku.setSudoku(":0903:127:...+8......3.+57.8.98....315.9.8142......+3+5....5.+36...4.1.42+3....+3..7....6.8...531.:412 612 712 613 916 933 572 986 587 987:113 213 713::");
-        // Exceütion when sorting
+        // Exception when sorting
         sudoku.setSudoku(":0903-1:35:1+53+9+642+7+8+9847+2.3+6.72+6..8+9..638.+4+9..+7+4+91..+78.+6+5+7+2+8+1+6493+8+6+74+9..32+3.9.+7268.+2.56+8+37.9:139:334 355 534::");
         SudokuSolver solver = SudokuSolverFactory.getDefaultSolverInstance();
 //        AlsSolver as = new AlsSolver(null);
@@ -1354,16 +1354,16 @@ class AlsComparator implements Comparator<SolutionStep> {
         }
         int sum1 = 0, sum2 = 0;
 
-        // zuerst nach Anzahl zu löschende Kandidaten (absteigend!)
+        // zuerst nach Anzahl zu lÃ¶schende Kandidaten (absteigend!)
         int result = o2.getCandidatesToDelete().size() - o1.getCandidatesToDelete().size();
         if (debug) {
             System.out.println("      1: " + result);
         }
         if (result != 0) {
-            return result;        // nach Äquivalenz (gleiche zu löschende Kandidaten)
+            return result;        // nach Ã„quivalenz (gleiche zu lÃ¶schende Kandidaten)
         }
         if (!o1.isEquivalent(o2)) {
-            // nicht äquivalent: nach Indexsumme der zu löschenden Kandidaten
+            // nicht Ã¤quivalent: nach Indexsumme der zu lÃ¶schenden Kandidaten
             sum1 = o1.getIndexSumme(o1.getCandidatesToDelete());
             sum2 = o2.getIndexSumme(o2.getCandidatesToDelete());
         if (debug) {

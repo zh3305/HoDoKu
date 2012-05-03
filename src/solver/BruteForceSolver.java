@@ -68,7 +68,7 @@ public class BruteForceSolver extends AbstractSolver {
     }
     
     /**
-     * Das Sudoku2 wird mit Dancing-Links gelöst. Anschließend wird aus den nicht gesetzten Zellen
+     * Das Sudoku2 wird mit Dancing-Links gelÃ¶st. AnschlieÃŸend wird aus den nicht gesetzten Zellen
      * die mittlere ausgesucht und gesetzt.<br>
      * If the sudoku is invalid, no result is returned.
      */
@@ -84,7 +84,7 @@ public class BruteForceSolver extends AbstractSolver {
             }
         }
         
-        // alle Positionen ermitteln, die im ungelösten Sudoku2 noch nicht gesetzt sind
+        // alle Positionen ermitteln, die im ungelÃ¶sten Sudoku2 noch nicht gesetzt sind
         SudokuSet unsolved = new SudokuSet();
         for (int i = 0; i < Sudoku2.LENGTH; i++) {
             if (sudoku.getValue(i) == 0) {

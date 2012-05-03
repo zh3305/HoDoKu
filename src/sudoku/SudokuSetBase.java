@@ -186,7 +186,7 @@ public class SudokuSetBase implements Cloneable, Serializable {
     }
 
     /**
-     * Wenn this und b sich überschneiden, werden die gemeinsamen Kandidaten in c hinzugefügt
+     * Wenn this und b sich Ã¼berschneiden, werden die gemeinsamen Kandidaten in c hinzugefÃ¼gt
      * @param b
      * @param c
      * @return  
@@ -209,7 +209,7 @@ public class SudokuSetBase implements Cloneable, Serializable {
     }
 
     /**
-     * Gibt true zurück, wenn b zur Gänze in this enthalten ist
+     * Gibt true zurÃ¼ck, wenn b zur GÃ¤nze in this enthalten ist
      * @param b
      * @return  
      */
@@ -242,7 +242,7 @@ public class SudokuSetBase implements Cloneable, Serializable {
     }
 
     /**
-     * gibt ((this & set) == this) zurück
+     * gibt ((this & set) == this) zurÃ¼ck
      * @param set
      * @return  
      */
@@ -253,7 +253,7 @@ public class SudokuSetBase implements Cloneable, Serializable {
     }
 
     /**
-     * gibt ((this & ~set) == this) zurück
+     * gibt ((this & ~set) == this) zurÃ¼ck
      * @param set
      * @return  
      */
@@ -264,7 +264,7 @@ public class SudokuSetBase implements Cloneable, Serializable {
     }
 
     /**
-     * gibt ((this & set) == 0) zurück
+     * gibt ((this & set) == 0) zurÃ¼ck
      * @param set
      * @return  
      */
@@ -275,7 +275,7 @@ public class SudokuSetBase implements Cloneable, Serializable {
     }
 
 //    /**
-//     * gibt ((this & ~set) == 0) zurück
+//     * gibt ((this & ~set) == 0) zurÃ¼ck
 //     */
 //    public boolean andNotEmpty(SudokuSetBase set) {
 //        long m1 = mask1 & ~set.mask1;

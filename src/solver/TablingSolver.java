@@ -95,7 +95,7 @@ public class TablingSolver extends AbstractSolver {
     /** A special comparator for comparing chains and nets. */
     private static TablingComparator tablingComparator = null;
     /** A list with steps found in the current run. */
-    private List<SolutionStep> steps; // gefundene Lösungsschritte
+    private List<SolutionStep> steps; // gefundene LÃ¶sungsschritte
     /** One global step for optimization. */
     private SolutionStep globalStep = new SolutionStep(SolutionType.HIDDEN_SINGLE);
     /** All chains already found: eliminations + index in {@link #steps}. */
@@ -141,7 +141,7 @@ public class TablingSolver extends AbstractSolver {
      * in the {@link SolutionStep}.
      */
     private TreeMap<Integer, Integer> chainAlses = new TreeMap<Integer, Integer>();
-    private Sudoku2 savedSudoku;            // Sudoku2 im Ausgangszustand (für Erstellen der Tables)
+    private Sudoku2 savedSudoku;            // Sudoku2 im Ausgangszustand (fÃ¼r Erstellen der Tables)
     private int[][] retIndices = new int[MAX_REC_DEPTH][5]; // indices ermitteln
 //    private int[][] retIndices1 = new int[MAX_REC_DEPTH][5]; // indices ermitteln
     private List<GroupNode> groupNodes = null;  // a list with all group nodes for a given sudoku
@@ -149,16 +149,16 @@ public class TablingSolver extends AbstractSolver {
 //    private SudokuSet alsBuddies = new SudokuSet(); // cells that can see all the cells of the als
     private SudokuSet[] alsEliminations = new SudokuSet[10]; // all cells with elminations for an als, sorted by candidate
     private SudokuStepFinder simpleFinder;
-    private List<SolutionStep> singleSteps = new ArrayList<SolutionStep>();  // für Naked und Hidden Singles
-    private int[] chain = new int[Options.getInstance().getMaxTableEntryLength()]; // globale chain für buildChain()
-    private int chainIndex = 0; // Index des nächsten Elements in chain[]
-    private int[][] mins = new int[200][Options.getInstance().getMaxTableEntryLength()]; // globale chains für networks
-    private int[] minIndexes = new int[mins.length]; // Indexe der nächsten Elemente in mins[]
+    private List<SolutionStep> singleSteps = new ArrayList<SolutionStep>();  // fÃ¼r Naked und Hidden Singles
+    private int[] chain = new int[Options.getInstance().getMaxTableEntryLength()]; // globale chain fÃ¼r buildChain()
+    private int chainIndex = 0; // Index des nÃ¤chsten Elements in chain[]
+    private int[][] mins = new int[200][Options.getInstance().getMaxTableEntryLength()]; // globale chains fÃ¼r networks
+    private int[] minIndexes = new int[mins.length]; // Indexe der nÃ¤chsten Elemente in mins[]
     private int actMin = 0;                          // derzeit aktuelles min
-    private int[] tmpChain = new int[Options.getInstance().getMaxTableEntryLength()]; // globale chain für addChain()
+    private int[] tmpChain = new int[Options.getInstance().getMaxTableEntryLength()]; // globale chain fÃ¼r addChain()
     private Chain[] tmpChains = new Chain[9];
     private int tmpChainsIndex = 0;
-    private SudokuSet lassoSet = new SudokuSet();  // für addChain: enthält alle Zellen-Indices der Chain
+    private SudokuSet lassoSet = new SudokuSet();  // fÃ¼r addChain: enthÃ¤lt alle Zellen-Indices der Chain
 
     private List<TableEntry> extendedTable = null; // Tables for group nodes, ALS, AUR...
     private SortedMap<Integer, Integer> extendedTableMap = null; // entry -> index in extendedTable
@@ -1395,7 +1395,7 @@ public class TablingSolver extends AbstractSolver {
      * we have created the actual chain. All chains, which first link remains in the start cell,
      * are ignored.
      *
-     * @param entry TableEntry für den Start-Link
+     * @param entry TableEntry fÃ¼r den Start-Link
      * @param entryIndex Index auf den vorletzten Link des Nice Loops (ist letzter Eintrag, der in der Table noch enthalten ist).
      */
     private void checkNiceLoop(TableEntry entry, int entryIndex) {
@@ -1432,7 +1432,7 @@ public class TablingSolver extends AbstractSolver {
         if (!firstLinkStrong && !lastLinkStrong && startCandidate == endCandidate) {
             // Discontinuous -> eliminate startCandidate in startIndex
             globalStep.addCandidateToDelete(startIndex, startCandidate);
-//            // auf mögliche AIC prüfen: die strong links müssen normale links sein
+//            // auf mÃ¶gliche AIC prÃ¼fen: die strong links mÃ¼ssen normale links sein
 //            if (Chain.getSNodeType(nlChain[1]) == Chain.NORMAL_NODE && Chain.getSNodeType(nlChain[nlChainIndex - 1]) == Chain.NORMAL_NODE) {
 //                tmpSet.set(Sudoku2.buddies[Chain.getSCellIndex(nlChain[1])]);
 //                tmpSet.and(Sudoku2.buddies[Chain.getSCellIndex(nlChain[nlChainIndex - 1])]);
@@ -2575,7 +2575,7 @@ public class TablingSolver extends AbstractSolver {
                                 && (dest.getDistance(orgIndex) > (srcBaseDistance + srcDistance)
                                 || dest.getDistance(orgIndex) == (srcBaseDistance + srcDistance)
                                 && dest.getNodeType(orgIndex) > src.getNodeType(k))) {
-                            // Alter Eintrag war länger oder komplizierter als neuer -> umschreiben
+                            // Alter Eintrag war lÃ¤nger oder komplizierter als neuer -> umschreiben
                             // old entry had a longer path or was more complicated -> rewrite
                             dest.retIndices[orgIndex] = TableEntry.makeSRetIndex(srcTableIndex, 0, 0, 0, 0);
                             // expanded flag was lost -> set it again
@@ -3108,7 +3108,7 @@ public class TablingSolver extends AbstractSolver {
         // 1/2/3/4/6/7/9 3= r2c4 =5= r2c9 -5- ALS:r13c7,r3c9 =7= r6c7 -7- ALS:r4c3,r56c2 -3- r4c4 =3= r2c4 =5 => r2c28,r3456c1,r46c7<>1, r12c9<>2, r4c18<>3, r456c1<>4, r2c4<>6, r6c19<>7, r1c9,r468c7<>9
         // r1c9<>9, r6c7<>9 are invalid
         sudoku.setSudoku(":0709:1234679:5.81...6.....9.4...39.8..7..6...5.....27.95....58...2..8..5134..51.3.....9...8651:221 224 231 743 445 349 666 793:122 128 131 141 147 151 161 167 219 229 341 348 441 451 461 624 761 769 919 947 967 987::11");
-        // sollte 2 Grouped AICs für 59 geben:
+        // sollte 2 Grouped AICs fÃ¼r 59 geben:
         //  Grouped AIC: 5/9 9- r7c8 =9= r2c8 =7= r2c5 -7- ALS:r78c6,r9c5 =5= r7c4 -5 => r7c8<>5, r7c4<>9
         //  Grouped AIC: 5/9 9- r7c8 =9= r2c8 =7= r2c5 -7- ALS:r36c4 =5= r7c4 -5 => r7c8<>5, r7c4<>9
         // es wird in 2.1beta nur die 1. gefunden

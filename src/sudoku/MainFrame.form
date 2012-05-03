@@ -663,13 +663,13 @@
             </Menu>
           </SubComponents>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="r&#xe4;tselMenu">
+        <Menu class="javax.swing.JMenu" name="raetselMenu">
           <Properties>
             <Property name="mnemonic" type="int" editor="org.netbeans.modules.i18n.form.FormI18nMnemonicEditor">
-              <ResourceString bundle="intl/MainFrame.properties" key="MainFrame.r&#xe4;tselMenuMnemonic" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="intl/MainFrame.properties" key="MainFrame.raetselMenuMnemonic" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="intl/MainFrame.properties" key="MainFrame.r&#xe4;tselMenu.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="intl/MainFrame.properties" key="MainFrame.raetselMenu.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
           <SubComponents>
@@ -705,20 +705,20 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mediumHintMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="l&#xf6;sungsSchrittMenuItem">
+            <MenuItem class="javax.swing.JMenuItem" name="loesungsSchrittMenuItem">
               <Properties>
                 <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
                   <KeyStroke key="F12"/>
                 </Property>
                 <Property name="mnemonic" type="int" editor="org.netbeans.modules.i18n.form.FormI18nMnemonicEditor">
-                  <ResourceString bundle="intl/MainFrame.properties" key="MainFrame.l&#xf6;sungsSchrittMenuItemMnemonic" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="intl/MainFrame.properties" key="MainFrame.loesungsSchrittMenuItemMnemonic" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="intl/MainFrame.properties" key="MainFrame.l&#xf6;sungsSchrittMenuItem.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="intl/MainFrame.properties" key="MainFrame.loesungsSchrittMenuItem.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="l&#xf6;sungsSchrittMenuItemActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loesungsSchrittMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JSeparator" name="jSeparator21">
@@ -1718,7 +1718,7 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="hinweisAusführenButton" linkSize="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="hinweisAusfuehrenButton" linkSize="1" min="-2" max="-2" attributes="0"/>
                           <Component id="hinweisAbbrechenButton" linkSize="1" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -1728,7 +1728,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="hinweisAusführenButton" linkSize="2" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+                          <Component id="hinweisAusfuehrenButton" linkSize="2" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
                           <Component id="neuerHinweisButton" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -1756,19 +1756,19 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="neuerHinweisButtonActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="hinweisAusf&#xfc;hrenButton">
+            <Component class="javax.swing.JButton" name="hinweisAusfuehrenButton">
               <Properties>
                 <Property name="mnemonic" type="int" value="102"/>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="intl/MainFrame.properties" key="MainFrame.hinweisAusf&#xfc;hrenButton.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="intl/MainFrame.properties" key="MainFrame.hinweisAusfuehrenButton.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="intl/MainFrame.properties" key="MainFrame.hinweisAusf&#xfc;hrenButton.toolTipText" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="intl/MainFrame.properties" key="MainFrame.hinweisAusfuehrenButton.toolTipText" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                 </Property>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="hinweisAusf&#xfc;hrenButtonActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="hinweisAusfuehrenButtonActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JButton" name="solveUpToButton">

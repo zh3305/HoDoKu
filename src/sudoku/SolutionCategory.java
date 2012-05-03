@@ -47,7 +47,7 @@ public enum SolutionCategory {
     private String categoryName;
     
     SolutionCategory() {
-        // für XMLEncoder
+        // fÃ¼r XMLEncoder
     }
     
     SolutionCategory(String catName) {

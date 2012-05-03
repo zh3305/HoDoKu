@@ -138,7 +138,7 @@ public class WingSolver extends AbstractSolver {
      * Spalte des ersten Elements (zweites Element in Spalte: nur Zeile) eine dritte Bivalue-Zelle, die
      * den neuen Kandidaten mit der zweiten Zelle gemeinsam hat und deren zweiter Kandidat der
      * fehlende Kandidat der ersten Zelle ist - yz (yz). Alle Zellen die die zweite und dritte Zelle
-     * (alle drei Zellen) sehen können, können z nicht als Kandidaten haben.
+     * (alle drei Zellen) sehen kÃ¶nnen, kÃ¶nnen z nicht als Kandidaten haben.
      */
     /**
      * Try all combinations of three bivalue cells (for xyz: one trivalue

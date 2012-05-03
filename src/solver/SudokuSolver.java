@@ -203,7 +203,7 @@ public class SudokuSolver {
 //        System.out.println("        Solver started (" + maxLevel.getName() + "/" + 
 //                rejectTooLowScore + "/" + singlesOnly + "/" + gameMode.name() + ")!");
 
-        // Eine Lösung wird nur gesucht, wenn zumindest 10 Kandidaten gesetzt sind
+        // Eine LÃ¶sung wird nur gesucht, wenn zumindest 10 Kandidaten gesetzt sind
         int anzCells = sudoku.getUnsolvedCellsAnz();
         if ((81 - anzCells) < 10) {
 //            System.out.println("        less than 10 cells set!");
@@ -250,12 +250,12 @@ public class SudokuSolver {
                 }
             }
         } while (step != null);
-        // wenn der Score größer als der MaxScore der aktuellen Stufe, dann wird das
-        // Puzzle höhergestuft.
+        // wenn der Score grÃ¶ÃŸer als der MaxScore der aktuellen Stufe, dann wird das
+        // Puzzle hÃ¶hergestuft.
         while (score > level.getMaxScore()) {
             level = Options.getInstance().getDifficultyLevel(level.getOrdinal() + 1);
         }
-        // Puzzle zu schwer -> ungültig
+        // Puzzle zu schwer -> ungÃ¼ltig
         if (level.getOrdinal() > maxLevel.getOrdinal() && acceptAnyway == false) {
 //            System.out.println("        rejected: to difficult");
             return false;
@@ -450,7 +450,7 @@ public class SudokuSolver {
                 }
             } else {
                 if (solverSteps[i].isEnabled() == false) {
-                    // diesen Schritt nicht ausführen
+                    // diesen Schritt nicht ausfÃ¼hren
                     continue;
                 }
             }

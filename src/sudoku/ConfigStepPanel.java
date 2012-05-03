@@ -520,7 +520,7 @@ public class ConfigStepPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_resetButtonActionPerformed
     
     public void okPressed() {
-        // Alle Werte übernehmen
+        // Alle Werte Ã¼bernehmen
         Options.getInstance().setMaxFins(Integer.parseInt((String)maxFinsComboBox.getSelectedItem()));
         Options.getInstance().setMaxEndoFins(Integer.parseInt((String)maxEndoFinsComboBox.getSelectedItem()));
         Options.getInstance().setCheckTemplates(checkTemplatesCheckBox.isSelected());

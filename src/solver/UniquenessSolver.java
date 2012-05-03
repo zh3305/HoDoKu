@@ -345,10 +345,10 @@ public class UniquenessSolver extends AbstractSolver {
     /**
      * - Feststellen, in welcher Unit1 sich die Zelle befindet
      * - alle anderen Zellen dieser Unit1 anschauen, die im selben Block sind
-     * - wenn eine Zelle die selben zwei Kandidaten (plus beliebig viele andere) hat, f¸r beide Zellen
+     * - wenn eine Zelle die selben zwei Kandidaten (plus beliebig viele andere) hat, f√ºr beide Zellen
      *   die Unit2 finden
      * - Alle Zellen dieser Unit2(s) durchgehen, die nicht im selben Block wie die Unit1(s) sind
-     * - Wenn beide Zellen die selben beiden Kandidaten haben -> mˆgliches Unique Rectangle, SolutionStep pr¸fen
+     * - Wenn beide Zellen die selben beiden Kandidaten haben -> m√∂gliches Unique Rectangle, SolutionStep pr√ºfen
      * 
      * when checking for avoidable rectangles some rules change: index11/index12 have
      * to be solved cells, they designate the candidates; the other side of the

@@ -34,7 +34,7 @@ public final class DifficultyLevel {
     private Color foregroundColor;
     
     public DifficultyLevel() {
-        // für XMLEncoder
+        // fÃ¼r XMLEncoder
     }
     
     public DifficultyLevel(DifficultyType type, int maxScore, String name, Color backgroundColor, Color foregroundColor) {

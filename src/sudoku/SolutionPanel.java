@@ -74,9 +74,9 @@ public class SolutionPanel extends javax.swing.JPanel {
         Font font = titleLabel.getFont();
         titleLabel.setFont(new Font(font.getName(), Font.BOLD, fontSize));
         
-//        solutionTabbedPane.add("Lösung 1", solutionScrollPane);
-//        solutionTabbedPane.add("Lösung 2", solutionScrollPane);
-//        solutionTabbedPane.add("Lösung 3", solutionScrollPane);
+//        solutionTabbedPane.add("LÃ¶sung 1", solutionScrollPane);
+//        solutionTabbedPane.add("LÃ¶sung 2", solutionScrollPane);
+//        solutionTabbedPane.add("LÃ¶sung 3", solutionScrollPane);
         addTabPane();
         getActTab();
     }
@@ -287,7 +287,7 @@ public class SolutionPanel extends javax.swing.JPanel {
     private void solutionListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_solutionListMouseClicked
         getActTab();
         //System.out.println("solutionListMouseClicked: " + evt.getButton() + "/" + evt.getClickCount());
-        // Element in der Liste ausgewählt
+        // Element in der Liste ausgewÃ¤hlt
         if (evt.getButton() == 1) {
             int index = solutionList.getSelectedIndex();
             if (index != -1) {
@@ -345,7 +345,7 @@ public class SolutionPanel extends javax.swing.JPanel {
                 mainFrame.setSolutionStep(actSteps.get(actSelectedIndex), true);
                 return;
             } else {
-                mainFrame.stepAusführen();
+                mainFrame.stepAusfuehren();
             }
         }
         if (actSelectedIndex < actSteps.size() - 1) {
@@ -510,11 +510,11 @@ private void tabPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//
     
     private void processDoubleClick(int index) {
         // bei Doppelklick wird das Sudoku2 neu geladen, dann werden alle Schritte bis zum
-        // geklickten ausgeführt
+        // geklickten ausgefÃ¼hrt
         getActTab();
         resetSudokuToIndex(index);
         
-        // wenn der aktuelle letzte Step INCOMPLETE ist, wird das Sudoku2 von hier weg neu gelöst
+        // wenn der aktuelle letzte Step INCOMPLETE ist, wird das Sudoku2 von hier weg neu gelÃ¶st
         if (actSteps.get(index).getType() == SolutionType.INCOMPLETE) {
             actSteps.remove(actSteps.size() - 1);
             Sudoku2 actSudoku = mainFrame.getSudokuPanel().getSudoku().clone();
@@ -556,7 +556,7 @@ private void tabPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//
     }
     
     private void stepListMouseClicked(java.awt.event.MouseEvent evt) {                                          
-        // Element in der Liste ausgewählt
+        // Element in der Liste ausgewÃ¤hlt
         getActTab();
         if (evt.getButton() == 1) {
             int index = actList.getSelectedIndex();

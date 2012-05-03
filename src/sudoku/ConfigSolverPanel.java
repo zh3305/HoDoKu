@@ -56,7 +56,7 @@ implements ListDragAndDropChange {
     private Stroke dndStroke;
     
     // wird true gesetzt, nachdem ein Eintrag selektiert wurde; beim
-    // nächsten Klick wird dann getoggelt
+    // nÃ¤chsten Klick wird dann getoggelt
     private boolean firstSelected = false;
     
     private boolean listView = false; // absichtlich verkehrt, damit stepList gesetzt wird
@@ -446,13 +446,13 @@ implements ListDragAndDropChange {
     }
     
     public void okPressed() {
-        // Alle Werte übernehmen
+        // Alle Werte Ã¼bernehmen
         Options.getInstance().solverSteps = Options.getInstance().copyStepConfigs(steps, false, true);
         Options.getInstance().adjustOrgSolverSteps();
     }
     
     private void initAll(boolean setDefault) {
-        // Zuerst die Daten zurücksetzen
+        // Zuerst die Daten zurÃ¼cksetzen
         if (setDefault) {
             steps = Options.getInstance().copyStepConfigs(Options.DEFAULT_SOLVER_STEPS, true, false);
         } else {

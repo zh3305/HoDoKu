@@ -129,7 +129,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
     private PageFormat pageFormat = null;
     private PrinterJob job = null;
     private double bildSize = 400;
-    private int bildAuflösung = 96;
+    private int bildAufloesung = 96;
     private int bildEinheit = 2;    // File/IO
     private MyFileFilter[] puzzleFileSaveFilters = new MyFileFilter[]{
         new MyFileFilter(1),
@@ -343,7 +343,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         showHintPanelMenuItem.setSelected(Options.getInstance().isShowHintPanel());
         showToolBarMenuItem.setSelected(Options.getInstance().isShowToolBar());
 
-        // Level-Menüs und Combo-Box
+        // Level-MenÃ¼s und Combo-Box
         levelMenuItems[0] = levelLeichtMenuItem;
         levelMenuItems[1] = levelMittelMenuItem;
         levelMenuItems[2] = levelKniffligMenuItem;
@@ -399,11 +399,11 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         // set back the saved difficulty level
         Options.getInstance().setActLevel(actLevel);
 
-        // Menüzustand prüfen, übernimmt Werte von SudokuPanel; muss am Anfang stehen,
-        // weil die Werte später in der Methode verwendet werden
+        // MenÃ¼zustand prÃ¼fen, Ã¼bernimmt Werte von SudokuPanel; muss am Anfang stehen,
+        // weil die Werte spÃ¤ter in der Methode verwendet werden
         check();
 
-        // Die ToggleButtons in ein Array stecken, ist später einfacher
+        // Die ToggleButtons in ein Array stecken, ist spÃ¤ter einfacher
         toggleButtons[0] = f1ToggleButton;
         toggleButtons[1] = f2ToggleButton;
         toggleButtons[2] = f3ToggleButton;
@@ -516,7 +516,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         outerSplitPane = new javax.swing.JSplitPane();
         hintPanel = new javax.swing.JPanel();
         neuerHinweisButton = new javax.swing.JButton();
-        hinweisAusführenButton = new javax.swing.JButton();
+        hinweisAusfuehrenButton = new javax.swing.JButton();
         solveUpToButton = new javax.swing.JButton();
         hinweisAbbrechenButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -576,10 +576,10 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         levelKniffligMenuItem = new javax.swing.JRadioButtonMenuItem();
         levelSchwerMenuItem = new javax.swing.JRadioButtonMenuItem();
         levelExtremMenuItem = new javax.swing.JRadioButtonMenuItem();
-        rätselMenu = new javax.swing.JMenu();
+        raetselMenu = new javax.swing.JMenu();
         vageHintMenuItem = new javax.swing.JMenuItem();
         mediumHintMenuItem = new javax.swing.JMenuItem();
-        lösungsSchrittMenuItem = new javax.swing.JMenuItem();
+        loesungsSchrittMenuItem = new javax.swing.JMenuItem();
         jSeparator21 = new javax.swing.JSeparator();
         backdoorSearchMenuItem = new javax.swing.JMenuItem();
         historyMenuItem = new javax.swing.JMenuItem();
@@ -1012,13 +1012,13 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             }
         });
 
-        hinweisAusführenButton.setMnemonic('f');
-        hinweisAusführenButton.setText(bundle.getString("MainFrame.hinweisAusführenButton.text")); // NOI18N
-        hinweisAusführenButton.setToolTipText(bundle.getString("MainFrame.hinweisAusführenButton.toolTipText")); // NOI18N
-        hinweisAusführenButton.setEnabled(false);
-        hinweisAusführenButton.addActionListener(new java.awt.event.ActionListener() {
+        hinweisAusfuehrenButton.setMnemonic('f');
+        hinweisAusfuehrenButton.setText(bundle.getString("MainFrame.hinweisAusfuehrenButton.text")); // NOI18N
+        hinweisAusfuehrenButton.setToolTipText(bundle.getString("MainFrame.hinweisAusfuehrenButton.toolTipText")); // NOI18N
+        hinweisAusfuehrenButton.setEnabled(false);
+        hinweisAusfuehrenButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                hinweisAusführenButtonActionPerformed(evt);
+                hinweisAusfuehrenButtonActionPerformed(evt);
             }
         });
 
@@ -1060,17 +1060,17 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
                     .addComponent(solveUpToButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(hintPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(hinweisAusführenButton)
+                    .addComponent(hinweisAusfuehrenButton)
                     .addComponent(hinweisAbbrechenButton)))
         );
 
-        hintPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {hinweisAbbrechenButton, hinweisAusführenButton, neuerHinweisButton, solveUpToButton});
+        hintPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {hinweisAbbrechenButton, hinweisAusfuehrenButton, neuerHinweisButton, solveUpToButton});
 
         hintPanelLayout.setVerticalGroup(
             hintPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(hintPanelLayout.createSequentialGroup()
                 .addGroup(hintPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(hinweisAusführenButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(hinweisAusfuehrenButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(neuerHinweisButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(hintPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1079,7 +1079,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
         );
 
-        hintPanelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {hinweisAbbrechenButton, hinweisAusführenButton, neuerHinweisButton, solveUpToButton});
+        hintPanelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {hinweisAbbrechenButton, hinweisAusfuehrenButton, neuerHinweisButton, solveUpToButton});
 
         outerSplitPane.setRightComponent(hintPanel);
 
@@ -1506,8 +1506,8 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
 
         jMenuBar1.add(optionenMenu);
 
-        rätselMenu.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.rätselMenuMnemonic").charAt(0));
-        rätselMenu.setText(bundle.getString("MainFrame.rätselMenu.text")); // NOI18N
+        raetselMenu.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.raetselMenuMnemonic").charAt(0));
+        raetselMenu.setText(bundle.getString("MainFrame.raetselMenu.text")); // NOI18N
 
         vageHintMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F12, java.awt.event.InputEvent.ALT_MASK));
         vageHintMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.vageHintMenuItemMnemonic").charAt(0));
@@ -1517,7 +1517,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
                 vageHintMenuItemActionPerformed(evt);
             }
         });
-        rätselMenu.add(vageHintMenuItem);
+        raetselMenu.add(vageHintMenuItem);
 
         mediumHintMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F12, java.awt.event.InputEvent.CTRL_MASK));
         mediumHintMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.mediumHintMenuItemMnemonic").charAt(0));
@@ -1527,18 +1527,18 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
                 mediumHintMenuItemActionPerformed(evt);
             }
         });
-        rätselMenu.add(mediumHintMenuItem);
+        raetselMenu.add(mediumHintMenuItem);
 
-        lösungsSchrittMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F12, 0));
-        lösungsSchrittMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.lösungsSchrittMenuItemMnemonic").charAt(0));
-        lösungsSchrittMenuItem.setText(bundle.getString("MainFrame.lösungsSchrittMenuItem.text")); // NOI18N
-        lösungsSchrittMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        loesungsSchrittMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F12, 0));
+        loesungsSchrittMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.loesungsSchrittMenuItemMnemonic").charAt(0));
+        loesungsSchrittMenuItem.setText(bundle.getString("MainFrame.loesungsSchrittMenuItem.text")); // NOI18N
+        loesungsSchrittMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                lösungsSchrittMenuItemActionPerformed(evt);
+                loesungsSchrittMenuItemActionPerformed(evt);
             }
         });
-        rätselMenu.add(lösungsSchrittMenuItem);
-        rätselMenu.add(jSeparator21);
+        raetselMenu.add(loesungsSchrittMenuItem);
+        raetselMenu.add(jSeparator21);
 
         backdoorSearchMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.backdoorSearchMenuItem.mnemonic").charAt(0));
         backdoorSearchMenuItem.setText(bundle.getString("MainFrame.backdoorSearchMenuItem.text")); // NOI18N
@@ -1547,7 +1547,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
                 backdoorSearchMenuItemActionPerformed(evt);
             }
         });
-        rätselMenu.add(backdoorSearchMenuItem);
+        raetselMenu.add(backdoorSearchMenuItem);
 
         historyMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.historyMenuItem.mnemonic").charAt(0));
         historyMenuItem.setText(bundle.getString("MainFrame.historyMenuItem.text")); // NOI18N
@@ -1556,7 +1556,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
                 historyMenuItemActionPerformed(evt);
             }
         });
-        rätselMenu.add(historyMenuItem);
+        raetselMenu.add(historyMenuItem);
 
         createSavePointMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.setSavePointMenuItem.mnemonic").charAt(0));
         createSavePointMenuItem.setText(bundle.getString("MainFrame.createSavePointMenuItem.text")); // NOI18N
@@ -1565,7 +1565,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
                 createSavePointMenuItemActionPerformed(evt);
             }
         });
-        rätselMenu.add(createSavePointMenuItem);
+        raetselMenu.add(createSavePointMenuItem);
 
         restoreSavePointMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.restoreSavePointMenuItem.mnemonic").charAt(0));
         restoreSavePointMenuItem.setText(bundle.getString("MainFrame.restoreSavePointMenuItem.text")); // NOI18N
@@ -1574,8 +1574,8 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
                 restoreSavePointMenuItemActionPerformed(evt);
             }
         });
-        rätselMenu.add(restoreSavePointMenuItem);
-        rätselMenu.add(jSeparator5);
+        raetselMenu.add(restoreSavePointMenuItem);
+        raetselMenu.add(jSeparator5);
 
         setGivensMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.setGivensMenuItem.mnemonic").charAt(0));
         setGivensMenuItem.setText(bundle.getString("MainFrame.setGivensMenuItem.text")); // NOI18N
@@ -1584,8 +1584,8 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
                 setGivensMenuItemActionPerformed(evt);
             }
         });
-        rätselMenu.add(setGivensMenuItem);
-        rätselMenu.add(jSeparator22);
+        raetselMenu.add(setGivensMenuItem);
+        raetselMenu.add(jSeparator22);
 
         alleHiddenSinglesSetzenMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F11, 0));
         alleHiddenSinglesSetzenMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.alleHiddenSinglesSetzenMenuItemMnemonic").charAt(0));
@@ -1595,9 +1595,9 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
                 alleHiddenSinglesSetzenMenuItemActionPerformed(evt);
             }
         });
-        rätselMenu.add(alleHiddenSinglesSetzenMenuItem);
+        raetselMenu.add(alleHiddenSinglesSetzenMenuItem);
 
-        jMenuBar1.add(rätselMenu);
+        jMenuBar1.add(raetselMenu);
 
         ansichtMenu.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.ansichtMenuMnemonic").charAt(0));
         ansichtMenu.setText(bundle.getString("MainFrame.ansichtMenu.text")); // NOI18N
@@ -1824,20 +1824,20 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
     }//GEN-LAST:event_summaryMenuItemActionPerformed
 
     private void speichernAlsBildMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_speichernAlsBildMenuItemActionPerformed
-        WriteAsPNGDialog dlg = new WriteAsPNGDialog(this, true, bildSize, bildAuflösung, bildEinheit);
+        WriteAsPNGDialog dlg = new WriteAsPNGDialog(this, true, bildSize, bildAufloesung, bildEinheit);
         dlg.setVisible(true);
         if (dlg.isOk()) {
             File bildFile = dlg.getBildFile();
-            bildAuflösung = dlg.getAuflösung();
+            bildAufloesung = dlg.getAufloesung();
             bildSize = dlg.getBildSize();
             bildEinheit = dlg.getEinheit();
             int size = 0;
             switch (bildEinheit) {
                 case 0:
-                    size = (int) (bildSize / 25.4 * bildAuflösung);
+                    size = (int) (bildSize / 25.4 * bildAufloesung);
                     break;
                 case 1:
-                    size = (int) (bildSize * bildAuflösung);
+                    size = (int) (bildSize * bildAufloesung);
                     break;
                 case 2:
                     size = (int) bildSize;
@@ -1854,7 +1854,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
                     return;
                 }
             }
-            sudokuPanel.saveSudokuAsPNG(bildFile, size, bildAuflösung);
+            sudokuPanel.saveSudokuAsPNG(bildFile, size, bildAufloesung);
         }
     }//GEN-LAST:event_speichernAlsBildMenuItemActionPerformed
 
@@ -1935,7 +1935,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
     }//GEN-LAST:event_showDeviationsMenuItemActionPerformed
 
     private void neuesSpielToolButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_neuesSpielToolButtonActionPerformed
-        // neues Spiel in der gewünschten Schwierigkeitsstufe erzeugen
+        // neues Spiel in der gewï¿½nschten Schwierigkeitsstufe erzeugen
         int actLevel = Options.getInstance().getActLevel();
         DifficultyLevel actDiffLevel = Options.getInstance().getDifficultyLevel(actLevel);
         if (Options.getInstance().getGameMode() == GameMode.LEARNING) {
@@ -2060,16 +2060,16 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
 //        sudokuPanel.abortStep();
 //        hinweisTextArea.setText("");
 //        hinweisAbbrechenButton.setEnabled(false);
-//        hinweisAusführenButton.setEnabled(false);
+//        hinweisAusfuehrenButton.setEnabled(false);
 //        fixFocus();
     }//GEN-LAST:event_hinweisAbbrechenButtonActionPerformed
 
-    private void hinweisAusführenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hinweisAusführenButtonActionPerformed
+    private void hinweisAusfuehrenButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                       
         sudokuPanel.doStep();
         sudokuPanel.checkProgress();
         hinweisTextArea.setText("");
         hinweisAbbrechenButton.setEnabled(false);
-        hinweisAusführenButton.setEnabled(false);
+        hinweisAusfuehrenButton.setEnabled(false);
         if (executeStepToggleButton != null) {
             executeStepToggleButton.setEnabled(false);
         }
@@ -2077,14 +2077,14 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             abortStepToggleButton.setEnabled(false);
         }
         fixFocus();
-    }//GEN-LAST:event_hinweisAusführenButtonActionPerformed
+    }                                                       
 
-    private void lösungsSchrittMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lösungsSchrittMenuItemActionPerformed
+    private void loesungsSchrittMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                                       
         getHint(2);
-    }//GEN-LAST:event_lösungsSchrittMenuItemActionPerformed
+    }                                                       
 
     private void neuerHinweisButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_neuerHinweisButtonActionPerformed
-        lösungsSchrittMenuItemActionPerformed(evt);
+        loesungsSchrittMenuItemActionPerformed(evt);
     }//GEN-LAST:event_neuerHinweisButtonActionPerformed
 
     private void neuMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_neuMenuItemActionPerformed
@@ -2281,7 +2281,7 @@ private void hintPanelPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-
 }//GEN-LAST:event_hintPanelPropertyChange
 
 private void spielEingebenMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spielEingebenMenuItemActionPerformed
-    // bestehendes Sudoku2 kann gelöscht werden, muss aber nicht
+    // bestehendes Sudoku2 kann gelï¿½scht werden, muss aber nicht
     if (sudokuPanel.getSolvedCellsAnz() != 0) {
         int antwort = JOptionPane.showConfirmDialog(this, java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.delete_sudoku"),
                 java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.new_input"),
@@ -2937,7 +2937,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
 
         vageHintMenuItem.setEnabled(isSpielen);
         mediumHintMenuItem.setEnabled(isSpielen);
-        lösungsSchrittMenuItem.setEnabled(isSpielen);
+        loesungsSchrittMenuItem.setEnabled(isSpielen);
         alleHiddenSinglesSetzenMenuItem.setEnabled(isSpielen);
         showDeviationsMenuItem.setEnabled(isSpielen);
         showColorKuMenuItem.setEnabled(isSpielen);
@@ -2957,7 +2957,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
         if (step == null) {
             hinweisTextArea.setText("");
             hinweisAbbrechenButton.setEnabled(false);
-            hinweisAusführenButton.setEnabled(false);
+            hinweisAusfuehrenButton.setEnabled(false);
             if (executeStepToggleButton != null) {
                 executeStepToggleButton.setEnabled(false);
             }
@@ -2968,8 +2968,8 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
             hinweisTextArea.setText(step.toString());
             hinweisTextArea.setCaretPosition(0);
             hinweisAbbrechenButton.setEnabled(true);
-            hinweisAusführenButton.setEnabled(true);
-            getRootPane().setDefaultButton(hinweisAusführenButton);
+            hinweisAusfuehrenButton.setEnabled(true);
+            getRootPane().setDefaultButton(hinweisAusfuehrenButton);
             if (executeStepToggleButton != null) {
                 executeStepToggleButton.setEnabled(true);
             }
@@ -3141,7 +3141,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
             // Options
             writeOptionsWithWindowState(path);
         } else {
-            // Sudoku2 und Lösung
+            // Sudoku2 und Lï¿½sung
             String newLine = System.getProperty("line.separator");
             if (filterType == 1) {
                 sudokuFileType = 1;
@@ -3442,8 +3442,8 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
         fixFocus();
     }
 
-    public void stepAusführen() {
-        hinweisAusführenButtonActionPerformed(null);
+    public void stepAusfuehren() {
+        hinweisAusfuehrenButtonActionPerformed(null);
     }
 
     public final void fixFocus() {
@@ -3615,7 +3615,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
         sudokuPanel.abortStep();
         hinweisTextArea.setText("");
         hinweisAbbrechenButton.setEnabled(false);
-        hinweisAusführenButton.setEnabled(false);
+        hinweisAusfuehrenButton.setEnabled(false);
         if (executeStepToggleButton != null) {
             executeStepToggleButton.setEnabled(false);
         }
@@ -3749,7 +3749,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
 
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    lösungsSchrittMenuItemActionPerformed(null);
+                    loesungsSchrittMenuItemActionPerformed(null);
                 }
             });
             showNextStepToggleButton.setToolTipText(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.neuerHinweisButton.toolTipText")); // NOI18N
@@ -3762,10 +3762,10 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
 
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    hinweisAusführenButtonActionPerformed(null);
+                    hinweisAusfuehrenButtonActionPerformed(null);
                 }
             });
-            executeStepToggleButton.setToolTipText(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.hinweisAusführenButton.toolTipText")); // NOI18N
+            executeStepToggleButton.setToolTipText(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.hinweisAusfuehrenButton.toolTipText")); // NOI18N
             executeStepToggleButton.setVisible(false);
             jToolBar1.add(executeStepToggleButton);
 
@@ -3789,8 +3789,8 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
             showNextStepToggleButton.setVisible(true);
             executeStepToggleButton.setVisible(true);
             abortStepToggleButton.setVisible(true);
-            executeStepToggleButton.setEnabled(hinweisAusführenButton.isEnabled());
-            abortStepToggleButton.setEnabled(hinweisAusführenButton.isEnabled());
+            executeStepToggleButton.setEnabled(hinweisAusfuehrenButton.isEnabled());
+            abortStepToggleButton.setEnabled(hinweisAusfuehrenButton.isEnabled());
         } else {
             hintSeperator.setVisible(false);
             vageHintToggleButton.setVisible(false);
@@ -3998,7 +3998,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
     private javax.swing.JMenu helpMenu;
     private javax.swing.JPanel hintPanel;
     private javax.swing.JButton hinweisAbbrechenButton;
-    private javax.swing.JButton hinweisAusführenButton;
+    private javax.swing.JButton hinweisAusfuehrenButton;
     private javax.swing.JTextArea hinweisTextArea;
     private javax.swing.JMenuItem historyMenuItem;
     private javax.swing.JMenuBar jMenuBar1;
@@ -4041,7 +4041,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
     private javax.swing.JRadioButtonMenuItem levelSchwerMenuItem;
     private javax.swing.JMenuItem loadConfigMenuItem;
     private javax.swing.JMenuItem loadPuzzleMenuItem;
-    private javax.swing.JMenuItem lösungsSchrittMenuItem;
+    private javax.swing.JMenuItem loesungsSchrittMenuItem;
     private javax.swing.JMenuItem mediumHintMenuItem;
     private javax.swing.ButtonGroup modeButtonGroup;
     private javax.swing.JMenu modeMenu;
@@ -4055,6 +4055,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
     private javax.swing.JRadioButtonMenuItem practisingMenuItem;
     private javax.swing.JLabel progressLabel;
     private javax.swing.JMenuItem projectHomePageMenuItem;
+    private javax.swing.JMenu raetselMenu;
     private javax.swing.JToggleButton redGreenToggleButton;
     private javax.swing.JMenuItem redoMenuItem;
     private javax.swing.JButton redoToolButton;
@@ -4062,7 +4063,6 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
     private javax.swing.JMenuItem resetViewMenuItem;
     private javax.swing.JMenuItem restartSpielMenuItem;
     private javax.swing.JMenuItem restoreSavePointMenuItem;
-    private javax.swing.JMenu rätselMenu;
     private javax.swing.JMenuItem saveConfigAsMenuItem;
     private javax.swing.JMenuItem savePuzzleAsMenuItem;
     private javax.swing.JMenuItem savePuzzleMenuItem;

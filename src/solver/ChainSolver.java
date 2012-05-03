@@ -752,31 +752,31 @@ public class ChainSolver extends AbstractSolver {
      * Nice Loop.
      *
      *  Discontinous Nice Loop:
-     *    - Erster und letzter Link sind weak f¸r den selben Kandidaten
-     *      -> Kandidat kann in erster Zelle gelˆscht werden
-     *    - Erster und letzter Link sind strong f¸r den selben Kandidaten
-     *      -> Kandidat kann in erster Zelle gesetzt werden (alle anderen Kandidaten lˆschen, ist einfacher in der Programmlogik)
+     *    - Erster und letzter Link sind weak f√ºr den selben Kandidaten
+     *      -> Kandidat kann in erster Zelle gel√∂scht werden
+     *    - Erster und letzter Link sind strong f√ºr den selben Kandidaten
+     *      -> Kandidat kann in erster Zelle gesetzt werden (alle anderen Kandidaten l√∂schen, ist einfacher in der Programmlogik)
      *    - Ein link ist weak und einer strong, die Kandidaten sind verschieden
-     *      -> Kandidat mit weak link kann in erster Zelle gelˆscht werden
+     *      -> Kandidat mit weak link kann in erster Zelle gel√∂scht werden
      *
      *  Continuous Nice Loop:
-     *    - Zwei weak links: Erste Zelle muss bivalue sein, Kandidaten m¸ssen verschieden sein
-     *    - Zwei strong links: Kandidaten m¸ssen verschieden sein
-     *    - Ein strong, ein weak link: Kandidaten m¸ssen gleich sein
+     *    - Zwei weak links: Erste Zelle muss bivalue sein, Kandidaten m√ºssen verschieden sein
+     *    - Zwei strong links: Kandidaten m√ºssen verschieden sein
+     *    - Ein strong, ein weak link: Kandidaten m√ºssen gleich sein
      *
-     *    -> eine Zelle mit zwei strong links: alle anderen Kandidaten von dieser Zelle lˆschen
-     *    -> weak link zwischen zwei Zellen: Kandidat des Links kann von allen Zellen gelˆscht werden,
+     *    -> eine Zelle mit zwei strong links: alle anderen Kandidaten von dieser Zelle l√∂schen
+     *    -> weak link zwischen zwei Zellen: Kandidat des Links kann von allen Zellen gel√∂scht werden,
      *       die beide Zellen sehen
      */
     private void checkNiceLoop(int lastLink, int chainIndex) {
         //int endIndex = (lastLink / 10) % 100;
         int endIndex = Chain.getSCellIndex(lastLink);
-        // Mindestl‰nge: 3 Links
+        // Mindestl√§nge: 3 Links
         if (endIndex != startIndex) {
             // kein Loop
             return;
         }
-        // auf Looptyp pr¸fen
+        // auf Looptyp pr√ºfen
         globalStep.reset();
         globalStep.setType(SolutionType.DISCONTINUOUS_NICE_LOOP);
         //boolean firstLinkStrong = chain[1] / 1000 > 0;
@@ -786,10 +786,10 @@ public class ChainSolver extends AbstractSolver {
         //int endCandidate = lastLink % 10;
         int endCandidate = Chain.getSCandidate(lastLink);
         if (!firstLinkStrong && !lastLinkStrong && startCandidate == endCandidate) {
-            // Discontinous -> startCandidate in erster Zelle lˆschen
+            // Discontinous -> startCandidate in erster Zelle l√∂schen
             globalStep.addCandidateToDelete(startIndex, startCandidate);
         } else if (firstLinkStrong && lastLinkStrong && startCandidate == endCandidate) {
-            // Discontinous -> alle anderen Kandidaten lˆschen
+            // Discontinous -> alle anderen Kandidaten l√∂schen
             int[] cands = sudoku.getAllCandidates(startIndex);
             for (int i = 0; i < cands.length; i++) {
                 if (cands[i] != startCandidate) {
@@ -797,7 +797,7 @@ public class ChainSolver extends AbstractSolver {
                 }
             }
         } else if (firstLinkStrong != lastLinkStrong && startCandidate != endCandidate) {
-            // Discontinous -> weak link lˆschen
+            // Discontinous -> weak link l√∂schen
             if (!firstLinkStrong) {
                 globalStep.addCandidateToDelete(startIndex, startCandidate);
             } else {
@@ -806,19 +806,19 @@ public class ChainSolver extends AbstractSolver {
         } else if ((!firstLinkStrong && !lastLinkStrong && sudoku.getAnzCandidates(startIndex) == 2 && startCandidate != endCandidate) ||
                 (firstLinkStrong && lastLinkStrong && startCandidate != endCandidate) ||
                 (firstLinkStrong != lastLinkStrong && startCandidate == endCandidate)) {
-            // Continous -> auf Lˆschen pr¸fen
+            // Continous -> auf L√∂schen pr√ºfen
             globalStep.setType(SolutionType.CONTINUOUS_NICE_LOOP);
-            // Zelle mit zwei strong links: strong link zwischen Zellen, weak link in der Zelle, strong link zu n‰chster Zelle
+            // Zelle mit zwei strong links: strong link zwischen Zellen, weak link in der Zelle, strong link zu n√§chster Zelle
             // weak link zwischen Zellen: trivial
             for (int i = 1; i <= chainIndex; i++) {
                 //if (chain[i] / 1000 > 0 && i <= chainIndex - 2 && (chain[i - 1] / 10) % 100 != (chain[i] / 10) % 100) {
                 if (Chain.isSStrong(chain[i]) && i <= chainIndex - 2 && Chain.getSCellIndex(chain[i - 1]) != Chain.getSCellIndex(chain[i])) {
-                    // mˆgliche Zelle mit zwei strong links: n‰chster Link muss weak sein auf selbe Zelle, danach strong auf n‰chste Zelle
+                    // m√∂gliche Zelle mit zwei strong links: n√§chster Link muss weak sein auf selbe Zelle, danach strong auf n√§chste Zelle
                     //if (chain[i + 1] / 1000 == 0 && (chain[i] / 10) % 100 == (chain[i + 1] / 10) % 100 &&
                     //        chain[i + 2] / 1000 > 0 && (chain[i + 1] / 10) % 100 != (chain[i + 2] / 10) % 100) {
                     if (!Chain.isSStrong(chain[i + 1]) && Chain.getSCellIndex(chain[i]) == Chain.getSCellIndex(chain[i + 1]) &&
                             Chain.isSStrong(chain[i + 2]) && Chain.getSCellIndex(chain[i + 1]) != Chain.getSCellIndex(chain[i + 2])) {
-                        // in der Zelle chain[i] alle kandidaten auﬂer den beiden strong links lˆschen
+                        // in der Zelle chain[i] alle kandidaten au√üer den beiden strong links l√∂schen
                         //int c1 = chain[i] % 10;
                         int c1 = Chain.getSCandidate(chain[i]);
                         //int c2 = chain[i + 2] % 10;
@@ -859,7 +859,7 @@ public class ChainSolver extends AbstractSolver {
             String del = globalStep.getCandidateString();
             Integer oldLength = deletesMap.get(del);
             if (oldLength != null && oldLength.intValue() <= chainIndex) {
-                // F¸r diese Kandidaten gibt es schon eine Chain und sie ist k¸rzer als die neue
+                // FÔøΩr diese Kandidaten gibt es schon eine Chain und sie ist kÔøΩrzer als die neue
                 return;
             }
             deletesMap.put(del, chainIndex);
@@ -885,7 +885,7 @@ public class ChainSolver extends AbstractSolver {
      * Turbot Fish and X-Chain share exactly the same links and X-CHain is after Turbot
      * in the default configuration. If a search for one type is done after
      * a search for the other has found nothing and the sudoku has not changed since,
-     * it is not necessary to recaˆculate the links.
+     * it is not necessary to recaÔøΩculate the links.
      * @param type
      */
     private void getAllLinks(int type) {

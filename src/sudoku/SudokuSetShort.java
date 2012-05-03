@@ -39,9 +39,9 @@ public final class SudokuSetShort implements Cloneable, Serializable {
         0x0100
     };
     private static final short MAX_MASK = 0x01ff;
-    // für jede der 256 möglichen Kombinationen von Bits das entsprechende Array
+    // fÃ¼r jede der 256 mÃ¶glichen Kombinationen von Bits das entsprechende Array
     private static final int[][] possibleValues = new int[0x200][];
-    // und zu jeder Zahl die Länge des Arrays
+    // und zu jeder Zahl die LÃ¤nge des Arrays
     private static int[] anzValues = new int[0x200];
     private short mask = 0; //  0 - 9
     boolean initialized = true;
@@ -194,7 +194,7 @@ public final class SudokuSetShort implements Cloneable, Serializable {
     }
 
     /**
-     * gibt ((this & set) == this) zurück
+     * gibt ((this & set) == this) zurï¿½ck
      * @param set
      * @return  
      */
@@ -204,7 +204,7 @@ public final class SudokuSetShort implements Cloneable, Serializable {
     }
 
     /**
-     * gibt ((this & ~set) == this) zurück
+     * gibt ((this & ~set) == this) zurï¿½ck
      * @param set
      * @return  
      */
@@ -214,7 +214,7 @@ public final class SudokuSetShort implements Cloneable, Serializable {
     }
 
     /**
-     * gibt ((this & set) == 0) zurück
+     * gibt ((this & set) == 0) zurï¿½ck
      * @param set
      * @return  
      */

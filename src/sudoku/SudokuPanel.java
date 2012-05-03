@@ -104,46 +104,46 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
         KeyEvent.VK_5, KeyEvent.VK_6, KeyEvent.VK_7, KeyEvent.VK_8, KeyEvent.VK_9
     };
     private static final int DELTA = 5; // Abstand zwischen den Quadraten in Pixel
-    private static final int DELTA_RAND = 5; // Abstand zu den Rändern
+    private static final int DELTA_RAND = 5; // Abstand zu den RÃ¤ndern
     private static BufferedImage[] colorKuImagesSmall = new BufferedImage[Sudoku2.UNITS];
     private static BufferedImage[] colorKuImagesLarge = new BufferedImage[Sudoku2.UNITS];
     // Konfigurationseigenschaften
-    private boolean showCandidates = Options.getInstance().isShowCandidates(); // Alle möglichen Kandidaten anzeigen
+    private boolean showCandidates = Options.getInstance().isShowCandidates(); // Alle mÃ¶glichen Kandidaten anzeigen
     private boolean showWrongValues = Options.getInstance().isShowWrongValues();    // falsche Werte mit anderer Farbe
-    private boolean showDeviations = Options.getInstance().isShowDeviations();  // Werte und Kandidaten, die von der Lösung abweichen
-    private boolean invalidCells = Options.getInstance().isInvalidCells(); // true: ungültige Zellen, false: mögliche Zellen
-    private boolean showInvalidOrPossibleCells = false;  // Ungültige/Mögliche Zellen für showHintCellValue mit anderem Hintergrund
+    private boolean showDeviations = Options.getInstance().isShowDeviations();  // Werte und Kandidaten, die von der LÃ¶sung abweichen
+    private boolean invalidCells = Options.getInstance().isInvalidCells(); // true: ungÃ¼ltige Zellen, false: mÃ¶gliche Zellen
+    private boolean showInvalidOrPossibleCells = false;  // UngÃ¼ltige/MÃ¶gliche Zellen fÃ¼r showHintCellValue mit anderem Hintergrund
     private boolean showColorKu = Options.getInstance().isShowColorKu();
     /** An array for every candidate for which a filter is set; index 10 stands for "filter bivalue cells" */
     private boolean[] showHintCellValues = new boolean[11];
     //private int showHintCellValue = 0;
     private boolean showAllCandidatesAkt = false; // bei alle Kandidaten anzeigen (nur aktive Zelle)
     private boolean showAllCandidates = false; // bei alle Kandidaten anzeigen (alle Zellen)
-    private int delta = DELTA; // Zwischenraum zwischen Blöcken
-    private int deltaRand = DELTA_RAND; // Zwischenraum zu den Rändern
-    private Font valueFont;    // Font für die Zellenwerte
-    private Font candidateFont; // Font für die Kandidaten
+    private int delta = DELTA; // Zwischenraum zwischen BlÃ¶cken
+    private int deltaRand = DELTA_RAND; // Zwischenraum zu den RÃ¤ndern
+    private Font valueFont;    // Font fÃ¼r die Zellenwerte
+    private Font candidateFont; // Font fÃ¼r die Kandidaten
     /** Font used for printing: Since it has to be scaled according to the printer resolution, {@link Options#bigFont} cannot be iused directly. */
     private Font bigFont;
     /** Font used for printing: Since it has to be scaled according to the printer resolution, {@link Options#smallFont} cannot be iused directly. */
     private Font smallFont;
     // interne Variable
-    private Sudoku2 sudoku; // Daten für das Sudoku
-    private SudokuSolver solver; // Lösung für das Sudoku
-    private SudokuGenerator generator; // Lösung mit BruteForce (Dancing Links)
-    private MainFrame mainFrame; // für Oberfläche
+    private Sudoku2 sudoku; // Daten fÃ¼r das Sudoku
+    private SudokuSolver solver; // LÃ¶sung fÃ¼r das Sudoku
+    private SudokuGenerator generator; // LÃ¶sung mit BruteForce (Dancing Links)
+    private MainFrame mainFrame; // fÃ¶r OberflÃ¤che
     private CellZoomPanel cellZoomPanel; // active cell display and color chooser
-    private SolutionStep step;   // für Anzeige der Hinweise
+    private SolutionStep step;   // fÃ¼r Anzeige der Hinweise
     private int chainIndex = -1; // if != -1, only the chain with the right index is shown
     private List<Integer> alsToShow = new ArrayList<Integer>(); // if chainIndex is != -1, alsToShow contains the indices of the ALS, that are part of the chain
     private int oldWidth; // Breite des Panels, als das letzte Mal Fonts erzeugt wurden
     private int width;    // Breite des Panels, auf Quadrat normiert
-    private int height;   // Höhe des Panels, auf Quadrat normiert
-    private int cellSize; // Kantenlänge einer Zelle
+    private int height;   // HÃ¶he des Panels, auf Quadrat normiert
+    private int cellSize; // KantenlÃ¤nge einer Zelle
     private int startSX;  // x-Koordinate des linken oberen Punktes des Sudoku
     private int startSY;  // y-Koordinate des linken oberen Punktes des Sudoku
     private Graphics2D g2; // zum Zeichnen, spart eine Menge Parameter
-    private CubicCurve2D.Double cubicCurve = new CubicCurve2D.Double(); // für Chain-Pfeile
+    private CubicCurve2D.Double cubicCurve = new CubicCurve2D.Double(); // fÃ¼r Chain-Pfeile
     private Polygon arrow = new Polygon(); // Pfeilspitze
     private Stroke arrowStroke = new BasicStroke(1.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND); // Pfeilspitzen abrunden
     private Stroke strongLinkStroke = new BasicStroke(1.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND); // strong links durchziehen
@@ -1038,13 +1038,13 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
 //        repaint();
 //    }
     private void checkShowAllCandidates(int modifiers, int keyCode) {
-        // wenn <Shift> und <Ctrl> gedrückt sind, soll showAllCandidatesAkt true sein, sonst false
+        // wenn <Shift> und <Ctrl> gedrï¿½ckt sind, soll showAllCandidatesAkt true sein, sonst false
         boolean oldShowAllCandidatesAkt = showAllCandidatesAkt;
         showAllCandidatesAkt = false;
         if ((modifiers & KeyEvent.SHIFT_DOWN_MASK) != 0 && (modifiers & KeyEvent.CTRL_DOWN_MASK) != 0) {
             showAllCandidatesAkt = true;
         }
-        // wenn <Shift> und <Alt> gedrückt sind, soll showAllCandidates true sein, sonst false
+        // wenn <Shift> und <Alt> gedrï¿½ckt sind, soll showAllCandidates true sein, sonst false
         boolean oldShowAllCandidates = showAllCandidates;
         showAllCandidates = false;
         if ((modifiers & KeyEvent.SHIFT_DOWN_MASK) != 0 && (modifiers & KeyEvent.ALT_DOWN_MASK) != 0) {
@@ -1056,9 +1056,9 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
     }
 
     public void handleKeysReleased(KeyEvent evt) {
-        // wenn <Left-Shift> und <Left-Ctrl> gedrückt sind, soll showAllCandidatesAkt true sein, sonst false
+        // wenn <Left-Shift> und <Left-Ctrl> gedrï¿½ckt sind, soll showAllCandidatesAkt true sein, sonst false
         int modifiers = evt.getModifiersEx();
-        int keyCode = 0; // getKeyCode() liefert immer noch die zuletzt gedrückte Taste
+        int keyCode = 0; // getKeyCode() liefert immer noch die zuletzt gedrï¿½ckte Taste
 
         checkShowAllCandidates(modifiers, keyCode);
 
@@ -1071,15 +1071,15 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
     }
 
     public void handleKeys(KeyEvent evt) {
-        // Undo/Redo: alten Zustand speichern, wenn nichts geändert wurde, wieder entfernen
+        // Undo/Redo: alten Zustand speichern, wenn nichts geï¿½ndert wurde, wieder entfernen
         boolean changed = false;
         undoStack.push(sudoku.clone());
 
         int keyCode = evt.getKeyCode();
         int modifiers = evt.getModifiersEx();
 
-        // wenn <Shift> und <Ctrl> gedrückt sind, soll showAllCandidatesAkt true sein, sonst false
-        // wenn <Shift> und <Alt> gedrückt sind, soll showAllCandidates true sein, sonst false
+        // wenn <Shift> und <Ctrl> gedrï¿½ckt sind, soll showAllCandidatesAkt true sein, sonst false
+        // wenn <Shift> und <Alt> gedrï¿½ckt sind, soll showAllCandidates true sein, sonst false
         checkShowAllCandidates(modifiers, keyCode);
 
         // if only <shift> is pressed and coloring is active, the cursor should change to complementary color
@@ -1093,7 +1093,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
         }
 
         // "normale" Tastaturbehandlung
-        // bei keyPressed funktioniert getKeyChar() nicht zuverlässig, daher die Zahl selbst ermitteln
+        // bei keyPressed funktioniert getKeyChar() nicht zuverlï¿½ssig, daher die Zahl selbst ermitteln
         // 20120111: makes problems on certain laptops where key combinations are
         // used to produce numbers. New try: If getKeyChar() gives a number, the corresponding key code is set
         char keyChar = evt.getKeyChar();
@@ -1370,7 +1370,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
             case KeyEvent.VK_0:
             case KeyEvent.VK_NUMPAD0:
                 if ((modifiers & KeyEvent.CTRL_DOWN_MASK) == 0) {
-                    // Zelle löschen
+                    // Zelle lï¿½schen
                     if (sudoku.getValue(aktLine, aktCol) != 0 && !sudoku.isFixed(aktLine, aktCol)) {
                         sudoku.setCell(aktLine, aktCol, 0);
                         changed = true;
@@ -1512,11 +1512,11 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                 break;
         }
         if (changed) {
-            // Undo wurde schon behandelt, Redo ist nicht mehr möglich
+            // Undo wurde schon behandelt, Redo ist nicht mehr mï¿½glich
             redoStack.clear();
             checkProgress();
         } else {
-            // kein Undo nötig -> wieder entfernen
+            // kein Undo nï¿½tig -> wieder entfernen
             undoStack.pop();
         }
         updateCellZoomPanel();
@@ -1756,7 +1756,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
         //SudokuCell cell = sudoku.getCell(line, col);
         int index = Sudoku2.getIndex(line, col);
         if (!sudoku.isFixed(index) && sudoku.getValue(index) != number) {
-            // Setzen ist möglich, auf löschen prüfen
+            // Setzen ist mï¿½glich, auf lï¿½schen prï¿½fen
             if (sudoku.getValue(index) != 0) {
                 sudoku.setCell(line, col, 0);
             }
@@ -1916,7 +1916,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
 //        printG2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 //        printG2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-        // Überschrift
+        // ï¿½berschrift
         // scale fonts up too fit the printer resolution
         Font tmpFont = Options.getInstance().getBigFont();
         bigFont = new Font(tmpFont.getName(), tmpFont.getStyle(), (int) (tmpFont.getSize() * scale));
@@ -1970,13 +1970,13 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
             lastCursorChanged = System.currentTimeMillis();
         }
 
-        // Größe bestimmen und quadratisch machen
+        // Grï¿½ï¿½e bestimmen und quadratisch machen
         width = totalWidth;
         height = totalHeight;
         width = (height < width) ? height : width;
         height = (width < height) ? width : height;
 
-        // Zwischenräume nicht mehr konstant
+        // Zwischenrï¿½ume nicht mehr konstant
         float strokeWidth = 2.0f / 1000.0f * width;
         if (width > 1000) {
             strokeWidth *= 1.5f;
@@ -1992,7 +1992,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
             delta = 0;
         }
 
-        // Größe der einzelnen Zellen bestimmen und Maße anpassen (Rundungsfehler!)
+        // Grï¿½ï¿½e der einzelnen Zellen bestimmen und Maï¿½e anpassen (Rundungsfehler!)
         if (mitRand) {
             cellSize = (width - 4 * delta - 2 * deltaRand) / 9;
         } else {
@@ -2007,7 +2007,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
         }
 
         // Fonts festlegen
-        // ACHTUNG: Bei jeder Änderung Fonts neu setzen!
+        // ACHTUNG: Bei jeder ï¿½nderung Fonts neu setzen!
         Font tmpFont = Options.getInstance().getDefaultValueFont();
         if (valueFont != null) {
             if (!valueFont.getName().equals(tmpFont.getName())
@@ -2048,7 +2048,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                 //SudokuCell cell = sudoku.getCell(line, col);
 
                 // Hintergrund zeichnen (ignore allBlack here!)
-                g2.setColor(Options.getInstance().getDefaultCellColor()); // normal ist weiß
+                g2.setColor(Options.getInstance().getDefaultCellColor()); // normal ist weiï¿½
                 if (Sudoku2.getBlock(Sudoku2.getIndex(line, col)) % 2 != 0) {
                     // every other block may have a different background color
                     g2.setColor(Options.getInstance().getAlternateCellColor());
@@ -2147,8 +2147,8 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                     }
                 } else {
                     g2.setFont(candidateFont);
-                    // alle vorhandenen Kandidaten gleichmäßig über die Zelle verteilen
-                    // wird auch aufgerufen, wenn hoDrawMode gesetzt ist und <Shift>+<Ctrl> gedrückt
+                    // alle vorhandenen Kandidaten gleichmï¿½ï¿½ig ï¿½ber die Zelle verteilen
+                    // wird auch aufgerufen, wenn hoDrawMode gesetzt ist und <Shift>+<Ctrl> gedrï¿½ckt
                     // ist; muss in diesem Fall alle Kandidaten anzeigen
                     ///*K*/ HIer werden nicht mehr alle Kandidaten angezeigt, wenn showCandidates true ist!
                     boolean userCandidates = !showCandidates;
@@ -2198,7 +2198,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                                     Chain chain = step.getChains().get(k);
                                     for (int j = chain.getStart(); j <= chain.getEnd(); j++) {
                                         if (chain.getChain()[j] == Integer.MIN_VALUE) {
-                                            // Trennmarker für mins -> ignorieren
+                                            // Trennmarker fï¿½r mins -> ignorieren
                                             continue;
                                         }
                                         int chainEntry = Math.abs(chain.getChain()[j]);
@@ -2292,7 +2292,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
             }
         }
 
-        // Rahmen zeichnen: muss am Schluss sein, wegen der Hintergründe
+        // Rahmen zeichnen: muss am Schluss sein, wegen der Hintergrï¿½nde
         switch (Options.getInstance().getDrawMode()) {
             case 0:
                 g2.setStroke(new BasicStroke((float) (2 * scale)));
@@ -2327,7 +2327,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
         // Chains zeichnen, wenn vorhanden
         if (step != null && !step.getChains().isEmpty()) {
             // es gibt mindestens eine Chain
-            // zuerst alle Punkte sammeln (auch zu löschende Kandidaten und ALS)
+            // zuerst alle Punkte sammeln (auch zu lï¿½schende Kandidaten und ALS)
             points.clear();
             //for (Chain chain : step.getChains()) {
             for (int ci = 0; ci < step.getChainAnz(); ci++) {
@@ -2497,10 +2497,10 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
             Point2D.Double point = points.get(i);
             double dx2 = point.x - p1.x;
             double dy2 = point.y - p1.y;
-            // Kontrolle mit Ähnlichkeitssatz
+            // Kontrolle mit ï¿½hnlichkeitssatz
             if (Math.signum(dx1) == Math.signum(dx2) && Math.signum(dy1) == Math.signum(dy2)
                     && Math.abs(dx2) <= Math.abs(dx1) && Math.abs(dy2) <= Math.abs(dy1)) {
-                // Punkt könnte auf der Geraden liegen
+                // Punkt kï¿½nnte auf der Geraden liegen
                 if (dx1 == 0.0 || dy1 == 0.0 || Math.abs(dx1 / dy1 - dx2 / dy2) < epsilon) {
                     // Punkt liegt auf der Geraden
                     doesIntersect = true;
@@ -2614,7 +2614,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
         p2.x = xact * cosAngle - yact * sinAngle;
         p2.y = xact * sinAngle + yact * cosAngle;
 
-        // und zurückschieben
+        // und zurï¿½ckschieben
         p2.x += p1.x;
         p2.y += p1.y;
     }
@@ -3204,11 +3204,11 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
     }
 
     /**
-     * Schreibt ein BufferedImage in eine PNG-Datei. Dabei wird die Auflösung
+     * Schreibt ein BufferedImage in eine PNG-Datei. Dabei wird die Auflï¿½sung
      * in die Metadaten der Datei geschrieben, was alles etwas kompliziert
      * macht.
      * @param bi Zu zeichnendes Bild
-     * @param dpi Auflösung in dots per inch
+     * @param dpi Auflï¿½sung in dots per inch
      * @param fileName Pfad und Name der neuen Bilddatei
      */
     private void writePNG(BufferedImage bi, int dpi, File file) {
@@ -3229,7 +3229,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
 
             Node node = iomd.getAsTree(formatName);
 
-            // standardmäßig ist nur IHDR gesetzt, pHYs dazufügen
+            // standardmï¿½ï¿½ig ist nur IHDR gesetzt, pHYs dazufï¿½gen
             int dpiRes = (int) (dpi / 2.54 * 100);
             IIOMetadataNode res = new IIOMetadataNode("pHYs");
             res.setAttribute("pixelsPerUnitXAxis", String.valueOf(dpiRes));
@@ -3566,11 +3566,11 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
             changed = true;
         }
         if (changed) {
-            // Undo wurde schon behandelt, Redo ist nicht mehr möglich
+            // Undo wurde schon behandelt, Redo ist nicht mehr mï¿½glich
             redoStack.clear();
             checkProgress();
         } else {
-            // kein Undo nötig -> wieder entfernen
+            // kein Undo nï¿½tig -> wieder entfernen
             undoStack.pop();
         }
         updateCellZoomPanel();

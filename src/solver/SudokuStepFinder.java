@@ -896,7 +896,7 @@ public class SudokuStepFinder {
                         // Template hat eine 1 an einer verbotenen Position
                         continue;
                     }
-                    // Template ist für Kandidaten erlaubt!
+                    // Template ist fÃ¼r Kandidaten erlaubt!
                     setValueTemplates[j].and(templates[i]);
                     delCandTemplates[j].or(templates[i]);
                     if (initLists) {

@@ -41,9 +41,9 @@ import sudoku.SudokuUtil;
 /**
  * Es gelten die Definitionen aus dem Ultimate Fish Guide: http://www.sudoku.com/boards/viewtopic.php?t=4993
  *
- * Zusätze:
+ * ZusÃ¤tze:
  *   - Ein Base-Candidate ist eine Potential Elimination, wenn er in mindestens zwei Cover-Units enthalten ist
- *   - Ein Basic-Fish ist Sashimi, wenn die Base-unit, die die Fins enthält, ohne Fins nur noch einen
+ *   - Ein Basic-Fish ist Sashimi, wenn die Base-unit, die die Fins enthÃ¤lt, ohne Fins nur noch einen
  *     Kandidaten hat. -- stimmt nicht mehr!
  *
  * Kraken Fish:
@@ -270,7 +270,7 @@ public class FishSolver extends AbstractSolver {
     /** the {@link SudokuStepFinder#stepNumber} of the last executed step. */
     private int lastStepNumber = 0;
     /** The maximum number of base unit combinations (for progress bar) */
-    private int maxBaseCombinations = 0; // Anzahl möglicher Kombinationen aus base-units
+    private int maxBaseCombinations = 0; // Anzahl mÃ¶glicher Kombinationen aus base-units
     /** number of combinations of base units in fish search */
     private int baseGesamt = 0;
     /** number of combinations of base units in fish search for progress bar */
@@ -753,11 +753,11 @@ public class FishSolver extends AbstractSolver {
      * type {@link #fishType}. Most required data are set in attributes
      * to reduce method overhead.
      *
-     * @param candidate Nummer des Kandidaten, für den die Fische gesucht werden sollen
+     * @param candidate Nummer des Kandidaten, fÃ¼r den die Fische gesucht werden sollen
      * @param minSize Minimale Anzahl an Base-Units im Base-Set (es werden keine kleineren Fische gefunden)
      * @param maxSize Maximale Anzahl an Base-Units im Base-Set (es werden auch kleinere Fische gefunden)
-     * @param baseUnits Alle möglichen Base-Units (jeweils ein sortiertes Array mit allen Indexen dieser Unit)
-     * @param coverUnits Alle möglichen Cover-Units (jeweils ein sortiertes Array mit allen Indexen dieser Unit)
+     * @param baseUnits Alle mÃ¶glichen Base-Units (jeweils ein sortiertes Array mit allen Indexen dieser Unit)
+     * @param coverUnits Alle mÃ¶glichen Cover-Units (jeweils ein sortiertes Array mit allen Indexen dieser Unit)
      * @param withoutFins <code>true</code>, wenn Finnless-Fische gesucht werden sollen
      * @param withFins <code>true</code>, if the search is for Finned/Sashimi Fish
      * @param sashimi <code>true</code>, if the search is for Sashimi Fish (<code>withFins</code> must be true as well).
@@ -766,12 +766,12 @@ public class FishSolver extends AbstractSolver {
      * @return A step if one was found or <code>null</code>
      */
     private SolutionStep getFishes(boolean lines) {
-        // die ganze Rechnung braucht nur gemacht werden, wenn es überhaupt ein Ergebnis geben kann!
+        // die ganze Rechnung braucht nur gemacht werden, wenn es Ã¼berhaupt ein Ergebnis geben kann!
         if (doTemplates) {
             templateSet.set(finder.getDelCandTemplates(false)[candidate]);
             templateSet.and(finder.getCandidates()[candidate]);
             if (templateSet.isEmpty()) {
-                // vergebliche Liebesmüh...
+                // vergebliche LiebesmÃ¼h...
                 return null;
             }
         }
@@ -990,7 +990,7 @@ public class FishSolver extends AbstractSolver {
 //                System.out.println("try fish!");
                 // same number of base and cover units -> possible fish
                 versucheFisch++;
-                // jetzt kann es ein Fisch sein (mit oder ohne Flossen) -> prüfen
+                // jetzt kann es ein Fisch sein (mit oder ohne Flossen) -> prÃ¼fen
 //                fins.clear();
                 finsM1 = finsM2 = 0;
 //                boolean isCovered = baseSet.isCovered(entry.candidates, fins);
@@ -1401,8 +1401,8 @@ public class FishSolver extends AbstractSolver {
         boolean isSashimi = false;
         if ((baseMask == LINE_MASK && coverMask == COL_MASK)
                 || (baseMask == COL_MASK && coverMask == LINE_MASK)) {
-            // alle base units durchschauen: wenn eine base unit mindestens eine fin enthält, werden alle
-            // fins gelöscht; es müssen dann noch mehr als ein base-Kandidat übrig sein
+            // alle base units durchschauen: wenn eine base unit mindestens eine fin enthÃ¤lt, werden alle
+            // fins gelÃ¶scht; es mÃ¼ssen dann noch mehr als ein base-Kandidat Ã¼brig sein
             for (int i = 0; i < numberOfBaseUnits; i++) {
                 if (baseUnitsUsed[baseUnits[i]]) {
 //                    checkSashimiSet.set(baseCandidates[i]);
@@ -1463,7 +1463,7 @@ public class FishSolver extends AbstractSolver {
                         Sudoku2.CONSTRAINT_NUMBER_FROM_CONSTRAINT[i]);
             }
         }
-        // zu löschende Kandidaten
+        // zu lÃ¶schende Kandidaten
         createFishSet.set(deleteSetM1, deleteSetM2);
         for (int k = 0; k < createFishSet.size(); k++) {
             globalStep.addCandidateToDelete(createFishSet.get(k), candidate);
@@ -1474,14 +1474,14 @@ public class FishSolver extends AbstractSolver {
             globalStep.addCannibalistic(createFishSet.get(k), candidate);
             globalStep.addCandidateToDelete(createFishSet.get(k), candidate);
         }
-        // Fins hinzufügen
+        // Fins hinzufÃ¼gen
         bm1 = finSetM1 & ~endoFinSetM1;
         bm2 = finSetM2 & ~endoFinSetM2;
         createFishSet.set(bm1, bm2);
         for (int i = 0; i < createFishSet.size(); i++) {
             globalStep.addFin(createFishSet.get(i), candidate);
         }
-        // Endo-Fins hinzufügen
+        // Endo-Fins hinzufÃ¼gen
         createFishSet.set(endoFinSetM1, endoFinSetM2);
         for (int i = 0; i < createFishSet.size(); i++) {
             globalStep.addEndoFin(createFishSet.get(i), candidate);

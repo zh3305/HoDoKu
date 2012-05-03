@@ -403,28 +403,28 @@ public class ConfigLevelFontPanel extends javax.swing.JPanel {
 
         printSmallFontLabel.setText("jLabel4"); // NOI18N
 
-        valuesButton.setText("…"); // NOI18N
+        valuesButton.setText("..."); // NOI18N
         valuesButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 valuesButtonActionPerformed(evt);
             }
         });
 
-        candidatesButton.setText("…"); // NOI18N
+        candidatesButton.setText("..."); // NOI18N
         candidatesButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 candidatesButtonActionPerformed(evt);
             }
         });
 
-        printLargeButton.setText("…"); // NOI18N
+        printLargeButton.setText("..."); // NOI18N
         printLargeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 printLargeButtonActionPerformed(evt);
             }
         });
 
-        printSmallButton.setText("…"); // NOI18N
+        printSmallButton.setText("..."); // NOI18N
         printSmallButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 printSmallButtonActionPerformed(evt);
@@ -479,7 +479,7 @@ public class ConfigLevelFontPanel extends javax.swing.JPanel {
                             .addComponent(candidatesButton)
                             .addComponent(printLargeButton)
                             .addComponent(printSmallButton))))
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         jPanel3Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {candidateFactorTextField, hintFactorTextField, valueFactorTextField});

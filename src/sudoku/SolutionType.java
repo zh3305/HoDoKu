@@ -140,7 +140,7 @@ public enum SolutionType {
     private String argName;
 
     SolutionType() {
-        // für XMLEncoder
+        // fÃ¼r XMLEncoder
     }
 
     SolutionType(String stepName, String libraryType, String argName) {

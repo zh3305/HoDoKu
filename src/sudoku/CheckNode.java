@@ -63,7 +63,7 @@ public class CheckNode extends DefaultMutableTreeNode {
             // normaler Knoten, kann nur AN oder AUS sein
             selectionState = selectionState == FULL ? NONE : FULL;
             adjustModel(this);
-            // der selectionState des parents muss ebenfalls überprüft werden
+            // der selectionState des parents muss ebenfalls Ã¼berprÃ¼ft werden
             int actState = -1;
             CheckNode tmpParent = (CheckNode) getParent();
             for (int i = 0; i < tmpParent.children.size(); i++) {
