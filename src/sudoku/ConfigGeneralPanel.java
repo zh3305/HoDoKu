@@ -104,6 +104,7 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         toggleFilterAndOrCheckBox = new javax.swing.JCheckBox();
         alternativeMouseModeCheckBox = new javax.swing.JCheckBox();
+        onlySmallFiltersCheckBox = new javax.swing.JCheckBox();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("intl/ConfigGeneralPanel"); // NOI18N
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("ConfigGeneralPanel.jPanel2.border.title"))); // NOI18N
@@ -251,11 +252,9 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
 
         alternativeMouseModeCheckBox.setMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigGeneralPanel").getString("ConfigGeneralPanel.alternativeMouseModeCheckBox.mnemonic").charAt(0));
         alternativeMouseModeCheckBox.setText(bundle.getString("ConfigGeneralPanel.alternativeMouseModeCheckBox.text")); // NOI18N
-        alternativeMouseModeCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                alternativeMouseModeCheckBoxActionPerformed(evt);
-            }
-        });
+
+        onlySmallFiltersCheckBox.setMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigGeneralPanel").getString("ConfigGeneralPanel.onlySmallFiltersCheckBox.mnemonic").charAt(0));
+        onlySmallFiltersCheckBox.setText(bundle.getString("ConfigGeneralPanel.onlySmallFiltersCheckBox.text")); // NOI18N
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -275,7 +274,8 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
                         .addComponent(deleteCursorAfterMsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel1))
-                    .addComponent(alternativeMouseModeCheckBox))
+                    .addComponent(alternativeMouseModeCheckBox)
+                    .addComponent(onlySmallFiltersCheckBox))
                 .addContainerGap(26, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
@@ -299,7 +299,9 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(alternativeMouseModeCheckBox)
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(onlySmallFiltersCheckBox)
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -342,10 +344,6 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
     private void deleteCursorAfterCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteCursorAfterCheckBoxActionPerformed
         deleteCursorAfterMsTextField.setEnabled(deleteCursorAfterCheckBox.isSelected());
     }//GEN-LAST:event_deleteCursorAfterCheckBoxActionPerformed
-
-    private void alternativeMouseModeCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alternativeMouseModeCheckBoxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_alternativeMouseModeCheckBoxActionPerformed
     
     public void okPressed() {
         boolean oldUseDefaultFontSize = Options.getInstance().isUseDefaultFontSize();
@@ -358,6 +356,7 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
         Options.getInstance().setShowColorKu(showColorKuCheckBox.isSelected());
         Options.getInstance().setSaveWindowLayout(saveWindowLayoutCheckBox.isSelected());
         Options.getInstance().setAlternativeMouseMode(alternativeMouseModeCheckBox.isSelected());
+        Options.getInstance().setOnlySmallFilters(onlySmallFiltersCheckBox.isSelected());
         
         if ((! Options.getInstance().isUseDefaultFontSize() && (oldUseDefaultFontSize || oldFontSize != Options.getInstance().getCustomFontSize())) ||
                 (Options.getInstance().isUseDefaultFontSize() && ! oldUseDefaultFontSize)) {
@@ -410,6 +409,7 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
             showColorKuCheckBox.setSelected(Options.SHOW_COLORKU);
             saveWindowLayoutCheckBox.setSelected(Options.SAVE_WINDOW_LAYOUT);
             alternativeMouseModeCheckBox.setSelected(Options.ALTERNATIVE_MOUSE_MODE);
+            onlySmallFiltersCheckBox.setSelected(Options.ONLY_SMALL_FILTERS);
             
             language = Options.DEFAULT_LANGUAGE;
             laf = Options.DEFAULT_LAF;
@@ -429,6 +429,7 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
             showColorKuCheckBox.setSelected(Options.getInstance().isShowColorKu());
             saveWindowLayoutCheckBox.setSelected(Options.getInstance().isSaveWindowLayout());
             alternativeMouseModeCheckBox.setSelected(Options.getInstance().isAlternativeMouseMode());
+            onlySmallFiltersCheckBox.setSelected(Options.getInstance().isOnlySmallFilters());
             
             language = Options.getInstance().getLanguage();
             laf = Options.getInstance().getLaf();
@@ -525,6 +526,7 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox lookAndFeelComboBox;
     private javax.swing.JLabel lookAndFeelLabel;
     private javax.swing.JCheckBox onlySmallCursorsCheckBox;
+    private javax.swing.JCheckBox onlySmallFiltersCheckBox;
     private javax.swing.JButton resetButton;
     private javax.swing.JCheckBox saveWindowLayoutCheckBox;
     private javax.swing.JCheckBox shiftKeyCheckBox;

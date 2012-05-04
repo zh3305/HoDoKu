@@ -336,6 +336,7 @@
                           <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Component id="alternativeMouseModeCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="onlySmallFiltersCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="26" max="32767" attributes="0"/>
               </Group>
@@ -363,7 +364,9 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="alternativeMouseModeCheckBox" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="40" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="onlySmallFiltersCheckBox" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="17" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -455,9 +458,16 @@
               <ResourceString bundle="intl/ConfigGeneralPanel.properties" key="ConfigGeneralPanel.alternativeMouseModeCheckBox.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="alternativeMouseModeCheckBoxActionPerformed"/>
-          </Events>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="onlySmallFiltersCheckBox">
+          <Properties>
+            <Property name="mnemonic" type="int" editor="org.netbeans.modules.i18n.form.FormI18nMnemonicEditor">
+              <ResourceString bundle="intl/ConfigGeneralPanel.properties" key="ConfigGeneralPanel.onlySmallFiltersCheckBox.mnemonic" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+            </Property>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="intl/ConfigGeneralPanel.properties" key="ConfigGeneralPanel.onlySmallFiltersCheckBox.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+            </Property>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>

@@ -293,6 +293,8 @@ public final class Options {
     public static final boolean DELETE_CURSOR_DISPLAY = false; // let the cursor disappear after a while
     public static final int DELETE_CURSOR_DISPLAY_LENGTH = 1000; // time in ms
     public static final boolean USE_OR_INSTEAD_OF_AND_FOR_FILTER = false; // used when filtering more than one candidate
+    /** Draw filters an the candidates themselves, not on the whole cell */
+    public static final boolean ONLY_SMALL_FILTERS = false;
     public static final boolean USE_DEFAULT_FONT_SIZE = true; // default siz for all fonts in the GUI
     public static final int CUSTOM_FONT_SIZE = 12;            // custom size for all fonts in the GUI
     public static final int DRAW_MODE = 1;
@@ -325,6 +327,7 @@ public final class Options {
     private boolean useDefaultFontSize = USE_DEFAULT_FONT_SIZE;
     private int customFontSize = CUSTOM_FONT_SIZE;
     private boolean useOrInsteadOfAndForFilter = USE_OR_INSTEAD_OF_AND_FOR_FILTER;
+    private boolean onlySmallFilters = ONLY_SMALL_FILTERS;
     private int drawMode = DRAW_MODE;
     private int initialHeight = INITIAL_HEIGHT;
     private int initialWidth = INITIAL_WIDTH;
@@ -2125,5 +2128,19 @@ public final class Options {
      */
     public void setShowColorKuAct(boolean showColorKuAct) {
         this.showColorKuAct = showColorKuAct;
+    }
+
+    /**
+     * @return the onlySmallFilters
+     */
+    public boolean isOnlySmallFilters() {
+        return onlySmallFilters;
+    }
+
+    /**
+     * @param onlySmallFilters the onlySmallFilters to set
+     */
+    public void setOnlySmallFilters(boolean onlySmallFilters) {
+        this.onlySmallFilters = onlySmallFilters;
     }
 }

@@ -46,6 +46,7 @@ Features added:
   - #3520334: Change UI for saving Sudokus as images
   - #3515747: Deviations, filters and alternate mouse mode
   - #3514371: Shade filter toggle buttons, when no candidates are available
+  - #3514367: Candidate highlight for filters
 
 Bugs fixed:
 
