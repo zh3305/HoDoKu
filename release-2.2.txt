@@ -48,6 +48,7 @@ Features added:
   - #3514371: Shade filter toggle buttons, when no candidates are available
   - #3514367: Candidate highlight for filters
   - #3523432: Make thickness of lines for boxes configurable
+  - #3514351: Reduces puzzle difficulty for "hard" and "unfair"
 
 Bugs fixed:
 
