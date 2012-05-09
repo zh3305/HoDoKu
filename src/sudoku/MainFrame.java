@@ -2510,7 +2510,12 @@ private void showHintPanelMenuItemActionPerformed(java.awt.event.ActionEvent evt
     Options.getInstance().setShowHintPanel(showHintPanelMenuItem.isSelected());
     hintPanel.setVisible(showHintPanelMenuItem.isSelected());
     if (Options.getInstance().isShowHintPanel()) {
-        outerSplitPane.setDividerLocation(Options.getInstance().getInitialHorzDividerLoc());
+        int horzDivLoc = Options.getInstance().getInitialHorzDividerLoc();
+        if (horzDivLoc > getHeight() - 204) {
+            horzDivLoc = getHeight() - 204;
+            Options.getInstance().setInitialHorzDividerLoc(horzDivLoc);
+        }
+        outerSplitPane.setDividerLocation(horzDivLoc);
     }
 }//GEN-LAST:event_showHintPanelMenuItemActionPerformed
 
@@ -2860,6 +2865,8 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
         }
         if (horzDivLoc > height - 204) {
             horzDivLoc = height - 204;
+            // can be used during program run, so has to be saved here
+            Options.getInstance().setInitialHorzDividerLoc(horzDivLoc);
         }
         if (screenSize.width - 20 < width) {
             width = screenSize.width - 20;
