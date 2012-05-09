@@ -1340,7 +1340,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                     // Zelle setzen
                     if (selectedCells.isEmpty()) {
                         setCell(aktLine, aktCol, number);
-                        if (mainFrame.isEingabeModus()) {
+                        if (mainFrame.isEingabeModus() && Options.getInstance().isEditModeAutoAdvance()) {
                             // automatically advance to the next cell
                             if (aktCol < 8) {
                                 setAktRowCol(aktLine, aktCol + 1);
@@ -1376,7 +1376,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                         sudoku.setCell(aktLine, aktCol, 0);
                         changed = true;
                     }
-                    if (mainFrame.isEingabeModus()) {
+                    if (mainFrame.isEingabeModus() &&Options.getInstance().isEditModeAutoAdvance()) {
                         // automatically advance to the next cell
                         if (aktCol < 8) {
                             setAktRowCol(aktLine, aktCol + 1);

@@ -312,6 +312,7 @@ public final class Options {
     public static final boolean INITIAL_SHOW_TOOLBAR = true;
     public static final int ACT_LEVEL = DEFAULT_DIFFICULTY_LEVELS[1].getOrdinal(); // Standard is EASY
     public static final boolean SHOW_SUDOKU_SOLVED = false;
+    public static final boolean EDIT_MODE_AUTO_ADVANCE = false;
     private boolean showCandidates = SHOW_CANDIDATES;
     private boolean showWrongValues = SHOW_WRONG_VALUES;
     private boolean showDeviations = SHOW_DEVIATIONS;
@@ -340,6 +341,7 @@ public final class Options {
     private boolean showToolBar = INITIAL_SHOW_TOOLBAR;
     private int actLevel = ACT_LEVEL;
     private boolean showSudokuSolved = SHOW_SUDOKU_SOLVED;
+    private boolean editModeAutoAdvance = EDIT_MODE_AUTO_ADVANCE;
     // Clipboard
     public static final boolean USE_ZERO_INSTEAD_OF_DOT = false; // as the name says...
     private boolean useZeroInsteadOfDot = USE_ZERO_INSTEAD_OF_DOT;
@@ -447,7 +449,7 @@ public final class Options {
     public static final String DEFAULT_LAF = "";
     private String laf = DEFAULT_LAF;
     // paint cursor only as small frame around cell
-    public static final boolean ONLY_SMALL_CURSORS = false;
+    public static final boolean ONLY_SMALL_CURSORS = true;
     public static final double CURSOR_FRAME_SIZE = 0.08;
     private boolean onlySmallCursors = ONLY_SMALL_CURSORS;
     private double cursorFrameSize = CURSOR_FRAME_SIZE;
@@ -2142,5 +2144,19 @@ public final class Options {
      */
     public void setOnlySmallFilters(boolean onlySmallFilters) {
         this.onlySmallFilters = onlySmallFilters;
+    }
+
+    /**
+     * @return the editModeAutoAdvance
+     */
+    public boolean isEditModeAutoAdvance() {
+        return editModeAutoAdvance;
+    }
+
+    /**
+     * @param editModeAutoAdvance the editModeAutoAdvance to set
+     */
+    public void setEditModeAutoAdvance(boolean editModeAutoAdvance) {
+        this.editModeAutoAdvance = editModeAutoAdvance;
     }
 }
