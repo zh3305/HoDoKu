@@ -2043,11 +2043,18 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
             if (!candidateFont.getName().equals(tmpFont.getName())
                     || candidateFont.getStyle() != tmpFont.getStyle()
                     || candidateFont.getSize() != ((int) (cellSize * Options.getInstance().getCandidateFontFactor()))) {
+                int oldCandidateHeight = candidateHeight;
                 candidateFont = new Font(tmpFont.getName(), tmpFont.getStyle(),
                         (int) (cellSize * Options.getInstance().getCandidateFontFactor()));
+                FontMetrics cm = getFontMetrics(candidateFont);
+                candidateHeight = (int) ((cm.getAscent() - cm.getDescent()) * 1.3);
+                if (candidateHeight != oldCandidateHeight) {
+                    resetColorKuImages();
+                }
             }
         }
         if (oldWidth != width) {
+            int oldCandidateHeight = candidateHeight;
             oldWidth = width;
             valueFont = new Font(Options.getInstance().getDefaultValueFont().getName(),
                     Options.getInstance().getDefaultValueFont().getStyle(),
@@ -2057,6 +2064,9 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                     (int) (cellSize * Options.getInstance().getCandidateFontFactor()));
             FontMetrics cm = getFontMetrics(candidateFont);
             candidateHeight = (int)((cm.getAscent() - cm.getDescent()) * 1.3);
+            if (candidateHeight != oldCandidateHeight) {
+                resetColorKuImages();
+            }
         }
 
         // draw the cells
@@ -2192,6 +2202,21 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                             candColor = Options.getInstance().getCandidateColor();
                             double shiftX = ((i - 1) % 3) * third;
                             double shiftY = ((i - 1) / 3) * third;
+                            if (Options.getInstance().isShowColorKuAct()) {
+                                // Colorku has to be drawm here, or filters, coloring, hints wont be visible
+//                                int ccx = (int) Math.round(startX + shiftX + third / 2.0 - ddy / 2.0);
+//                                int ccy = (int) Math.round(startY + shiftY + third / 2.0 - ddy / 2.0);
+//                                int ccs = (int) Math.round(ddy);
+//                                drawColorBox(i, g2, ccx, ccy, ccs, false);
+                                int ccx = (int) Math.round(startX + shiftX + third / 2.0 - candidateHeight / 2.0);
+                                int ccy = (int) Math.round(startY + shiftY + third / 2.0 - candidateHeight / 2.0);
+                                drawColorBox(i, g2, ccx, ccy, candidateHeight, false);
+//                                drawColorBox(i, g2, (int) (startX + shiftX + 1), (int) (startY + shiftY + 1), (int) ddy - 1);
+                                if (offColor != null) {
+                                    setColor(g2, allBlack, offColor);
+                                    g2.drawString("x", (int) Math.round(startX + dcx + shiftX), (int) Math.round(startY + dcy + shiftY));
+                                }
+                            }
                             if (step != null) {
                                 int index = Sudoku2.getIndex(line, col);
                                 if (step.getIndices().indexOf(index) >= 0 && step.getValues().indexOf(i) >= 0) {
@@ -2318,19 +2343,19 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
 //                            setColor(g2, allBlack, oldColor);
                             if (!Options.getInstance().isShowColorKuAct()) {
                                 g2.drawString(Integer.toString(i), (int) Math.round(startX + dcx + shiftX), (int) Math.round(startY + dcy + shiftY));
-                            } else {
-//                                int ccx = (int) Math.round(startX + shiftX + third / 2.0 - ddy / 2.0);
-//                                int ccy = (int) Math.round(startY + shiftY + third / 2.0 - ddy / 2.0);
-//                                int ccs = (int) Math.round(ddy);
-//                                drawColorBox(i, g2, ccx, ccy, ccs, false);
-                                int ccx = (int) Math.round(startX + shiftX + third / 2.0 - candidateHeight / 2.0);
-                                int ccy = (int) Math.round(startY + shiftY + third / 2.0 - candidateHeight / 2.0);
-                                drawColorBox(i, g2, ccx, ccy, candidateHeight, false);
-//                                drawColorBox(i, g2, (int) (startX + shiftX + 1), (int) (startY + shiftY + 1), (int) ddy - 1);
-                                if (offColor != null) {
-                                    setColor(g2, allBlack, offColor);
-                                    g2.drawString("x", (int) Math.round(startX + dcx + shiftX), (int) Math.round(startY + dcy + shiftY));
-                                }
+//                            } else {
+////                                int ccx = (int) Math.round(startX + shiftX + third / 2.0 - ddy / 2.0);
+////                                int ccy = (int) Math.round(startY + shiftY + third / 2.0 - ddy / 2.0);
+////                                int ccs = (int) Math.round(ddy);
+////                                drawColorBox(i, g2, ccx, ccy, ccs, false);
+//                                int ccx = (int) Math.round(startX + shiftX + third / 2.0 - candidateHeight / 2.0);
+//                                int ccy = (int) Math.round(startY + shiftY + third / 2.0 - candidateHeight / 2.0);
+//                                drawColorBox(i, g2, ccx, ccy, candidateHeight, false);
+////                                drawColorBox(i, g2, (int) (startX + shiftX + 1), (int) (startY + shiftY + 1), (int) ddy - 1);
+//                                if (offColor != null) {
+//                                    setColor(g2, allBlack, offColor);
+//                                    g2.drawString("x", (int) Math.round(startX + dcx + shiftX), (int) Math.round(startY + dcy + shiftY));
+//                                }
                             }
 
                         }
