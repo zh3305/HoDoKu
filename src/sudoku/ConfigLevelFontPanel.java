@@ -51,6 +51,7 @@ public class ConfigLevelFontPanel extends javax.swing.JPanel {
     private double valueFactor;
     private double candidateFactor;
     private double hintFactor;
+    private double boxFactor;
 
     /**
      * Creates new form ConfigGeneralPanel
@@ -142,6 +143,8 @@ public class ConfigLevelFontPanel extends javax.swing.JPanel {
         valueFactorTextField = new javax.swing.JTextField();
         candidateFactorTextField = new javax.swing.JTextField();
         hintFactorTextField = new javax.swing.JTextField();
+        boxFactorLabel = new javax.swing.JLabel();
+        boxFactorTextField = new javax.swing.JTextField();
         resetButton = new javax.swing.JButton();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("intl/ConfigLevelFontPanel"); // NOI18N
@@ -443,23 +446,16 @@ public class ConfigLevelFontPanel extends javax.swing.JPanel {
         hintFactorLabel.setLabelFor(hintFactorTextField);
         hintFactorLabel.setText(bundle.getString("ConfigLevelFontPanel.hintFactorLabel.text_1")); // NOI18N
 
+        boxFactorLabel.setDisplayedMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigLevelFontPanel").getString("ConfigLevelFontPanel.boxFactorLabel.mnemonic").charAt(0));
+        boxFactorLabel.setLabelFor(boxFactorTextField);
+        boxFactorLabel.setText(bundle.getString("ConfigLevelFontPanel.boxFactorLabel.text")); // NOI18N
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(valueFactorLabel)
-                            .addComponent(candidatesFactorLabel)
-                            .addComponent(hintFactorLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(hintFactorTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(candidateFactorTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(valueFactorTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -478,11 +474,24 @@ public class ConfigLevelFontPanel extends javax.swing.JPanel {
                             .addComponent(valuesButton)
                             .addComponent(candidatesButton)
                             .addComponent(printLargeButton)
-                            .addComponent(printSmallButton))))
+                            .addComponent(printSmallButton)))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(valueFactorLabel)
+                            .addComponent(candidatesFactorLabel)
+                            .addComponent(hintFactorLabel)
+                            .addComponent(boxFactorLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(boxFactorTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(hintFactorTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(candidateFactorTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(valueFactorTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(33, Short.MAX_VALUE))
         );
 
-        jPanel3Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {candidateFactorTextField, hintFactorTextField, valueFactorTextField});
+        jPanel3Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {boxFactorTextField, candidateFactorTextField, hintFactorTextField, valueFactorTextField});
 
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -518,6 +527,10 @@ public class ConfigLevelFontPanel extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(hintFactorLabel)
                     .addComponent(hintFactorTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(boxFactorLabel)
+                    .addComponent(boxFactorTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -541,7 +554,7 @@ public class ConfigLevelFontPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 342, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 343, Short.MAX_VALUE)
                         .addComponent(resetButton)))
                 .addContainerGap())
         );
@@ -673,6 +686,11 @@ public class ConfigLevelFontPanel extends javax.swing.JPanel {
         } catch (NumberFormatException ex) {
             Options.getInstance().setHintBackFactor(Options.HINT_BACK_FACTOR);
         }
+        try {
+            Options.getInstance().setBoxLineFactor(Double.parseDouble(boxFactorTextField.getText()));
+        } catch (NumberFormatException ex) {
+            Options.getInstance().setBoxLineFactor(Options.BOX_LINE_FACTOR);
+        }
     }
     
     private void initAll(boolean setDefault) {
@@ -687,6 +705,7 @@ public class ConfigLevelFontPanel extends javax.swing.JPanel {
             valueFactor = Options.VALUE_FONT_FACTOR;
             candidateFactor = Options.CANDIDATE_FONT_FACTOR;
             hintFactor = Options.HINT_BACK_FACTOR;
+            boxFactor = Options.BOX_LINE_FACTOR;
         } else {
             levels = Options.getInstance().copyDifficultyLevels(Options.getInstance().getDifficultyLevels());
             
@@ -698,6 +717,7 @@ public class ConfigLevelFontPanel extends javax.swing.JPanel {
             valueFactor = Options.getInstance().getValueFontFactor();
             candidateFactor = Options.getInstance().getCandidateFontFactor();
             hintFactor = Options.getInstance().getHintBackFactor();
+            boxFactor = Options.getInstance().getBoxLineFactor();
         }
         
         initButtons();
@@ -721,6 +741,7 @@ public class ConfigLevelFontPanel extends javax.swing.JPanel {
         valueFactorTextField.setText(Double.toString(valueFactor));
         candidateFactorTextField.setText(Double.toString(candidateFactor));
         hintFactorTextField.setText(Double.toString(hintFactor));
+        boxFactorTextField.setText(Double.toString(boxFactor));
     }
     
     private void chooseFont(int index) {
@@ -776,6 +797,8 @@ public class ConfigLevelFontPanel extends javax.swing.JPanel {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel boxFactorLabel;
+    private javax.swing.JTextField boxFactorTextField;
     private javax.swing.JTextField candidateFactorTextField;
     private javax.swing.JButton candidatesButton;
     private javax.swing.JLabel candidatesFactorLabel;

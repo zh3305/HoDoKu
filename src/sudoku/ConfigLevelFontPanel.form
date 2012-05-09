@@ -26,7 +26,7 @@
                       <Component id="jPanel3" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace pref="342" max="32767" attributes="1"/>
+                      <EmptySpace pref="343" max="32767" attributes="1"/>
                       <Component id="resetButton" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -179,7 +179,7 @@
                       </Group>
                       <Component id="incompleteBGButton" linkSize="2" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="49" max="32767" attributes="0"/>
+                  <EmptySpace pref="75" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -481,20 +481,6 @@
               <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="valueFactorLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="candidatesFactorLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="hintFactorLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="hintFactorTextField" linkSize="5" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="candidateFactorTextField" linkSize="5" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="valueFactorTextField" linkSize="5" alignment="0" min="-2" pref="60" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <Group type="102" attributes="0">
                           <EmptySpace min="10" pref="10" max="10" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="valuesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -515,6 +501,22 @@
                               <Component id="candidatesButton" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="printLargeButton" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="printSmallButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="valueFactorLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="candidatesFactorLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="hintFactorLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="boxFactorLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="boxFactorTextField" linkSize="5" alignment="0" min="-2" pref="21" max="-2" attributes="0"/>
+                              <Component id="hintFactorTextField" linkSize="5" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="candidateFactorTextField" linkSize="5" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="valueFactorTextField" linkSize="5" alignment="0" min="-2" pref="60" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -562,6 +564,11 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="hintFactorLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="hintFactorTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="boxFactorLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="boxFactorTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -693,6 +700,21 @@
         <Component class="javax.swing.JTextField" name="candidateFactorTextField">
         </Component>
         <Component class="javax.swing.JTextField" name="hintFactorTextField">
+        </Component>
+        <Component class="javax.swing.JLabel" name="boxFactorLabel">
+          <Properties>
+            <Property name="displayedMnemonic" type="int" editor="org.netbeans.modules.i18n.form.FormI18nMnemonicEditor">
+              <ResourceString bundle="intl/ConfigLevelFontPanel.properties" key="ConfigLevelFontPanel.boxFactorLabel.mnemonic" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+            </Property>
+            <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="boxFactorTextField"/>
+            </Property>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="intl/ConfigLevelFontPanel.properties" key="ConfigLevelFontPanel.boxFactorLabel.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="boxFactorTextField">
         </Component>
       </SubComponents>
     </Container>

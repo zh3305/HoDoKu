@@ -401,6 +401,8 @@ public final class Options {
     public static final double VALUE_FONT_FACTOR = 0.6;      // Zellengröße * valueFontFactor gibt Schriftgröße für Zellenwerte
     public static final double CANDIDATE_FONT_FACTOR = 0.25; // Zellengröße * candidateFontFactor gibt Schriftgröße für Kandidaten
     public static final double HINT_BACK_FACTOR = 1.6;       // um wie viel der Kreis beim Hint größer ist als die Zahl
+    /** How much should the lines around the boxes be thicker than normal lines */
+    public static final double BOX_LINE_FACTOR = 1.5;
     public static Font DEFAULT_VALUE_FONT = new Font("Tahoma", Font.PLAIN, 10);     // Standard für Zellenwerte (Größe wird ignoriert)
     public static Font DEFAULT_CANDIDATE_FONT = new Font("Tahoma", Font.PLAIN, 10); // Standard für Kandidaten (Größe wird ignoriert)
     public static Font BIG_FONT = new Font("Arial", Font.BOLD, 16);    // Font für Ausdruck Überschrift
@@ -436,6 +438,7 @@ public final class Options {
     private double valueFontFactor = VALUE_FONT_FACTOR;
     private double candidateFontFactor = CANDIDATE_FONT_FACTOR;
     private double hintBackFactor = HINT_BACK_FACTOR;
+    private double boxLineFactor = BOX_LINE_FACTOR;
     private Font defaultValueFont = new Font(DEFAULT_VALUE_FONT.getName(), DEFAULT_VALUE_FONT.getStyle(), DEFAULT_VALUE_FONT.getSize());
     private Font defaultCandidateFont = new Font(DEFAULT_CANDIDATE_FONT.getName(), DEFAULT_CANDIDATE_FONT.getStyle(), DEFAULT_CANDIDATE_FONT.getSize());
     private Font bigFont = new Font(BIG_FONT.getName(), BIG_FONT.getStyle(), BIG_FONT.getSize());
@@ -2158,5 +2161,19 @@ public final class Options {
      */
     public void setEditModeAutoAdvance(boolean editModeAutoAdvance) {
         this.editModeAutoAdvance = editModeAutoAdvance;
+    }
+
+    /**
+     * @return the boxLineFactor
+     */
+    public double getBoxLineFactor() {
+        return boxLineFactor;
+    }
+
+    /**
+     * @param boxLineFactor the boxLineFactor to set
+     */
+    public void setBoxLineFactor(double boxLineFactor) {
+        this.boxLineFactor = boxLineFactor;
     }
 }

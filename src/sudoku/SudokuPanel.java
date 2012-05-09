@@ -2001,9 +2001,12 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
         if (width > 1000) {
             strokeWidth *= 1.5f;
         }
-        int strokeWidthInt = Math.round(strokeWidth / 2);
-        delta = DELTA;
-        deltaRand = DELTA_RAND;
+        float boxStrokeWidth = (float)(strokeWidth * Options.getInstance().getBoxLineFactor());
+        int strokeWidthInt = Math.round(boxStrokeWidth / 2);
+//        delta = (int)(DELTA * scale);
+//        deltaRand = (int)(DELTA_RAND * scale);
+        delta = totalWidth / 100;
+        deltaRand = totalWidth / 100;
         if (deltaRand < strokeWidthInt) {
             deltaRand = strokeWidthInt;
         }
@@ -2367,12 +2370,28 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
         // Rahmen zeichnen: muss am Schluss sein, wegen der Hintergrï¿½nde
         switch (Options.getInstance().getDrawMode()) {
             case 0:
-                g2.setStroke(new BasicStroke((float) (2 * scale)));
-                setColor(g2, allBlack, Options.getInstance().getGridColor());
-                g2.drawRect(startSX, startSY, width, height);
+//                g2.setStroke(new BasicStroke((float) (2 * scale)));
+//                setColor(g2, allBlack, Options.getInstance().getGridColor());
+//                g2.drawRect(startSX, startSY, width, height);
+                if (allBlack) {
+                    g2.setStroke(new BasicStroke(strokeWidth / 2));
+                } else {
+                    g2.setStroke(new BasicStroke(strokeWidth));
+                }
+                setColor(g2, allBlack, Options.getInstance().getInnerGridColor());
                 drawBlockLine(delta + startSX, 1 * delta + startSY, true);
                 drawBlockLine(delta + startSX, 2 * delta + startSY + 3 * cellSize, true);
                 drawBlockLine(delta + startSX, 3 * delta + startSY + 6 * cellSize, true);
+                setColor(g2, allBlack, Options.getInstance().getGridColor());
+                g2.setStroke(new BasicStroke(boxStrokeWidth));
+                g2.drawRect(startSX, startSY, width, height);
+                for (int i = 0; i < 3; i++) {
+                    g2.drawRect((i + 1) * delta + startSX + i * 3 * cellSize, 1 * delta + startSY, 3 * cellSize, 3 * cellSize);
+                    g2.drawRect((i + 1) * delta + startSX + i * 3 * cellSize, 2 * delta + startSY + 3 * cellSize, 3 * cellSize, 3 * cellSize);
+                    g2.drawRect((i + 1) * delta + startSX + i * 3 * cellSize, 3 * delta + startSY + 6 * cellSize, 3 * cellSize, 3 * cellSize);
+//                    g2.drawLine(startSX, startSY + i * 3 * cellSize, startSX + 9 * cellSize, startSY + i * 3 * cellSize);
+//                    g2.drawLine(startSX + i * 3 * cellSize, startSY, startSX + i * 3 * cellSize, startSY + 9 * cellSize);
+                }
                 break;
             case 1:
                 if (allBlack) {
@@ -2385,9 +2404,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                 drawBlockLine(delta + startSX, 2 * delta + startSY + 3 * cellSize, false);
                 drawBlockLine(delta + startSX, 3 * delta + startSY + 6 * cellSize, false);
                 setColor(g2, allBlack, Options.getInstance().getGridColor());
-                if (allBlack) {
-                    g2.setStroke(new BasicStroke(strokeWidth));
-                }
+                g2.setStroke(new BasicStroke(boxStrokeWidth));
                 g2.drawRect(startSX, startSY, width, height);
                 for (int i = 0; i < 3; i++) {
                     g2.drawLine(startSX, startSY + i * 3 * cellSize, startSX + 9 * cellSize, startSY + i * 3 * cellSize);

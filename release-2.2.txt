@@ -47,6 +47,7 @@ Features added:
   - #3515747: Deviations, filters and alternate mouse mode
   - #3514371: Shade filter toggle buttons, when no candidates are available
   - #3514367: Candidate highlight for filters
+  - #3523432: Make thickness of lines for boxes configurable
 
 Bugs fixed:
 
