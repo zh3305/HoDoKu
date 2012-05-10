@@ -5,6 +5,7 @@
 package sudoku;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
@@ -65,6 +66,8 @@ public class ColorKuImage extends BufferedImage {
         if (sizeR > IMG_MAX) {
             sizeR = IMG_MAX;
         }
+        // TODO
+        System.out.println("create colorku icon " + sizeR);
         // pattern already loaded?
         if (lastOverlay == null || (lastOverlay != null && lastOverlay.getWidth() != sizeR)) {
             // not loaded -> do it
@@ -77,6 +80,14 @@ public class ColorKuImage extends BufferedImage {
             }
         }
 
+        //TODO
+        if (sizeR == 54 || sizeR == 78) {
+            Graphics2D g2 = createGraphics();
+            g2.setColor(color);
+            g2.fillOval(0, 0, sizeR, sizeR);
+            g2.drawImage(lastOverlay, 0, 0, null);
+            return;
+        }
         // create overlay image in the right size
         WritableRaster src = lastOverlay.getRaster();
         int[] srcPixel = new int[4];
