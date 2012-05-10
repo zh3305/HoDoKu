@@ -36,6 +36,8 @@ public class ColorKuImage extends BufferedImage {
     private static final int IMG_MAX = 98;
     /** Increment for overlay sizes in pixel */
     private static final int IMG_FACTOR = 4;
+    /** The overlay source */
+    private static BufferedImage sourceOverlay = null;
     /** The latest overlay loaded, for caching */
     private static BufferedImage lastOverlay = null;
     /** The color of the image */
@@ -66,23 +68,26 @@ public class ColorKuImage extends BufferedImage {
         if (sizeR > IMG_MAX) {
             sizeR = IMG_MAX;
         }
-        // pattern already loaded?
-        if (lastOverlay == null) {
+        if (sourceOverlay == null) {
             // not loaded -> do it
             try {
-                lastOverlay = ImageIO.read(getClass().getResource("/overlay/ov078.png"));
+                sourceOverlay = ImageIO.read(getClass().getResource("/img/ov078.png"));
             } catch (IOException ex) {
                 Logger.getLogger(ColorKuImage.class.getName()).log(Level.SEVERE, null, ex);
                 return;
             }
         }
 
+        // pattern already created?
+        if (lastOverlay == null || (lastOverlay != null && lastOverlay.getWidth() != sizeR)) {
+            // not created -> do it
+            lastOverlay = getScaledInstance(sourceOverlay, sizeR);
+        }
+
         Graphics2D g2 = createGraphics();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setColor(color);
         g2.fillOval(0, 0, sizeR, sizeR);
-        double scale = sizeR / 78.0;
-        g2.scale(scale, scale);
         g2.drawImage(lastOverlay, 0, 0, null);
 
         ticks = System.nanoTime() - ticks;
@@ -175,71 +180,45 @@ public class ColorKuImage extends BufferedImage {
 //    }
     /**
      * Convenience method that returns a scaled instance of the
-     * provided {@code BufferedImage}.
+     * provided {@code BufferedImage}.<br><br>
+     * 
+     * This method will use a multi-step
+     * scaling technique that provides higher quality than the usual
+     * one-step technique (only useful in downscaling cases, where
+     * {@code targetSize} is
+     * smaller than the original dimensions, and generally only when
+     * the {@code BILINEAR} hint is specified)
      *
      * @param img the original image to be scaled
-     * @param targetWidth the desired width of the scaled instance,
+     * @param targetSize the desired size of the scaled instance,
      *    in pixels
-     * @param targetHeight the desired height of the scaled instance,
-     *    in pixels
-     * @param hint one of the rendering hints that corresponds to
-     *    {@code RenderingHints.KEY_INTERPOLATION} (e.g.
-     *    {@code RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR},
-     *    {@code RenderingHints.VALUE_INTERPOLATION_BILINEAR},
-     *    {@code RenderingHints.VALUE_INTERPOLATION_BICUBIC})
-     * @param higherQuality if true, this method will use a multi-step
-     *    scaling technique that provides higher quality than the usual
-     *    one-step technique (only useful in downscaling cases, where
-     *    {@code targetWidth} or {@code targetHeight} is
-     *    smaller than the original dimensions, and generally only when
-     *    the {@code BILINEAR} hint is specified)
+     * @param higherQuality if true, 
      * @return a scaled version of the original {@code BufferedImage}
      */
-    public BufferedImage getScaledInstance(BufferedImage img,
-            int targetWidth,
-            int targetHeight,
-            Object hint,
-            boolean higherQuality) {
-        int type = (img.getTransparency() == Transparency.OPAQUE)
-                ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB;
+    private BufferedImage getScaledInstance(BufferedImage img,
+            int targetSize) {
         BufferedImage ret = (BufferedImage) img;
-        int w, h;
-        if (higherQuality) {
-            // Use multi-step technique: start with original size, then
-            // scale down in multiple passes with drawImage()
-            // until the target size is reached
-            w = img.getWidth();
-            h = img.getHeight();
-        } else {
-            // Use one-step technique: scale directly from original
-            // size to target size with a single drawImage() call
-            w = targetWidth;
-            h = targetHeight;
-        }
+        // Use multi-step technique: start with original size, then
+        // scale down in multiple passes with drawImage()
+        // until the target size is reached
+        int size = img.getWidth();
 
         do {
-            if (higherQuality && w > targetWidth) {
-                w /= 2;
-                if (w < targetWidth) {
-                    w = targetWidth;
+            if (size > targetSize) {
+                size /= 2;
+                if (size < targetSize) {
+                    size = targetSize;
                 }
             }
 
-            if (higherQuality && h > targetHeight) {
-                h /= 2;
-                if (h < targetHeight) {
-                    h = targetHeight;
-                }
-            }
-
-            BufferedImage tmp = new BufferedImage(w, h, type);
+            BufferedImage tmp = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
             Graphics2D g2 = tmp.createGraphics();
-            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, hint);
-            g2.drawImage(ret, 0, 0, w, h, null);
+            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+            g2.drawImage(ret, 0, 0, size, size, null);
             g2.dispose();
 
             ret = tmp;
-        } while (w != targetWidth || h != targetHeight);
+        } while (size != targetSize);
 
         return ret;
     }
