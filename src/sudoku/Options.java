@@ -812,6 +812,22 @@ public final class Options {
         // the same for solverStepsProgress
         instance.solverSteps = instance.copyStepConfigs(instance.orgSolverSteps, false, false, false);
         instance.solverStepsProgress = instance.copyStepConfigs(instance.orgSolverSteps, false, false, false, true);
+        
+        // reduction of standard scores in v 2.2 could lead to strange effects, if a user had
+        // changed the level scores manually (max scores could get out of order)
+        // we cant have this
+        boolean changed = false;
+        int maxScore = instance.difficultyLevels[1].getMaxScore();
+        for (int i = 2; i < instance.difficultyLevels.length; i++) {
+            if (instance.difficultyLevels[i].getMaxScore() <= maxScore) {
+                instance.difficultyLevels[i].setMaxScore(maxScore + 100);
+                changed = true;
+            }
+            maxScore = instance.difficultyLevels[i].getMaxScore();
+        }
+        if (changed) {
+            BackgroundGeneratorThread.getInstance().resetAll();
+        }
     }
 
     @SuppressWarnings("CallToThreadDumpStack")

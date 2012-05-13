@@ -61,13 +61,14 @@ public class ColorKuImage extends BufferedImage {
     private void createImage() {
         // get the overlay that fits best
         long ticks = System.nanoTime();
-        int sizeR = ((getWidth() - IMG_MIN) / IMG_FACTOR) * IMG_FACTOR + IMG_MIN;
-        if (sizeR < IMG_MIN) {
-            sizeR = IMG_MIN;
-        }
-        if (sizeR > IMG_MAX) {
-            sizeR = IMG_MAX;
-        }
+        int sizeR = getWidth();
+//        int sizeR = ((getWidth() - IMG_MIN) / IMG_FACTOR) * IMG_FACTOR + IMG_MIN;
+//        if (sizeR < IMG_MIN) {
+//            sizeR = IMG_MIN;
+//        }
+//        if (sizeR > IMG_MAX) {
+//            sizeR = IMG_MAX;
+//        }
         if (sourceOverlay == null) {
             // not loaded -> do it
             try {
