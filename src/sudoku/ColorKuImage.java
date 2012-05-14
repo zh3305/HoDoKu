@@ -7,7 +7,6 @@ package sudoku;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -88,11 +87,13 @@ public class ColorKuImage extends BufferedImage {
         Graphics2D g2 = createGraphics();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setColor(color);
-        g2.fillOval(0, 0, sizeR, sizeR);
+        int delta = sizeR / 28;
+        g2.fillOval(delta, 0, sizeR - delta, sizeR - delta);
+//        g2.fillOval(0, 0, sizeR, sizeR);
         g2.drawImage(lastOverlay, 0, 0, null);
 
         ticks = System.nanoTime() - ticks;
-//        System.out.println("createImage(): " + (ticks / 1000000) + "ms");
+//        System.out.println("ColorKu.createImage(): " + (ticks / 1000000) + "ms");
     }
 
 //    /**
@@ -114,8 +115,6 @@ public class ColorKuImage extends BufferedImage {
 //        if (sizeR > IMG_MAX) {
 //            sizeR = IMG_MAX;
 //        }
-//        // TODO
-//        System.out.println("create colorku icon " + sizeR);
 //        // pattern already loaded?
 //        if (lastOverlay == null || (lastOverlay != null && lastOverlay.getWidth() != sizeR)) {
 //            // not loaded -> do it
@@ -128,7 +127,6 @@ public class ColorKuImage extends BufferedImage {
 //            }
 //        }
 //
-//        //TODO
 //        if (sizeR == 54 || sizeR == 78) {
 //            Graphics2D g2 = createGraphics();
 //            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -198,7 +196,7 @@ public class ColorKuImage extends BufferedImage {
      */
     private BufferedImage getScaledInstance(BufferedImage img,
             int targetSize) {
-        BufferedImage ret = (BufferedImage) img;
+        BufferedImage ret = img;
         // Use multi-step technique: start with original size, then
         // scale down in multiple passes with drawImage()
         // until the target size is reached
@@ -210,6 +208,8 @@ public class ColorKuImage extends BufferedImage {
                 if (size < targetSize) {
                     size = targetSize;
                 }
+            } else {
+                size = targetSize;
             }
 
             BufferedImage tmp = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);

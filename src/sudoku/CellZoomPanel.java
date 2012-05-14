@@ -1036,7 +1036,7 @@ public class CellZoomPanel extends javax.swing.JPanel {
             colorPanelHeight = (int) ((width - 2 * X_OFFSET) / 4.5);
         }
         colorPanelGesWidth = colorPanelHeight * 4;
-        colorImageHeight = colorPanelHeight * 2 / 3;
+        int newColorImageHeight = colorPanelHeight * 2 / 3;
 
         // ok, do the layout
 //        titleLabel.setSize(width, titleLabel.getHeight());
@@ -1109,7 +1109,8 @@ public class CellZoomPanel extends javax.swing.JPanel {
         }
         // ColorKu icons should be the same size as the candidate numbers
         // icons are only created, if colorKu mode is active
-        if (colorImageHeight > 0 && Options.getInstance().isShowColorKuAct()) {
+        if (newColorImageHeight > 0 && Options.getInstance().isShowColorKuAct() && newColorImageHeight != colorImageHeight) {
+            colorImageHeight = newColorImageHeight;
             for (int i = 0; i < colorKuIcons.length; i++) {
                 colorKuIcons[i] = new ImageIcon(new ColorKuImage(colorImageHeight, Options.getInstance().getColorKuColor(i + 1)));
             }
