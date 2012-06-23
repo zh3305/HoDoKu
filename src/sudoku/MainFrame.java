@@ -211,6 +211,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             Options.readOptions(launchFile);
             BackgroundGeneratorThread.getInstance().resetAll();
         }
+        Options.getInstance().checkAllFonts();
 
         initComponents();
         setTitleWithFile();
@@ -251,16 +252,16 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
 
         Color lafMenuBackColor = UIManager.getColor("textHighlight");
         Color lafMenuColor = UIManager.getColor("textHighlightText");
-        Color lafMenuInactiveColor = UIManager.getColor("textInactiveText");
+//        Color lafMenuInactiveColor = UIManager.getColor("textInactiveText");
         if (lafMenuBackColor == null) {
             lafMenuBackColor = Color.BLUE;
         }
         if (lafMenuColor == null) {
             lafMenuColor = Color.BLACK;
         }
-        if (lafMenuInactiveColor == null) {
-            lafMenuInactiveColor = Color.WHITE;
-        }
+//        if (lafMenuInactiveColor == null) {
+//            lafMenuInactiveColor = Color.WHITE;
+//        }
         statusLinePanel.setBackground(lafMenuBackColor);
         statusLabelLevel.setForeground(lafMenuColor);
         summaryPanel.setTitleLabelColors(lafMenuColor, lafMenuBackColor);
@@ -1936,7 +1937,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
     }//GEN-LAST:event_showDeviationsMenuItemActionPerformed
 
     private void neuesSpielToolButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_neuesSpielToolButtonActionPerformed
-        // neues Spiel in der gewï¿½nschten Schwierigkeitsstufe erzeugen
+        // neues Spiel in der gewünschten Schwierigkeitsstufe erzeugen
         int actLevel = Options.getInstance().getActLevel();
         DifficultyLevel actDiffLevel = Options.getInstance().getDifficultyLevel(actLevel);
         if (Options.getInstance().getGameMode() == GameMode.LEARNING) {

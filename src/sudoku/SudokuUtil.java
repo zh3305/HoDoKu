@@ -38,6 +38,7 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.plaf.FontUIResource;
 
+
 /**
  *
  * @author hobiwan
@@ -278,6 +279,7 @@ public class SudokuUtil {
                     // exists on Nimbus and triggers inheritance
                     Font font = (Font) value;
                     if (font.getSize() != fontSize) {
+//                        //TODO
 //                        System.out.println("Changing fontSize (1) from " + font.getSize() + " to " + fontSize);
                         def.put("defaultFont", new FontUIResource(font.getName(), font.getStyle(), fontSize));
                     }
@@ -298,6 +300,7 @@ public class SudokuUtil {
                     Font font = def.getFont(key);
                     if (font != null) {
                         if (font.getSize() != fontSize) {
+//                            //TODO
 //                            System.out.println("Changing fontSize (2) from " + font.getSize() + " to " + fontSize);
                             def.put(key, new FontUIResource(font.getName(), font.getStyle(), fontSize));
                         }

@@ -512,6 +512,42 @@ public final class Options {
 //    public static final Font DEFAULT_CANDIDATE_FONT = new Font("Tahoma", Font.PLAIN, 10); // Standard für Kandidaten (Größe wird ignoriert)
 //    public static final Font BIG_FONT = new Font("Arial", Font.BOLD, 16);    // Font für Ausdruck Überschrift
 //    public static final Font SMALL_FONT = new Font("Arial", Font.PLAIN, 10); // Font für Ausdruck Rating
+//        // allow for different fonts in different OSes
+//        if (!checkFont(DEFAULT_CANDIDATE_FONT)) {
+//            DEFAULT_CANDIDATE_FONT = new Font(Font.SANS_SERIF, DEFAULT_CANDIDATE_FONT.getStyle(), DEFAULT_CANDIDATE_FONT.getSize());
+//            defaultCandidateFont = new Font(DEFAULT_CANDIDATE_FONT.getName(), DEFAULT_CANDIDATE_FONT.getStyle(), DEFAULT_CANDIDATE_FONT.getSize());
+//        }
+//        if (!checkFont(DEFAULT_VALUE_FONT)) {
+//            DEFAULT_VALUE_FONT = new Font(Font.SANS_SERIF, DEFAULT_VALUE_FONT.getStyle(), DEFAULT_VALUE_FONT.getSize());
+//            defaultValueFont = new Font(DEFAULT_VALUE_FONT.getName(), DEFAULT_VALUE_FONT.getStyle(), DEFAULT_VALUE_FONT.getSize());
+//        }
+//        if (!checkFont(defaultCandidateFont)) {
+//            defaultCandidateFont = new Font(DEFAULT_CANDIDATE_FONT.getName(), DEFAULT_CANDIDATE_FONT.getStyle(), DEFAULT_CANDIDATE_FONT.getSize());
+//        }
+//        if (!checkFont(defaultValueFont)) {
+//            defaultValueFont = new Font(DEFAULT_VALUE_FONT.getName(), DEFAULT_VALUE_FONT.getStyle(), DEFAULT_VALUE_FONT.getSize());
+//        }
+//        if (!checkFont(BIG_FONT)) {
+//            BIG_FONT = new Font(Font.SANS_SERIF, BIG_FONT.getStyle(), BIG_FONT.getSize());
+//            bigFont = new Font(BIG_FONT.getName(), BIG_FONT.getStyle(), BIG_FONT.getSize());
+//        }
+//        if (!checkFont(SMALL_FONT)) {
+//            SMALL_FONT = new Font(Font.SANS_SERIF, SMALL_FONT.getStyle(), SMALL_FONT.getSize());
+//            smallFont = new Font(SMALL_FONT.getName(), SMALL_FONT.getStyle(), SMALL_FONT.getSize());
+//        }
+//        if (!checkFont(bigFont)) {
+//            bigFont = new Font(BIG_FONT.getName(), BIG_FONT.getStyle(), BIG_FONT.getSize());
+//        }
+//        if (!checkFont(smallFont)) {
+//            smallFont = new Font(SMALL_FONT.getName(), SMALL_FONT.getStyle(), SMALL_FONT.getSize());
+//        }
+    }
+
+    /**
+     * Due to a bug in JRE 1.7_05 this method must not be called befor
+     * the first JFrame is created or all fonts will always be bold.
+     */
+    public void checkAllFonts() {
         // allow for different fonts in different OSes
         if (!checkFont(DEFAULT_CANDIDATE_FONT)) {
             DEFAULT_CANDIDATE_FONT = new Font(Font.SANS_SERIF, DEFAULT_CANDIDATE_FONT.getStyle(), DEFAULT_CANDIDATE_FONT.getSize());
