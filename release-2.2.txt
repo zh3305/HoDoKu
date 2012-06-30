@@ -67,6 +67,7 @@ Bugs fixed:
   - #3514464: Changing maximum scores doesnt reset pregen puzzles
   - #3516415: Background generation request cancels generation
   - #3521140: Setting a cell via context menu doesnt enable Undo
+  - #3530975: Setting values in regions is broken
 
 
 Version 2.1.3 (2012-01-19)

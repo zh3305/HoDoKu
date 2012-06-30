@@ -18,6 +18,7 @@
  */
 package sudoku;
 
+
 import generator.BackgroundGeneratorThread;
 import java.awt.Color;
 import java.awt.Dimension;

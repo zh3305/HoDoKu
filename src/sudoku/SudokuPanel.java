@@ -882,6 +882,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                                 clearRegion();
                             }
                             if (Options.getInstance().isAlternativeMouseMode()) {
+                                System.out.println(index + "/" + cand);
                                 // the selected cell(s) must be set to cand
                                 if (sudoku.getValue(index) == 0) {
                                     if (selectedCells.isEmpty()) {
@@ -904,9 +905,21 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                                             changed = true;
                                         }
                                     } else {
-                                        for (int selIndex : selectedCells) {
-                                            if (cand != -1 && sudoku.getValue(selIndex) == 0
-                                                    && sudoku.isCandidate(selIndex, cand, !showCandidates)) {
+                                        if (cand == -1 || ! sudoku.isCandidate(index, cand, !showCandidates)) {
+                                            // an empty space was clicked in the cell -> clear region
+                                            setAktRowCol(line, col);
+                                            clearRegion();
+                                        } else if (cand != -1) {
+                                            // an actual candiate was clicked -> set value in all cells where it is
+                                            // still possible (collect cells first to avoid side effects!)
+                                            List<Integer> cells = new ArrayList<Integer>();
+                                            for (int selIndex : selectedCells) {
+                                                if (sudoku.getValue(selIndex) == 0
+                                                        && sudoku.isCandidate(selIndex, cand, !showCandidates)) {
+                                                    cells.add(selIndex);
+                                                }
+                                            }
+                                            for (int selIndex : cells) {
                                                 setCell(Sudoku2.getLine(selIndex), Sudoku2.getCol(selIndex), cand);
                                             }
                                         }
@@ -1349,7 +1362,16 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                             }
                         }
                     } else {
+                        // set value only in cells where the candidate is still present
+                        // problem: setting the first removes all other candidates in the
+                        // corresponding blocks so we have to collect the applicable cells first
+                        List<Integer> cells = new ArrayList<Integer>();
                         for (int index : selectedCells) {
+                            if (sudoku.getValue(index) == 0 && sudoku.isCandidate(index, number, !showCandidates)) {
+                                cells.add(index);
+                            }
+                        }
+                        for (int index : cells) {
                             setCell(Sudoku2.getLine(index), Sudoku2.getCol(index), number);
                         }
                     }
