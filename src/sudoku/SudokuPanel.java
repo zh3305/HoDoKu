@@ -2237,10 +2237,6 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                                 int ccy = (int) Math.round(startY + shiftY + third / 2.0 - candidateHeight / 2.0);
                                 drawColorBox(i, g2, ccx, ccy, candidateHeight, false);
 //                                drawColorBox(i, g2, (int) (startX + shiftX + 1), (int) (startY + shiftY + 1), (int) ddy - 1);
-                                if (offColor != null) {
-                                    setColor(g2, allBlack, offColor);
-                                    g2.drawString("x", (int) Math.round(startX + dcx + shiftX), (int) Math.round(startY + dcy + shiftY));
-                                }
                             }
                             if (step != null) {
                                 int index = Sudoku2.getIndex(line, col);
@@ -2381,6 +2377,11 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
 //                                    setColor(g2, allBlack, offColor);
 //                                    g2.drawString("x", (int) Math.round(startX + dcx + shiftX), (int) Math.round(startY + dcy + shiftY));
 //                                }
+                            } else {
+                                if (offColor != null) {
+                                    setColor(g2, allBlack, offColor);
+                                    g2.drawString("x", (int) Math.round(startX + dcx + shiftX), (int) Math.round(startY + dcy + shiftY));
+                                }
                             }
 
                         }
