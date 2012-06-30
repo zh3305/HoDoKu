@@ -287,6 +287,7 @@ public final class Options {
     public static final boolean SHOW_DEVIATIONS = true;    // Abweichungen von der richtigen Lösung anzeigen
     public static final boolean SHOW_COLORKU = false;	   // use colors instead of numbers
     public static final boolean INVALID_CELLS = false;     // show possible cells
+    public static final boolean COLOR_CELLS = true;        // color cells or candidates
     public static final boolean SAVE_WINDOW_LAYOUT = true; // save window layout at shutdown
     public static final boolean USE_SHIFT_FOR_REGION_SELECT = true; // use shift for selecting cells or toggeling candidates
     public static final boolean ALTERNATIVE_MOUSE_MODE = false; // use simpler mouse mode (less clicks required)
@@ -320,6 +321,7 @@ public final class Options {
     /** Current state, set by {@link MainFrame}. */
     private boolean showColorKuAct = SHOW_COLORKU;
     private boolean invalidCells = INVALID_CELLS;
+    private boolean colorCells = COLOR_CELLS;
     private boolean saveWindowLayout = SAVE_WINDOW_LAYOUT;
     private boolean useShiftForRegionSelect = USE_SHIFT_FOR_REGION_SELECT;
     private boolean alternativeMouseMode = ALTERNATIVE_MOUSE_MODE;
@@ -1344,6 +1346,20 @@ public final class Options {
      */
     public void setColorKuColors(Color[] colorKuColors) {
         this.colorKuColors = colorKuColors;
+    }
+
+    /**
+     * @return the colorCells
+     */
+    public boolean isColorCells() {
+        return colorCells;
+    }
+
+    /**
+     * @param colorCells the colorCells to set
+     */
+    public void setColorCells(boolean colorCells) {
+        this.colorCells = colorCells;
     }
 
     private static class ProgressComparator implements Comparator<StepConfig> {

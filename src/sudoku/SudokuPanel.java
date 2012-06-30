@@ -167,7 +167,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
     // indicates wether coloring is active (-1 means "not active"
     private int aktColorIndex = -1;
     // coloring is meant for cells or candidates
-    private boolean colorCells = true;
+    private boolean colorCells = Options.getInstance().isColorCells();
     // Cursor for coloring: shows the strong color
     private Cursor colorCursor = null;
     // Cursor for coloring: shows the weak color
@@ -3048,6 +3048,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
         undoStack.clear();
         redoStack.clear();
         coloringMap.clear();
+        resetShowHintCellValues();
         if (init == null || init.length() == 0) {
             sudoku = new Sudoku2();
         } else {
@@ -3392,6 +3393,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
      */
     public void setColorCells(boolean colorCells) {
         this.colorCells = colorCells;
+        Options.getInstance().setColorCells(colorCells);
         updateCellZoomPanel();
     }
 

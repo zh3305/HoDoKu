@@ -49,6 +49,7 @@ Features added:
   - #3514367: Candidate highlight for filters
   - #3523432: Make thickness of lines for boxes configurable
   - #3514351: Reduces puzzle difficulty for "hard" and "unfair"
+  - #3527849: Save state of coloring cells/candidates
 
 Bugs fixed:
 

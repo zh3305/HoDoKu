@@ -2284,7 +2284,7 @@ private void hintPanelPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-
 }//GEN-LAST:event_hintPanelPropertyChange
 
 private void spielEingebenMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spielEingebenMenuItemActionPerformed
-    // bestehendes Sudoku2 kann gelï¿½scht werden, muss aber nicht
+    // bestehendes Sudoku2 kann gelöscht werden, muss aber nicht
     if (sudokuPanel.getSolvedCellsAnz() != 0) {
         int antwort = JOptionPane.showConfirmDialog(this, java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.delete_sudoku"),
                 java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.new_input"),
@@ -2307,6 +2307,7 @@ private void spielEditierenMenuItemActionPerformed(java.awt.event.ActionEvent ev
     resetResultPanels();
     sudokuPanel.setNoClues();
     sudokuPanel.checkProgress();
+    sudokuPanel.resetShowHintCellValues();
     hinweisAbbrechenButtonActionPerformed(null);
     setSpielen(false);
 }//GEN-LAST:event_spielEditierenMenuItemActionPerformed
