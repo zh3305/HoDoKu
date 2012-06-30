@@ -152,6 +152,11 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
         defaultSizeCheckBox.setText(bundle.getString("ConfigGeneralPanel.defaultSizeCheckBox.text")); // NOI18N
         defaultSizeCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         defaultSizeCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        defaultSizeCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                defaultSizeCheckBoxActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -168,22 +173,23 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
                     .addComponent(lookAndFeelComboBox, 0, 120, Short.MAX_VALUE))
                 .addGap(10, 10, 10))
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(defaultSizeCheckBox)
-                .addContainerGap(87, Short.MAX_VALUE))
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(showCandidatesCheckBox)
-                    .addComponent(showWrongValuesCheckBox)
-                    .addComponent(showDeviationsCheckBox)
-                    .addComponent(saveWindowLayoutCheckBox)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(fontSizeLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(fontSizeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(showColorKuCheckBox))
-                .addContainerGap(61, Short.MAX_VALUE))
+                        .addContainerGap()
+                        .addComponent(defaultSizeCheckBox))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(showCandidatesCheckBox)
+                            .addComponent(showWrongValuesCheckBox)
+                            .addComponent(showDeviationsCheckBox)
+                            .addComponent(saveWindowLayoutCheckBox)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(fontSizeLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(fontSizeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(showColorKuCheckBox))))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -212,7 +218,7 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
                 .addComponent(saveWindowLayoutCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(showColorKuCheckBox)
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(47, Short.MAX_VALUE))
         );
 
         resetButton.setMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigGeneralPanel").getString("ConfigGeneralPanel.resetButton.mnemonic").charAt(0));
@@ -261,6 +267,7 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
         editModeAutoAdvanceCheckBox.setMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigGeneralPanel").getString("ConfigGeneralPanel.editModeAutoAdvanceCheckBox.mnemonic").charAt(0));
         editModeAutoAdvanceCheckBox.setText(bundle.getString("ConfigGeneralPanel.editModeAutoAdvanceCheckBox.text")); // NOI18N
 
+        drawExtraBoxesCheckBox.setMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigGeneralPanel").getString("ConfigGeneralPanel.drawExtraBoxesCheckBox.mnemonic").charAt(0));
         drawExtraBoxesCheckBox.setText(bundle.getString("ConfigGeneralPanel.drawExtraBoxesCheckBox.text")); // NOI18N
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -357,6 +364,10 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
     private void deleteCursorAfterCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteCursorAfterCheckBoxActionPerformed
         deleteCursorAfterMsTextField.setEnabled(deleteCursorAfterCheckBox.isSelected());
     }//GEN-LAST:event_deleteCursorAfterCheckBoxActionPerformed
+
+    private void defaultSizeCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_defaultSizeCheckBoxActionPerformed
+        fontSizeTextField.setEnabled(! defaultSizeCheckBox.isSelected());
+    }//GEN-LAST:event_defaultSizeCheckBoxActionPerformed
     
     public void okPressed() {
         boolean oldUseDefaultFontSize = Options.getInstance().isUseDefaultFontSize();
