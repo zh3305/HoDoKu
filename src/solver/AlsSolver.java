@@ -18,7 +18,6 @@
  */
 package solver;
 
-import sudoku.Chain;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,6 +26,7 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import sudoku.Candidate;
+import sudoku.Chain;
 import sudoku.Options;
 import sudoku.SolutionStep;
 import sudoku.SolutionType;
@@ -180,7 +180,7 @@ public class AlsSolver extends AbstractSolver {
         sudoku = finder.getSudoku();
         List<SolutionStep> oldSteps = steps;
         List<SolutionStep> resultSteps = new ArrayList<SolutionStep>();
-        finder.setRcOnlyForward(false);
+        finder.setRcOnlyForward(Options.getInstance().isAllStepsAlsChainForwardOnly());
         if (chain.length == MAX_RC) {
             chain = new RestrictedCommon[Options.getInstance().getAllStepsAlsChainLength()];
         }

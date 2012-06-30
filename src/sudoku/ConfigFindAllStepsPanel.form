@@ -1,4 +1,4 @@
-<?xml version="1.1" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.6" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <AuxValues>
@@ -141,9 +141,9 @@
                                       <EmptySpace min="-2" max="-2" attributes="0"/>
                                       <Component id="fishToLabel" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                                      <Component id="fishToComboBox" pref="54" max="32767" attributes="0"/>
+                                      <Component id="fishToComboBox" pref="96" max="32767" attributes="0"/>
                                   </Group>
-                                  <Component id="fishTypeComboBox" pref="132" max="32767" attributes="2"/>
+                                  <Component id="fishTypeComboBox" pref="180" max="32767" attributes="2"/>
                               </Group>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
@@ -413,9 +413,9 @@
                                       <EmptySpace min="-2" max="-2" attributes="0"/>
                                       <Component id="krakenFishToLabel" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                                      <Component id="krakenFishToComboBox" pref="54" max="32767" attributes="0"/>
+                                      <Component id="krakenFishToComboBox" pref="96" max="32767" attributes="0"/>
                                   </Group>
-                                  <Component id="krakenFishTypeComboBox" pref="132" max="32767" attributes="2"/>
+                                  <Component id="krakenFishTypeComboBox" pref="180" max="32767" attributes="2"/>
                               </Group>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
@@ -633,7 +633,9 @@
                       <Component id="alsChainLengthLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="alsChainLengthComboBox" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="90" max="32767" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="alsBiDirCheckBox" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -644,6 +646,7 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="alsChainLengthLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="alsChainLengthComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="alsBiDirCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -673,6 +676,16 @@
                     <StringItem index="2" value="6"/>
                     <StringItem index="3" value="7"/>
                   </StringArray>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="alsBiDirCheckBox">
+              <Properties>
+                <Property name="mnemonic" type="int" editor="org.netbeans.modules.i18n.form.FormI18nMnemonicEditor">
+                  <ResourceString bundle="intl/ConfigFindAllStepsPanel.properties" key="ConfigFindAllStepsPanel.alsBiDirCheckBox.mnemonic" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                </Property>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="intl/ConfigFindAllStepsPanel.properties" key="ConfigFindAllStepsPanel.alsBiDirCheckBox.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
             </Component>

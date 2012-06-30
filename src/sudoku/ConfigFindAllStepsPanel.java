@@ -131,6 +131,7 @@ public class ConfigFindAllStepsPanel extends javax.swing.JPanel {
         alsPanel = new javax.swing.JPanel();
         alsChainLengthLabel = new javax.swing.JLabel();
         alsChainLengthComboBox = new javax.swing.JComboBox();
+        alsBiDirCheckBox = new javax.swing.JCheckBox();
 
         resetButton.setMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigFindAllStepsPanel").getString("ConfigFindAllStepsPanel.resetButton.mnemonic").charAt(0));
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("intl/ConfigFindAllStepsPanel"); // NOI18N
@@ -220,8 +221,8 @@ public class ConfigFindAllStepsPanel extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(fishToLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(fishToComboBox, 0, 54, Short.MAX_VALUE))
-                            .addComponent(fishTypeComboBox, 0, 132, Short.MAX_VALUE)))
+                                .addComponent(fishToComboBox, 0, 96, Short.MAX_VALUE))
+                            .addComponent(fishTypeComboBox, 0, 180, Short.MAX_VALUE)))
                     .addGroup(fishPanelLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(fishCheckBox))
@@ -336,8 +337,8 @@ public class ConfigFindAllStepsPanel extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(krakenFishToLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(krakenFishToComboBox, 0, 54, Short.MAX_VALUE))
-                            .addComponent(krakenFishTypeComboBox, 0, 132, Short.MAX_VALUE)))
+                                .addComponent(krakenFishToComboBox, 0, 96, Short.MAX_VALUE))
+                            .addComponent(krakenFishTypeComboBox, 0, 180, Short.MAX_VALUE)))
                     .addGroup(krakenFishPanelLayout.createSequentialGroup()
                         .addComponent(krakenFishCandidatesLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -385,6 +386,9 @@ public class ConfigFindAllStepsPanel extends javax.swing.JPanel {
 
         alsChainLengthComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "4", "5", "6", "7" }));
 
+        alsBiDirCheckBox.setMnemonic(java.util.ResourceBundle.getBundle("intl/ConfigFindAllStepsPanel").getString("ConfigFindAllStepsPanel.alsBiDirCheckBox.mnemonic").charAt(0));
+        alsBiDirCheckBox.setText(bundle.getString("ConfigFindAllStepsPanel.alsBiDirCheckBox.text")); // NOI18N
+
         javax.swing.GroupLayout alsPanelLayout = new javax.swing.GroupLayout(alsPanel);
         alsPanel.setLayout(alsPanelLayout);
         alsPanelLayout.setHorizontalGroup(
@@ -394,7 +398,9 @@ public class ConfigFindAllStepsPanel extends javax.swing.JPanel {
                 .addComponent(alsChainLengthLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(alsChainLengthComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(90, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(alsBiDirCheckBox)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         alsPanelLayout.setVerticalGroup(
             alsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -402,7 +408,8 @@ public class ConfigFindAllStepsPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(alsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(alsChainLengthLabel)
-                    .addComponent(alsChainLengthComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(alsChainLengthComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(alsBiDirCheckBox))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -531,6 +538,7 @@ private void krakenFishCandidatesButtonActionPerformed(java.awt.event.ActionEven
         Options.getInstance().setAllStepsKrakenFishCandidates(krakenFishCandidates);
 
         Options.getInstance().setAllStepsAlsChainLength(alsChainLengthComboBox.getSelectedIndex() + 4);
+        Options.getInstance().setAllStepsAlsChainForwardOnly(alsBiDirCheckBox.isSelected());
     }
 
     private void initAll(boolean setDefault) {
@@ -556,6 +564,7 @@ private void krakenFishCandidatesButtonActionPerformed(java.awt.event.ActionEven
             krakenFishCandidates = Options.ALL_STEPS_KRAKEN_FISH_CANDIDATES;
             
             alsChainLengthComboBox.setSelectedIndex(Options.ALL_STEPS_ALS_CHAIN_LENGTH - 4);
+            alsBiDirCheckBox.setSelected(Options.ALL_STEPS_ALS_CHAIN_FORWARD_ONLY);
         } else {
             steps = Options.getInstance().copyStepConfigs(Options.getInstance().solverSteps, true, false);
             
@@ -577,6 +586,7 @@ private void krakenFishCandidatesButtonActionPerformed(java.awt.event.ActionEven
             krakenFishCandidates = Options.getInstance().getAllStepsKrakenFishCandidates();
             
             alsChainLengthComboBox.setSelectedIndex(Options.getInstance().getAllStepsAlsChainLength() - 4);
+            alsBiDirCheckBox.setSelected(Options.getInstance().isAllStepsAlsChainForwardOnly());
         }
         setCandidateLabels();
         
@@ -676,6 +686,7 @@ private void krakenFishCandidatesButtonActionPerformed(java.awt.event.ActionEven
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox alsBiDirCheckBox;
     private javax.swing.JComboBox alsChainLengthComboBox;
     private javax.swing.JLabel alsChainLengthLabel;
     private javax.swing.JPanel alsPanel;

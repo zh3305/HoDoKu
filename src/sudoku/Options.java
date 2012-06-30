@@ -230,6 +230,7 @@ public final class Options {
     public static final String ALL_STEPS_KRAKEN_FISH_CANDIDATES = "111111111"; // see above
     public static final int ALL_STEPS_SORT_MODE = 4; // sort by StepType
     public static final int ALL_STEPS_ALS_CHAIN_LENGTH = 6; // maximum chain length in ALS-Chain search (all steps only)
+    public static final boolean ALL_STEPS_ALS_CHAIN_FORWARD_ONLY = true;
     private boolean allStepsSearchFish = ALL_STEPS_SEARCH_FISH;
     private int allStepsMaxFishType = ALL_STEPS_MAX_FISH_TYPE;
     private int allStepsMinFishSize = ALL_STEPS_MIN_FISH_SIZE;
@@ -246,6 +247,7 @@ public final class Options {
     private String allStepsKrakenFishCandidates = ALL_STEPS_KRAKEN_FISH_CANDIDATES;
     private int allStepsSortMode = ALL_STEPS_SORT_MODE;
     private int allStepsAlsChainLength = ALL_STEPS_ALS_CHAIN_LENGTH;
+    private boolean allStepsAlsChainForwardOnly = ALL_STEPS_ALS_CHAIN_FORWARD_ONLY;
     //SudokuPanel
     // Coloring Solver
     public static final Color[] COLORING_COLORS = {
@@ -1360,6 +1362,20 @@ public final class Options {
      */
     public void setColorCells(boolean colorCells) {
         this.colorCells = colorCells;
+    }
+
+    /**
+     * @return the allStepsAlsChainForwardOnly
+     */
+    public boolean isAllStepsAlsChainForwardOnly() {
+        return allStepsAlsChainForwardOnly;
+    }
+
+    /**
+     * @param allStepsAlsChainForwardOnly the allStepsAlsChainForwardOnly to set
+     */
+    public void setAllStepsAlsChainForwardOnly(boolean allStepsAlsChainForwardOnly) {
+        this.allStepsAlsChainForwardOnly = allStepsAlsChainForwardOnly;
     }
 
     private static class ProgressComparator implements Comparator<StepConfig> {
