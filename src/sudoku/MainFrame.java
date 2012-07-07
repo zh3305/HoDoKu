@@ -190,6 +190,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
     /** The file type of the last loaded sudoku file: 1 .. hsol, 8 .. txt or 9 .. ss */
     private int sudokuFileType = -1;
     
+    
     /** Incorporates the last subversion revision of this file into
      *  the version string.<br><br>
      * 
