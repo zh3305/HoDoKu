@@ -387,7 +387,8 @@ public final class Options {
         new Color(251, 153, 0), // a better orange
         new Color(255, 218, 27),
         new Color(0, 192, 41), // dark green
-        new Color(43, 24, 255),
+//        new Color(43, 24, 255),
+        new Color(0, 45, 255),
         new Color(221, 84, 177), // purple
         new Color(159, 252, 51), // light green
         new Color(144, 246, 249), // sky blue

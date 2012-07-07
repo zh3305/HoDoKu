@@ -112,8 +112,12 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
     private Icon[] toggleButtonIconsColorKu = new Icon[10];
     /** Icons for the filter toggle buttons in the toolbar (currently displayed) */
     private Icon[] toggleButtonIcons = new Icon[10];
+    /** One empty icon for disabled filter buttons - digits */
+    private Icon emptyToggleButtonIconOrg = new ImageIcon(getClass().getResource("/img/f_0c.png"));
     /** One empty icon for disabled filter buttons */
-    private Icon emptyToggleButtonIcon = new ImageIcon(getClass().getResource("/img/f_0c.png"));
+    private Icon emptyToggleButtonIconOrgColorKu = new ImageIcon(new ColorKuImage(32, Color.WHITE));
+    /** One empty icon for disabled filter buttons */
+    private Icon emptyToggleButtonIcon = emptyToggleButtonIconOrg;
     private JRadioButtonMenuItem[] levelMenuItems = new JRadioButtonMenuItem[5];
     private JRadioButtonMenuItem[] modeMenuItems;
     private boolean oldShowDeviations = true;
@@ -2578,10 +2582,12 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
                 }
                 toggleButtonIcons[i] = toggleButtonIconsColorKu[i];
             }
+            emptyToggleButtonIcon = emptyToggleButtonIconOrgColorKu;
         } else {
             for (int i = 0, lim = toggleButtons.length - 1; i < lim; i++) {
                 toggleButtonIcons[i] = toggleButtonIconsOrg[i];
             }
+            emptyToggleButtonIcon = emptyToggleButtonIconOrg;
         }
     }
 
@@ -3492,16 +3498,16 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
                         button.setIcon(toggleButtonIcons[i]);
                     }
                     if (remainingCandidates[i]) {
-                        if (!button.isEnabled()) {
-                            button.setEnabled(true);
+//                        if (!button.isEnabled()) {
+                            //button.setEnabled(true);
                             button.setIcon(toggleButtonIcons[i]);
-                        }
+//                        }
                     } else {
-                        if (button.isEnabled()) {
+//                        if (button.isEnabled()) {
                             button.setSelected(false);
-                            button.setEnabled(false);
+                            //button.setEnabled(false);
                             button.setIcon(emptyToggleButtonIcon);
-                        }
+//                        }
                     }
                 }
                 for (int i = 0; i < toggleButtons.length; i++) {

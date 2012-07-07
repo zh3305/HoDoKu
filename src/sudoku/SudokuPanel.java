@@ -918,7 +918,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                                 clearRegion();
                             }
                             if (Options.getInstance().isAlternativeMouseMode()) {
-                                System.out.println(index + "/" + cand);
+//                                System.out.println(index + "/" + cand);
                                 // the selected cell(s) must be set to cand
                                 if (sudoku.getValue(index) == 0) {
                                     if (selectedCells.isEmpty()) {
@@ -3893,7 +3893,7 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
     }
 
     /**
-     * Update the {@link CellZoomPanel}. FOr more information see
+     * Update the {@link CellZoomPanel}. For more information see
      * {@link CellZoomPanel#update(sudoku.SudokuSet, sudoku.SudokuSet, int, boolean, java.util.SortedMap, java.util.SortedMap) CellZoomPanel.update()}.
      */
     private void updateCellZoomPanel() {
@@ -3905,23 +3905,19 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
                 if (sudoku.getValue(index) != 0 && selectedCells.isEmpty()) {
                     // cell is already set -> nothing can be selected
                     cellZoomPanel.update(SudokuSetBase.EMPTY_SET, SudokuSetBase.EMPTY_SET, -1, index, false, singleCell, null, null);
-                    return;
                 } else {
                     SudokuSet valueSet = collectCandidates(true);
                     SudokuSet candSet = collectCandidates(false);
                     cellZoomPanel.update(valueSet, candSet, -1, index, false, singleCell, null, null);
-                    return;
                 }
             } else {
                 if (!selectedCells.isEmpty() || (selectedCells.isEmpty() && sudoku.getValue(index) != 0)) {
                     // no coloring, when set of cells is selected
                     cellZoomPanel.update(SudokuSetBase.EMPTY_SET, SudokuSetBase.EMPTY_SET, aktColorIndex, index, colorCells, singleCell, null, null);
-                    return;
                 } else {
                     SudokuSet valueSet = collectCandidates(true);
                     SudokuSet candSet = collectCandidates(false);
                     cellZoomPanel.update(valueSet, candSet, aktColorIndex, index, colorCells, singleCell, coloringMap, coloringCandidateMap);
-                    return;
                 }
             }
         }
