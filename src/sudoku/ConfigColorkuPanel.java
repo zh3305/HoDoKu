@@ -46,10 +46,10 @@ public class ConfigColorkuPanel extends javax.swing.JPanel {
         initComponents();
 
         buttons = new JButton[]{
-            invalidButton, deviationButton,
             v1Button, v2Button, v3Button,
             v4Button, v5Button, v6Button,
-            v7Button, v8Button, v9Button
+            v7Button, v8Button, v9Button,
+            invalidButton, deviationButton,
         };
         this.mainFrame = (MainFrame) mainFrame;
 
@@ -296,27 +296,27 @@ public class ConfigColorkuPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_resetButtonActionPerformed
 
     private void invalidButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_invalidButtonActionPerformed
-        chooseColor(0);
+        chooseColor(9);
     }//GEN-LAST:event_invalidButtonActionPerformed
 
     private void deviationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deviationButtonActionPerformed
-        chooseColor(1);
+        chooseColor(10);
     }//GEN-LAST:event_deviationButtonActionPerformed
 
     private void v1ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_v1ButtonActionPerformed
-        chooseColor(2);
+        chooseColor(0);
     }//GEN-LAST:event_v1ButtonActionPerformed
 
     private void v2ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_v2ButtonActionPerformed
-        chooseColor(3);
+        chooseColor(1);
     }//GEN-LAST:event_v2ButtonActionPerformed
 
     private void v4ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_v4ButtonActionPerformed
-        chooseColor(5);
+        chooseColor(2);
     }//GEN-LAST:event_v4ButtonActionPerformed
 
     private void v5ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_v5ButtonActionPerformed
-        chooseColor(6);
+        chooseColor(3);
     }//GEN-LAST:event_v5ButtonActionPerformed
 
     private void v3ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_v3ButtonActionPerformed
@@ -324,19 +324,19 @@ public class ConfigColorkuPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_v3ButtonActionPerformed
 
     private void v6ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_v6ButtonActionPerformed
-        chooseColor(7);
+        chooseColor(5);
     }//GEN-LAST:event_v6ButtonActionPerformed
 
     private void v7ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_v7ButtonActionPerformed
-        chooseColor(8);
+        chooseColor(6);
     }//GEN-LAST:event_v7ButtonActionPerformed
 
     private void v8ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_v8ButtonActionPerformed
-        chooseColor(9);
+        chooseColor(7);
     }//GEN-LAST:event_v8ButtonActionPerformed
 
     private void v9ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_v9ButtonActionPerformed
-        chooseColor(10);
+        chooseColor(8);
     }//GEN-LAST:event_v9ButtonActionPerformed
 
     
@@ -345,7 +345,7 @@ public class ConfigColorkuPanel extends javax.swing.JPanel {
         Color color = JColorChooser.showDialog(this, java.util.ResourceBundle.getBundle("intl/ConfigColorPanel").getString("ConfigColorPanel.choose_color"), init);
         if (color != null) {
             colors[index] = color;
-            initButton(buttons[index], color, index > 1 ? true : false);
+            initButton(buttons[index], color, index < 9 ? true : false);
         }
     }
 
@@ -353,21 +353,21 @@ public class ConfigColorkuPanel extends javax.swing.JPanel {
         boolean changed = false;
         Color[] old = Options.getInstance().getColorKuColors();
         for (int i = 0; i < old.length; i++) {
-            if (! old[i].equals(colors[i + 2])) {
+            if (! old[i].equals(colors[i])) {
                 changed = true;
             }
         }
-        Options.getInstance().getColorKuColors()[9] = colors[0];
-        Options.getInstance().getColorKuColors()[10] = colors[1];
-        Options.getInstance().getColorKuColors()[0] = colors[2];
-        Options.getInstance().getColorKuColors()[1] = colors[3];
-        Options.getInstance().getColorKuColors()[2] = colors[4];
-        Options.getInstance().getColorKuColors()[3] = colors[5];
-        Options.getInstance().getColorKuColors()[4] = colors[6];
-        Options.getInstance().getColorKuColors()[5] = colors[7];
-        Options.getInstance().getColorKuColors()[6] = colors[8];
-        Options.getInstance().getColorKuColors()[7] = colors[9];
-        Options.getInstance().getColorKuColors()[8] = colors[10];
+        Options.getInstance().getColorKuColors()[0] = colors[0];
+        Options.getInstance().getColorKuColors()[1] = colors[1];
+        Options.getInstance().getColorKuColors()[2] = colors[2];
+        Options.getInstance().getColorKuColors()[3] = colors[3];
+        Options.getInstance().getColorKuColors()[4] = colors[4];
+        Options.getInstance().getColorKuColors()[5] = colors[5];
+        Options.getInstance().getColorKuColors()[6] = colors[6];
+        Options.getInstance().getColorKuColors()[7] = colors[7];
+        Options.getInstance().getColorKuColors()[8] = colors[8];
+        Options.getInstance().getColorKuColors()[9] = colors[9];
+        Options.getInstance().getColorKuColors()[10] = colors[10];
         
         if (changed) {
             mainFrame.getSudokuPanel().resetColorKuImages();
@@ -380,36 +380,36 @@ public class ConfigColorkuPanel extends javax.swing.JPanel {
             colors = new Color[buttons.length];
         }
         if (setDefault) {
-            colors[0] = Options.COLORKU_COLORS[9];
-            colors[1] = Options.COLORKU_COLORS[10];
-            colors[2] = Options.COLORKU_COLORS[0];
-            colors[3] = Options.COLORKU_COLORS[1];
-            colors[4] = Options.COLORKU_COLORS[2];
-            colors[5] = Options.COLORKU_COLORS[3];
-            colors[6] = Options.COLORKU_COLORS[4];
-            colors[7] = Options.COLORKU_COLORS[5];
-            colors[8] = Options.COLORKU_COLORS[6];
-            colors[9] = Options.COLORKU_COLORS[7];
-            colors[10] = Options.COLORKU_COLORS[8];
+            colors[0] = Options.COLORKU_COLORS[0];
+            colors[1] = Options.COLORKU_COLORS[1];
+            colors[2] = Options.COLORKU_COLORS[2];
+            colors[3] = Options.COLORKU_COLORS[3];
+            colors[4] = Options.COLORKU_COLORS[4];
+            colors[5] = Options.COLORKU_COLORS[5];
+            colors[6] = Options.COLORKU_COLORS[6];
+            colors[7] = Options.COLORKU_COLORS[7];
+            colors[8] = Options.COLORKU_COLORS[8];
+            colors[9] = Options.COLORKU_COLORS[9];
+            colors[10] = Options.COLORKU_COLORS[10];
         } else {
-            colors[0] = Options.getInstance().getColorKuColor(10);
-            colors[1] = Options.getInstance().getColorKuColor(11);
-            colors[2] = Options.getInstance().getColorKuColor(1);
-            colors[3] = Options.getInstance().getColorKuColor(2);
-            colors[4] = Options.getInstance().getColorKuColor(3);
-            colors[5] = Options.getInstance().getColorKuColor(4);
-            colors[6] = Options.getInstance().getColorKuColor(5);
-            colors[7] = Options.getInstance().getColorKuColor(6);
-            colors[8] = Options.getInstance().getColorKuColor(7);
-            colors[9] = Options.getInstance().getColorKuColor(8);
-            colors[10] = Options.getInstance().getColorKuColor(9);
+            colors[0] = Options.getInstance().getColorKuColor(1);
+            colors[1] = Options.getInstance().getColorKuColor(2);
+            colors[2] = Options.getInstance().getColorKuColor(3);
+            colors[3] = Options.getInstance().getColorKuColor(4);
+            colors[4] = Options.getInstance().getColorKuColor(5);
+            colors[5] = Options.getInstance().getColorKuColor(6);
+            colors[6] = Options.getInstance().getColorKuColor(7);
+            colors[7] = Options.getInstance().getColorKuColor(8);
+            colors[8] = Options.getInstance().getColorKuColor(9);
+            colors[9] = Options.getInstance().getColorKuColor(10);
+            colors[10] = Options.getInstance().getColorKuColor(11);
         }
 
-        initButton(buttons[0], colors[0], false);
-        initButton(buttons[1], colors[1], false);
-        for (int i = 2; i < buttons.length; i++) {
+        for (int i = 0; i < buttons.length - 2; i++) {
             initButton(buttons[i], colors[i], true);
         }
+        initButton(buttons[9], colors[9], false);
+        initButton(buttons[10], colors[10], false);
     }
 
     private void initButton(JButton button, Color color, boolean cand) {
