@@ -357,8 +357,8 @@ public class ConfigColorkuPanel extends javax.swing.JPanel {
                 changed = true;
             }
         }
-        Options.getInstance().setColorKuInvalidColor(colors[0]);
-        Options.getInstance().setColorKuDeviationColor(colors[1]);
+        Options.getInstance().getColorKuColors()[9] = colors[0];
+        Options.getInstance().getColorKuColors()[10] = colors[1];
         Options.getInstance().getColorKuColors()[0] = colors[2];
         Options.getInstance().getColorKuColors()[1] = colors[3];
         Options.getInstance().getColorKuColors()[2] = colors[4];
@@ -380,8 +380,8 @@ public class ConfigColorkuPanel extends javax.swing.JPanel {
             colors = new Color[buttons.length];
         }
         if (setDefault) {
-            colors[0] = Options.COLORKU_INVALID_COLOR;
-            colors[1] = Options.COLORKU_DEVIATION_COLOR;
+            colors[0] = Options.COLORKU_COLORS[9];
+            colors[1] = Options.COLORKU_COLORS[10];
             colors[2] = Options.COLORKU_COLORS[0];
             colors[3] = Options.COLORKU_COLORS[1];
             colors[4] = Options.COLORKU_COLORS[2];
@@ -392,8 +392,8 @@ public class ConfigColorkuPanel extends javax.swing.JPanel {
             colors[9] = Options.COLORKU_COLORS[7];
             colors[10] = Options.COLORKU_COLORS[8];
         } else {
-            colors[0] = Options.getInstance().getColorKuInvalidColor();
-            colors[1] = Options.getInstance().getColorKuDeviationColor();
+            colors[0] = Options.getInstance().getColorKuColor(10);
+            colors[1] = Options.getInstance().getColorKuColor(11);
             colors[2] = Options.getInstance().getColorKuColor(1);
             colors[3] = Options.getInstance().getColorKuColor(2);
             colors[4] = Options.getInstance().getColorKuColor(3);

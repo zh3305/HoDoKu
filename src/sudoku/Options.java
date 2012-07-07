@@ -251,15 +251,15 @@ public final class Options {
     //SudokuPanel
     // Coloring Solver
     public static final Color[] COLORING_COLORS = {
-        new Color(254, 204, 129), // 'a' - first color of first color pair
-        new Color(252, 234, 190), // 'A' - second color of first color pair
-        new Color(184, 184, 248), // 'b' - first color of second color pair
-        new Color(220, 220, 252), // 'B' - second color of second color pair
-        new Color(255, 185, 185), // 'c' - first color of third color pair
+        new Color(255, 192, 89),  // 'a' - first color of first color pair
+        new Color(247, 222, 143), // 'A' - second color of first color pair
+        new Color(177, 165, 243), // 'b' - first color of second color pair
+        new Color(220, 212, 252), // 'B' - second color of second color pair
+        new Color(247, 165, 167), // 'c' - first color of third color pair
         new Color(255, 210, 210), // 'C' - second color of third color pair
-        new Color(159, 247, 220), // 'd' - first color of fourth color pair
+        new Color(134, 232, 208), // 'd' - first color of fourth color pair
         new Color(206, 251, 237), // 'D' - second color of fourth color pair
-        new Color(168, 255, 168), // 'e' - first color of fifth color pair
+        new Color(134, 242, 128), // 'e' - first color of fifth color pair
         new Color(215, 255, 215) // 'E' - second color of fifth color pair
     //        new Color(140, 198, 255),   // 'a' - first color of first color pair
     //        new Color(205, 171, 255),   // 'A' - second color of first color pair
@@ -362,39 +362,40 @@ public final class Options {
     public static final Color AKT_CELL_COLOR = new Color(255, 255, 150);                      // Hintergrund aktuell markierte Zelle
     public static final Color INVALID_CELL_COLOR = new Color(255, 185, 185);                  // Hintergrund Zelle mit ungültigen Wert
     public static final Color POSSIBLE_CELL_COLOR = new Color(185, 255, 185);                 // Hintergrund Zelle mit möglichem Wert
-    public static final Color HINT_CANDIDATE_BACK_COLOR = new Color(113, 221, 137);           // Hintergrund Kandidat in Hinweis
-    public static final Color HINT_CANDIDATE_DELETE_BACK_COLOR = new Color(249, 147, 162);    // Hintergrund für zu löschende Kandidaten
-    public static final Color HINT_CANDIDATE_CANNIBALISTIC_BACK_COLOR = new Color(255, 0, 0); // Hintergrund für zu löschende Kandidaten
-    public static final Color HINT_CANDIDATE_FIN_BACK_COLOR = new Color(140, 198, 255);       // Hintergrund für Fins
-    public static final Color HINT_CANDIDATE_ENDO_FIN_BACK_COLOR = new Color(205, 171, 255);  // Hintergrund für Endo-Fins
+    public static final Color HINT_CANDIDATE_BACK_COLOR = new Color(63, 218, 101);            // Hintergrund Kandidat in Hinweis
+    public static final Color HINT_CANDIDATE_DELETE_BACK_COLOR = new Color(255, 118, 132);    // Hintergrund für zu löschende Kandidaten
+    public static final Color HINT_CANDIDATE_CANNIBALISTIC_BACK_COLOR = new Color(235, 0, 0); // Hintergrund für zu löschende Kandidaten
+    public static final Color HINT_CANDIDATE_FIN_BACK_COLOR = new Color(127, 187, 255);       // Hintergrund für Fins
+    public static final Color HINT_CANDIDATE_ENDO_FIN_BACK_COLOR = new Color(216, 178, 255);  // Hintergrund für Endo-Fins
     public static final Color HINT_CANDIDATE_COLOR = Color.BLACK;                             // Zeichenfarbe Kandidat in Hinweis
     public static final Color HINT_CANDIDATE_DELETE_COLOR = Color.BLACK;                      // Zeichenfarbe für zu löschende Kandidaten
     public static final Color HINT_CANDIDATE_CANNIBALISTIC_COLOR = Color.BLACK;               // Zeichenfarbe für zu löschende Kandidaten
     public static final Color HINT_CANDIDATE_FIN_COLOR = Color.BLACK;                         // Zeichenfarbe für Fins
     public static final Color HINT_CANDIDATE_ENDO_FIN_COLOR = Color.BLACK;                    // Zeichenfarbe für Endo-Fins
     public static final Color[] HINT_CANDIDATE_ALS_BACK_COLORS = { // Hintergrund für ALS (verschieden wegen Chains und Wings)
-        new Color(215, 255, 215),
-        new Color(255, 210, 210),
-        new Color(206, 251, 237),
-        new Color(252, 234, 190)
+        new Color(197, 232, 140),
+        new Color(255, 203, 203),
+        new Color(178, 223, 223),
+        new Color(252, 220, 165)
 //        new Color(150, 150, 255),
 //        new Color(150, 255, 150),
 //        new Color(150, 100, 255),
 //        new Color(150, 255, 100)
     };
     public static final Color[] COLORKU_COLORS = {
-        Color.red,
-        new Color(255, 147, 28), // a better orange
-        Color.yellow,
-        new Color(0.0f, 0.8f, 0.0f), // dark green
-        Color.blue,
-        new Color(220, 93, 171), // purple
-        new Color(0.7f, 1.0f, 0.7f), // light green
-        new Color(0.7f, 1.0f, 1.0f), // sky blue
-        new Color(1.0f, 0.8f, 1.0f) // light purple (fuchsia)
+        new Color(252, 20, 16),
+        new Color(251, 153, 0), // a better orange
+        new Color(255, 218, 27),
+        new Color(0, 192, 41), // dark green
+        new Color(43, 24, 255),
+        new Color(221, 84, 177), // purple
+        new Color(159, 252, 51), // light green
+        new Color(144, 246, 249), // sky blue
+        new Color(255, 175, 252), // light purple (fuchsia)
+        Color.BLACK, new Color(128, 128, 128)
     };
-    public static final Color COLORKU_INVALID_COLOR = Color.BLACK;
-    public static final Color COLORKU_DEVIATION_COLOR = new Color(128, 128, 128);
+//    public static final Color COLORKU_INVALID_COLOR = Color.BLACK;
+//    public static final Color COLORKU_DEVIATION_COLOR = new Color(128, 128, 128);
     public static final Color[] HINT_CANDIDATE_ALS_COLORS = { // Zeichenfarbe für ALS-Candidaten
         Color.BLACK,
         Color.BLACK,
@@ -435,8 +436,8 @@ public final class Options {
     private Color hintCandidateEndoFinColor = HINT_CANDIDATE_ENDO_FIN_COLOR;
     private Color[] hintCandidateAlsBackColors = null;
     private Color[] hintCandidateAlsColors = null;
-    private Color colorKuInvalidColor = COLORKU_INVALID_COLOR;
-    private Color colorKuDeviationColor = COLORKU_DEVIATION_COLOR;
+//    private Color colorKuInvalidColor = COLORKU_INVALID_COLOR;
+//    private Color colorKuDeviationColor = COLORKU_DEVIATION_COLOR;
     private Color[] colorKuColors = null;
     private Color arrowColor = ARROW_COLOR;
     private double valueFontFactor = VALUE_FONT_FACTOR;
@@ -2163,33 +2164,33 @@ public final class Options {
         this.showColorKu = showColorKu;
     }
 
-    /**
-     * @return the colorKuInvalidColor
-     */
-    public Color getColorKuInvalidColor() {
-        return colorKuInvalidColor;
-    }
-
-    /**
-     * @param colorKuInvalidColor the colorKuInvalidColor to set
-     */
-    public void setColorKuInvalidColor(Color colorKuInvalidColor) {
-        this.colorKuInvalidColor = colorKuInvalidColor;
-    }
-
-    /**
-     * @return the colorKuDeviationColor
-     */
-    public Color getColorKuDeviationColor() {
-        return colorKuDeviationColor;
-    }
-
-    /**
-     * @param colorKuDeviationColor the colorKuDeviationColor to set
-     */
-    public void setColorKuDeviationColor(Color colorKuDeviationColor) {
-        this.colorKuDeviationColor = colorKuDeviationColor;
-    }
+//    /**
+//     * @return the colorKuInvalidColor
+//     */
+//    public Color getColorKuInvalidColor() {
+//        return colorKuInvalidColor;
+//    }
+//
+//    /**
+//     * @param colorKuInvalidColor the colorKuInvalidColor to set
+//     */
+//    public void setColorKuInvalidColor(Color colorKuInvalidColor) {
+//        this.colorKuInvalidColor = colorKuInvalidColor;
+//    }
+//
+//    /**
+//     * @return the colorKuDeviationColor
+//     */
+//    public Color getColorKuDeviationColor() {
+//        return colorKuDeviationColor;
+//    }
+//
+//    /**
+//     * @param colorKuDeviationColor the colorKuDeviationColor to set
+//     */
+//    public void setColorKuDeviationColor(Color colorKuDeviationColor) {
+//        this.colorKuDeviationColor = colorKuDeviationColor;
+//    }
 
     /**
      * @return the defaultImageDir
