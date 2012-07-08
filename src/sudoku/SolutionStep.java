@@ -145,7 +145,8 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
     }
 
     public StringBuffer getForcingChainString(Chain chain) {
-        return getForcingChainString(chain.getChain(), chain.getStart(), chain.getEnd(), false);
+//        return getForcingChainString(chain.getChain(), chain.getStart(), chain.getEnd(), false);
+        return getForcingChainString(chain.getChain(), chain.getStart(), chain.getEnd(), true);
     }
 
     /**

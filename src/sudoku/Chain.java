@@ -140,7 +140,7 @@ public class Chain implements Cloneable {
     public Chain() {
     }
 
-    /** Create ans initialize a new chain.
+    /** Create and initialize a new chain.
      * @param start
      * @param end
      * @param chain  
@@ -648,14 +648,21 @@ public class Chain implements Cloneable {
      * @return
      */
     public static String toString(int entry) {
+        if (entry == Integer.MIN_VALUE) {
+            return "MIN";
+        }
+        String sign = "";
+        if (entry < 0) {
+            sign = "-";
+        }
         if (getSNodeType(entry) == ALS_NODE) {
-            return TYPE_NAMES[getSNodeType(entry)] + " - " +
-                    getSAlsIndex(entry) + " - " +
-                    getSCellIndex(entry) + " - " + isSStrong(entry) + " - " + getSCandidate(entry);
+            return sign + TYPE_NAMES[getSNodeType(entry)] + "/" +
+                    getSAlsIndex(entry) + "/" +
+                    getSCellIndex(entry) + "/" + isSStrong(entry) + "/" + getSCandidate(entry);
         } else {
-            return TYPE_NAMES[getSNodeType(entry)] + " - " +
-                    getSCellIndex3(entry) + " - " + getSCellIndex2(entry) + " - " +
-                    getSCellIndex(entry) + " - " + isSStrong(entry) + " - " + getSCandidate(entry);
+            return sign + TYPE_NAMES[getSNodeType(entry)] + "/" +
+                    getSCellIndex3(entry) + "/" + getSCellIndex2(entry) + "/" +
+                    getSCellIndex(entry) + "/" + isSStrong(entry) + "/" + getSCandidate(entry);
         }
     }
 

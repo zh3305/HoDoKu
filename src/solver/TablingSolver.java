@@ -18,7 +18,6 @@
  */
 package solver;
 
-import sudoku.Chain;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -28,6 +27,7 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import sudoku.Candidate;
+import sudoku.Chain;
 import sudoku.Options;
 import sudoku.SolutionStep;
 import sudoku.SolutionType;
@@ -36,109 +36,145 @@ import sudoku.SudokuSet;
 import sudoku.SudokuSetBase;
 
 /**
- * Implements Trebors Tables for finding Nice Loops, AICs, Forcing Chains and Forcing Nets.
- * Also called by the {@link FishSolver} for finding suitable chains for Kraken Fish.<br><br>
+ * Implements Trebors Tables for finding Nice Loops, AICs, Forcing Chains and
+ * Forcing Nets. Also called by the {@link FishSolver} for finding suitable
+ * chains for Kraken Fish.<br><br>
  *
- * The idea of tabling is simple: For all possible premises ("candidate n is set in/eliminated from cell x")
- * all possible outcomes are logged. The result is then checked for contradictions
- * or verities. For chains only direct outcomes are stored, for nets every possible outcome triggers
- * a new round of starting conditions (up to a maximum recursion depth). For every premise
- * a separate table is used.<br><br>
+ * The idea of tabling is simple: For all possible premises ("candidate n is set
+ * in/eliminated from cell x") all possible outcomes are logged. The result is
+ * then checked for contradictions or verities. For chains only direct outcomes
+ * are stored, for nets every possible outcome triggers a new round of starting
+ * conditions (up to a maximum recursion depth). For every premise a separate
+ * table is used.<br><br>
  *
- * After the initial round all tables are expanded: For every possible outcome all
- * other outcomes from the other table are added. This results in a matrix holding all possible
- * conclusions. The method is simple but it uses a lot of memory and computation time.<br><br>
+ * After the initial round all tables are expanded: For every possible outcome
+ * all other outcomes from the other table are added. This results in a matrix
+ * holding all possible conclusions. The method is simple but it uses a lot of
+ * memory and computation time.<br><br>
  *
- * The real problem with Trebors Tables is to reconstruct the chains/nets that led to
- * the result.<br><br>
+ * The real problem with Trebors Tables is to reconstruct the chains/nets that
+ * led to the result.<br><br>
  *
- * Some tests currently implemented (every table holds an array with sets for all cells than
- * can be set to a certain candidate - onSets - and with set for cell where that candidate
- * can be eliminated - offSets):
- * <ol>
- *   <li>only one chain:<ul>
- *        <li>two values set in the same cell (AND onSets) -> premise was wrong </li>
- *        <li>same value set twice in one house -> premise was wrong</li>
- *        <li>all candidates deleted from a cell -> premise was wrong</li>
- *        <li>candidate cand be set in and deleted from a cell simultaneously -> premise was wrong</li>
- *        <li>all candidates are deleted from a cell -> premise was wrong</li></ul></li>
- *   <li>two chains for the same start candidate (candidate set and deleted):<ul>
- *        <li>both chains lead to the same value in onSets -> value can be set</li>
- *        <li>both chains lead to the same value in offSets -> candidate can be deleted</li></ul></li>
- *   <li>chains for all candidates in one house/cell set:<ul>
- *        <li>both chains lead to the same value in onSets -> value can be set</li>
- *        <li>both chains lead to the same value in offSets -> candidate can be deleted</li></ul></li>
- * </ol>
- * 
- * 20081013: AIC added (combined with Nice Loops)<br><br>
- *    For every Nice Loop that starts with a strong inference out of the start cell and ends
- *    with a weak inference into the start cell the AIC (start cell - last strong inference)
- *    is checked. If it gives more than one elimination, it is stored as AIC instead of as Nice Loop.
- *    The check is done for discontinuous loops only.<br><br>
+ * Some tests currently implemented (every table holds an array with sets for
+ * all cells than can be set to a certain candidate - onSets - and with set for
+ * cell where that candidate can be eliminated - offSets): <ol> <li>only one
+ * chain:<ul> <li>two values set in the same cell (AND onSets) -> premise was
+ * wrong </li> <li>same value set twice in one house -> premise was wrong</li>
+ * <li>all candidates deleted from a cell -> premise was wrong</li>
+ * <li>candidate cand be set in and deleted from a cell simultaneously ->
+ * premise was wrong</li> <li>all candidates are deleted from a cell -> premise
+ * was wrong</li></ul></li> <li>two chains for the same start candidate
+ * (candidate set and deleted):<ul> <li>both chains lead to the same value in
+ * onSets -> value can be set</li> <li>both chains lead to the same value in
+ * offSets -> candidate can be deleted</li></ul></li> <li>chains for all
+ * candidates in one house/cell set:<ul> <li>both chains lead to the same value
+ * in onSets -> value can be set</li> <li>both chains lead to the same value in
+ * offSets -> candidate can be deleted</li></ul></li> </ol>
  *
- *    AIC eliminations:
- *    <ul>
- *      <li>if the candidates of the endpoints are equal, all candidates can be eliminated
- *          that see both endpoints</li>
- *      <li>if the candidates are not equal, cand A can be eliminated in cell b and vice versa</li>
- *    </ul>
-
+ * 20081013: AIC added (combined with Nice Loops)<br><br> For every Nice Loop
+ * that starts with a strong inference out of the start cell and ends with a
+ * weak inference into the start cell the AIC (start cell - last strong
+ * inference) is checked. If it gives more than one elimination, it is stored as
+ * AIC instead of as Nice Loop. The check is done for discontinuous loops
+ * only.<br><br>
+ *
+ * AIC eliminations: <ul> <li>if the candidates of the endpoints are equal, all
+ * candidates can be eliminated that see both endpoints</li> <li>if the
+ * candidates are not equal, cand A can be eliminated in cell b and vice
+ * versa</li> </ul>
+ *
  * @author hobiwan
  */
 public class TablingSolver extends AbstractSolver {
-    private static final long CLEANUP_INTERVAL = 5 * 60 * 1000;
 
-    /** Enable additional output for debugging. */
+    private static final long CLEANUP_INTERVAL = 5 * 60 * 1000;
+    /**
+     * Enable additional output for debugging.
+     */
     private static boolean DEBUG = false;
-    /** Maximum recursion depth in buildung the tables. */
+    /**
+     * Maximum recursion depth in buildung the tables.
+     */
     private static final int MAX_REC_DEPTH = 50;
-    /** A special comparator for comparing chains and nets. */
+    /**
+     * A special comparator for comparing chains and nets.
+     */
     private static TablingComparator tablingComparator = null;
-    /** A list with steps found in the current run. */
+    /**
+     * A list with steps found in the current run.
+     */
     private List<SolutionStep> steps; // gefundene Lösungsschritte
-    /** One global step for optimization. */
+    /**
+     * One global step for optimization.
+     */
     private SolutionStep globalStep = new SolutionStep(SolutionType.HIDDEN_SINGLE);
-    /** All chains already found: eliminations + index in {@link #steps}. */
+    /**
+     * All chains already found: eliminations + index in {@link #steps}.
+     */
     private SortedMap<String, Integer> deletesMap = new TreeMap<String, Integer>();
-    /** Search only for chains, not for nets. */
+    /**
+     * Search only for chains, not for nets.
+     */
     private boolean chainsOnly = true;
-    /** Include group nodes in search. */
+    /**
+     * Include group nodes in search.
+     */
     private boolean withGroupNodes = false;
-    /** Include ALS nodes in search. */
+    /**
+     * Include ALS nodes in search.
+     */
     private boolean withAlsNodes = false;
-    /** Accept steps only if they contain group nodes/ALS nodes. */
+    /**
+     * Accept steps only if they contain group nodes/ALS nodes.
+     */
     private boolean onlyGroupedNiceLoops = false;
     /**
-     * One table for every premise. Indices are in format "nnm" with "nn" the index of the
-     * cell and "m" the candidate. This table holds all entries for "candidate m set in
-     * cell nn".
+     * One table for every premise. Indices are in format "nnm" with "nn" the
+     * index of the cell and "m" the candidate. This table holds all entries for
+     * "candidate m set in cell nn".
      */
     private TableEntry[] onTable = null;
     /**
-     * One table for every premise. Indices are in format "nnm" with "nn" the index of the
-     * cell and "m" the candidate. This table holds all entries for "candidate m deleted from
-     * cell nn".
+     * One table for every premise. Indices are in format "nnm" with "nn" the
+     * index of the cell and "m" the candidate. This table holds all entries for
+     * "candidate m deleted from cell nn".
      */
     private TableEntry[] offTable = null;
-    /** A list of all table entries for e specific candidate in a house or
-     * for all candidates in a cell respectively. Used for Forcing chain/Net checks.
+    /**
+     * A list of all table entries for e specific candidate in a house or for
+     * all candidates in a cell respectively. Used for Forcing chain/Net checks.
      */
     private List<TableEntry> entryList = new ArrayList<TableEntry>(10);
-    /** For temporary checks. */
+    /**
+     * For temporary checks.
+     */
     private SudokuSet tmpSet = new SudokuSet();
-    /** For temporary checks. */
+    /**
+     * For temporary checks.
+     */
     private SudokuSet tmpSet1 = new SudokuSet();
-    /** For temporary checks. */
+    /**
+     * For temporary checks.
+     */
     private SudokuSet tmpSet2 = new SudokuSet();
-    /** For buildung chains. */
+    /**
+     * For buildung chains.
+     */
     private SudokuSet tmpSetC = new SudokuSet();
-    /** Used to check if all candidates in a house or cell set lead to the same value in a cell. */
+    /**
+     * Used to check if all candidates in a house or cell set lead to the same
+     * value in a cell.
+     */
     private SudokuSet[] tmpOnSets = new SudokuSet[10];
-    /** Used to check if all candidates in a house or cell deleted lead to the same canddiate deleted from a cell. */
+    /**
+     * Used to check if all candidates in a house or cell deleted lead to the
+     * same canddiate deleted from a cell.
+     */
     private SudokuSet[] tmpOffSets = new SudokuSet[10];
-    /** Map containing the new indices of all alses, that have already been written to globalStep.
-     * They key is the old index into {@link #alses}, the value is the new index of the ALS stored
-     * in the {@link SolutionStep}.
+    /**
+     * Map containing the new indices of all alses, that have already been
+     * written to globalStep. They key is the old index into {@link #alses}, the
+     * value is the new index of the ALS stored in the {@link SolutionStep}.
      */
     private TreeMap<Integer, Integer> chainAlses = new TreeMap<Integer, Integer>();
     private Sudoku2 savedSudoku;            // Sudoku2 im Ausgangszustand (für Erstellen der Tables)
@@ -159,15 +195,16 @@ public class TablingSolver extends AbstractSolver {
     private Chain[] tmpChains = new Chain[9];
     private int tmpChainsIndex = 0;
     private SudokuSet lassoSet = new SudokuSet();  // für addChain: enthält alle Zellen-Indices der Chain
-
     private List<TableEntry> extendedTable = null; // Tables for group nodes, ALS, AUR...
     private SortedMap<Integer, Integer> extendedTableMap = null; // entry -> index in extendedTable
     private int extendedTableIndex = 0; // current index in extendedTable
     private boolean initialized = false;
     private long lastUsed = -1;
 
-    /** Creates a new instance of TablingSolver
-     * @param finder 
+    /**
+     * Creates a new instance of TablingSolver
+     *
+     * @param finder
      */
     public TablingSolver(SudokuStepFinder finder) {
         super(finder);
@@ -193,10 +230,10 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * Late initialization for those internal data structures,
-     * that are very memory intensive. This method <b>MUST</b>
-     * be called <b>every time</b> the solver is actually used.<br>
-     * 
+     * Late initialization for those internal data structures, that are very
+     * memory intensive. This method <b>MUST</b> be called <b>every time</b> the
+     * solver is actually used.<br>
+     *
      * Calling this method also resets {@link #lastUsed} to the current time
      * (see {@link #cleanUp() }).
      */
@@ -208,7 +245,7 @@ public class TablingSolver extends AbstractSolver {
                 onTable[i] = new TableEntry();
                 offTable[i] = new TableEntry();
             }
-            
+
             extendedTable = new ArrayList<TableEntry>();
             extendedTableMap = new TreeMap<Integer, Integer>();
             extendedTableIndex = 0;
@@ -217,27 +254,27 @@ public class TablingSolver extends AbstractSolver {
         }
         lastUsed = System.currentTimeMillis();
     }
-    
+
     /**
-     * Releases memory, if the solver has not been used for more
-     * than {@link #CLEANUP_INTERVAL} ms.<br>
-     * 
-     * Please note, that this method is called from a seperate thread
-     * and must therefore be synchronized. Calling this method while
-     * the solver is in use, will result in Exceptions.
+     * Releases memory, if the solver has not been used for more than {@link #CLEANUP_INTERVAL}
+     * ms.<br>
+     *
+     * Please note, that this method is called from a seperate thread and must
+     * therefore be synchronized. Calling this method while the solver is in
+     * use, will result in Exceptions.
      */
     @Override
     protected void cleanUp() {
-        synchronized(this) {
+        synchronized (this) {
             if (initialized && (System.currentTimeMillis() - lastUsed) > CLEANUP_INTERVAL) {
-                for (int i = 0; i < onTable.length;i++) {
+                for (int i = 0; i < onTable.length; i++) {
                     onTable[i] = null;
                     offTable[i] = null;
                 }
             }
             onTable = null;
             offTable = null;
-            
+
             if (extendedTable != null) {
                 for (int i = 0; i < extendedTableIndex; i++) {
                     extendedTable.set(i, null);
@@ -249,11 +286,11 @@ public class TablingSolver extends AbstractSolver {
                 extendedTableMap = null;
             }
             extendedTableIndex = 0;
-            
+
             initialized = false;
         }
     }
-    
+
     /**
      * Delete all temporary chains.
      */
@@ -356,6 +393,7 @@ public class TablingSolver extends AbstractSolver {
 
     /**
      * Finds all Nice Loops/AICs contained in the current sudoku.
+     *
      * @return
      */
     protected synchronized List<SolutionStep> getAllNiceLoops() {
@@ -375,7 +413,9 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * Finds all Grouped Nice Loops/Grouped AICs contained in the current sudoku.
+     * Finds all Grouped Nice Loops/Grouped AICs contained in the current
+     * sudoku.
+     *
      * @return
      */
     protected synchronized List<SolutionStep> getAllGroupedNiceLoops() {
@@ -398,6 +438,7 @@ public class TablingSolver extends AbstractSolver {
 
     /**
      * Finds all Forcing Chains contained in the current sudoku.
+     *
      * @return
      */
     protected synchronized List<SolutionStep> getAllForcingChains() {
@@ -421,6 +462,7 @@ public class TablingSolver extends AbstractSolver {
 
     /**
      * Finds all Forcing Nets contained in the current sudoku.
+     *
      * @return
      */
     protected synchronized List<SolutionStep> getAllForcingNets() {
@@ -444,9 +486,9 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * Fills and expands the tables for a Kraken Fish search. This method
-     * is called by the fish finder before the fish search starts. For every
-     * fish {@link #checkKrakenTypeOne(sudoku.SudokuSet, int, int)} or
+     * Fills and expands the tables for a Kraken Fish search. This method is
+     * called by the fish finder before the fish search starts. For every fish {@link #checkKrakenTypeOne(sudoku.SudokuSet, int, int)}
+     * or
      * {@link #checkKrakenTypeTwo(sudoku.SudokuSet, sudoku.SudokuSet, int, int)}
      * is called to do the actual search.
      */
@@ -485,10 +527,10 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * Search for Kraken Fish Type 1: if a chain starting and ending with
-     * a weak link exists from every cell in fins to candidate in index,
-     * a KF Type 1 exists.
-     * 
+     * Search for Kraken Fish Type 1: if a chain starting and ending with a weak
+     * link exists from every cell in fins to candidate in index, a KF Type 1
+     * exists.
+     *
      * @param fins Set with all fins
      * @param index Index of destination cell
      * @param candidate Candidate in destination cell
@@ -506,9 +548,9 @@ public class TablingSolver extends AbstractSolver {
 
     /**
      * Check for Kraken Fish Type 2: If for all cells in indices chains starting
-     * and ending in a weak link exist to a candidate, a Kraken Fish Type 2 exists.
-     * A set with all cells holding a target for the KF is returned.
-     * 
+     * and ending in a weak link exist to a candidate, a Kraken Fish Type 2
+     * exists. A set with all cells holding a target for the KF is returned.
+     *
      * @param indices Set with all starting cells
      * @param result Set that contains possible targets for Kraken Fishes
      * @param startCandidate The fish candidate
@@ -543,6 +585,7 @@ public class TablingSolver extends AbstractSolver {
 
     /**
      * Get the shortest NiceLoop/AIC in the grid. Delegates to {@link #doGetNiceLoops()}.
+     *
      * @return
      */
     private synchronized SolutionStep getNiceLoops() {
@@ -575,8 +618,8 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * This is the method that actually searches for all types of
-     * NiceLoops and AICs.
+     * This is the method that actually searches for all types of NiceLoops and
+     * AICs.
      */
     private void doGetNiceLoops() {
         deletesMap.clear();
@@ -622,8 +665,8 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * This is the method that actually searches for all types of
-     * Forcing Chains and Nets.
+     * This is the method that actually searches for all types of Forcing Chains
+     * and Nets.
      */
     private void doGetForcingChains() {
         deletesMap.clear();
@@ -659,8 +702,17 @@ public class TablingSolver extends AbstractSolver {
         // ok, hier beginnt der Spass!
         ticks = System.currentTimeMillis();
         checkForcingChains();
-//        for(SolutionStep step: steps) {
-//            System.out.println("   "+step.toString(2));
+//        // TODO: DEBUG
+//        for (SolutionStep step : steps) {
+//            if (step.getCandidatesToDelete().get(0).getIndex() == 3 && step.getCandidatesToDelete().get(0).getValue() == 5) {
+//                System.out.println("==================================");
+//                System.out.println("   " + step.toString(2));
+//                List<Chain> chains = step.getChains();
+//                for (Chain chain : chains) {
+//                    System.out.println("   chain: " + chain);
+//                }
+//                System.out.println("==================================");
+//            }
 //        }
         ticks = System.currentTimeMillis() - ticks;
         if (DEBUG) {
@@ -669,8 +721,8 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * Starting point for the real checks for Forcing Chains/Nets.
-     * The checks are delegated to {@link #checkOneChain(solver.TableEntry)},
+     * Starting point for the real checks for Forcing Chains/Nets. The checks
+     * are delegated to {@link #checkOneChain(solver.TableEntry)},
      * {@link #checkTwoChains(solver.TableEntry, solver.TableEntry)} and
      * {@link #checkAllChainsForHouse(sudoku.SudokuSet[])}.
      */
@@ -694,11 +746,13 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * Collects all tables for a specific candidate in one house
-     * (for all candidates in every cell if <code>houseSets</code> is
-     * <code>null</code>) and stores them in {@link #entryList}.
-     * The list is then used in {@link #checkEntryList(java.util.List)}
-     * to find chains that have the same outcome.
+     * Collects all tables for a specific candidate in one house (for all
+     * candidates in every cell if
+     * <code>houseSets</code> is
+     * <code>null</code>) and stores them in {@link #entryList}. The list is
+     * then used in {@link #checkEntryList(java.util.List)} to find chains that
+     * have the same outcome.
+     *
      * @param houseSets
      */
     private void checkAllChainsForHouse(SudokuSet[] houseSets) {
@@ -743,10 +797,12 @@ public class TablingSolver extends AbstractSolver {
     /**
      * Used by {@link #checkAllChainsForHouse(sudoku.SudokuSet[])} to check
      * outcomes from "all candidates set in one house or one cell".
-     * <code>entryList</code> contains the necessary table entries for one check.
-     * If the same value is set/deleted in all chains, it can be set/deleted.<br><br>
+     * <code>entryList</code> contains the necessary table entries for one
+     * check. If the same value is set/deleted in all chains, it can be
+     * set/deleted.<br><br>
      *
-     * Note: The destinations candidate must not be one of the source candidates.
+     * Note: The destinations candidate must not be one of the source
+     * candidates.
      *
      * @param entryList
      */
@@ -805,8 +861,8 @@ public class TablingSolver extends AbstractSolver {
 
     /**
      * Steps are created as "Forcing Chain" always. Here the chains are checked
-     * for signs of a net. If nets are found, the type is corrected to
-     * "Forcing Net".
+     * for signs of a net. If nets are found, the type is corrected to "Forcing
+     * Net".
      *
      * @param step
      */
@@ -822,10 +878,10 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * Chains that contain ALS_NODEs have to be handled carefully:
-     * The ALS for every ALS_NODE must be added to globalStep, the index
-     * of the ALS in the chain entry has to be adjusted and all candidates
-     * for the entry have to be put as endo fins
+     * Chains that contain ALS_NODEs have to be handled carefully: The ALS for
+     * every ALS_NODE must be added to globalStep, the index of the ALS in the
+     * chain entry has to be adjusted and all candidates for the entry have to
+     * be put as endo fins
      *
      * @param step
      */
@@ -859,10 +915,11 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * Replace <code>dest</code> with <code>src</code>. Used to overwrite
-     * a longer chain/net already found with a shorter one that provides
-     * the same outcome.
-     * 
+     * Replace
+     * <code>dest</code> with
+     * <code>src</code>. Used to overwrite a longer chain/net already found with
+     * a shorter one that provides the same outcome.
+     *
      * @param src
      * @param dest
      */
@@ -940,10 +997,10 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * Checks if a step with the same effect is already contained in {@link #steps}. If not, the
-     * new step is added. If it is already there, the old step is replaced with the
-     * new one if the chains in the new step are shorter. If they are longer,
-     * the new step is discarded.
+     * Checks if a step with the same effect is already contained in {@link #steps}.
+     * If not, the new step is added. If it is already there, the old step is
+     * replaced with the new one if the chains in the new step are shorter. If
+     * they are longer, the new step is discarded.
      */
     private void replaceOrCopyStep() {
         adjustType(globalStep);
@@ -994,8 +1051,8 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * Print all table entries from <code>entrylist</code>
-     * (for debugging only).
+     * Print all table entries from
+     * <code>entrylist</code> (for debugging only).
      *
      * @param entryList
      * @return
@@ -1012,14 +1069,15 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * <code>on</code> and <code>off</code> lead to the same conclusion. This
-     * is a verity and the conclusion has to be always true.<br><br>
+     * <code>on</code> and
+     * <code>off</code> lead to the same conclusion. This is a verity and the
+     * conclusion has to be always true.<br><br>
      *
      * Note: If one of the chains gets back to the originating cell, the other
-     * chain is only one element long. The whole thing really is a Nice Loop
-     * and has already been handled by {@link #checkOneChain(solver.TableEntry)}.
-     * It is ignored here.
-     * 
+     * chain is only one element long. The whole thing really is a Nice Loop and
+     * has already been handled by {@link #checkOneChain(solver.TableEntry)}. It
+     * is ignored here.
+     *
      * @param on
      * @param off
      */
@@ -1070,21 +1128,20 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * Checks <code>entry</code> for all combinations that lead to a conclusion.
-     * <ul>
-     *      <li>setting/deleting a candidate in/from a cell leades to that
-     *          candidate beeing deletedfrom/set in that very cell -> original assumption was false.</li>
-     *      <li>two chains from the same start lead to a candidate set in and deleted from the same cell ->
-     *          assumption is false.</i>
-     *      <li>two chains from the same start lead to two different values set
-     *          in the same cell -> assumption is false.</li>
-     *      <li>two chains from the same start lead to the same value set
-     *          twice in one house -> assumption is false.</li>
-     *      <li>chains from the same start lead to all instances of a candidate
-     *          beeing removed from a cell -> assumption is false.</li>
-     *      <li>chains from the same start lead to all instances of a candidate
-     *          beeing removed from a house -> assumption is false.</li>
-     * </ul>
+     * Checks
+     * <code>entry</code> for all combinations that lead to a conclusion. <ul>
+     * <li>setting/deleting a candidate in/from a cell leades to that candidate
+     * beeing deletedfrom/set in that very cell -> original assumption was
+     * false.</li> <li>two chains from the same start lead to a candidate set in
+     * and deleted from the same cell -> assumption is false.</i> <li>two chains
+     * from the same start lead to two different values set in the same cell ->
+     * assumption is false.</li> <li>two chains from the same start lead to the
+     * same value set twice in one house -> assumption is false.</li> <li>chains
+     * from the same start lead to all instances of a candidate beeing removed
+     * from a cell -> assumption is false.</li> <li>chains from the same start
+     * lead to all instances of a candidate beeing removed from a house ->
+     * assumption is false.</li> </ul>
+     *
      * @param entry
      */
     private void checkOneChain(TableEntry entry) {
@@ -1209,15 +1266,13 @@ public class TablingSolver extends AbstractSolver {
 
     /**
      * Check, if all instances of a canddiate are delete from one house. If so,
-     * the assumption was invalid:
-     * <ul>
-     *      <li>Get all instances of the candidate in the house</li>
-     *      <li>If there are canddiates and the set equals the offSet, step was found</li>
-     * </ul>
-     * 
+     * the assumption was invalid: <ul> <li>Get all instances of the candidate
+     * in the house</li> <li>If there are canddiates and the set equals the
+     * offSet, step was found</li> </ul>
+     *
      * @param entry
      * @param houseSets
-     * @param entityTyp 
+     * @param entityTyp
      */
     private void checkHouseDel(TableEntry entry, SudokuSet[] houseSets, int entityTyp) {
         // check all candidates
@@ -1253,10 +1308,10 @@ public class TablingSolver extends AbstractSolver {
 
     /**
      * Checks, if an assumptions leads to the same vaule set twice in one house.
-     * 
+     *
      * @param entry
      * @param houseSets
-     * @param entityTyp 
+     * @param entityTyp
      */
     private void checkHouseSet(TableEntry entry, SudokuSet[] houseSets, int entityTyp) {
         for (int i = 1; i < entry.onSets.length; i++) {
@@ -1288,12 +1343,11 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * For every table check, if it contains a link, that goes back to
-     * the originating cell of the table entry. If so, a possible Nice Loop
-     * exists. A Nice Loop in this implementation always starts and ends
-     * with a {@link Chain#NORMAL_NODE}.
-     * 
-     * @param tables 
+     * For every table check, if it contains a link, that goes back to the
+     * originating cell of the table entry. If so, a possible Nice Loop exists.
+     * A Nice Loop in this implementation always starts and ends with a {@link Chain#NORMAL_NODE}.
+     *
+     * @param tables
      */
     private void checkNiceLoops(TableEntry[] tables) {
         // check all table entries
@@ -1310,16 +1364,14 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * AICs are checked separately: The end of the chain has to be:
-     * <ul>
-     *   <li>on-entry for the same candidate as the start cell (Type 1), if
-     *       the combined buddies of start and end cell can eliminate more
-     *       than one candidate</li>
-     *   <li>on-entry for a different candidate if the end cell sees the start cell
-     *       and if the start cell contains a candidate of the chain end and the 
-     *       end cell contains a candidate of the chain start</li>
+     * AICs are checked separately: The end of the chain has to be: <ul>
+     * <li>on-entry for the same candidate as the start cell (Type 1), if the
+     * combined buddies of start and end cell can eliminate more than one
+     * candidate</li> <li>on-entry for a different candidate if the end cell
+     * sees the start cell and if the start cell contains a candidate of the
+     * chain end and the end cell contains a candidate of the chain start</li>
      * </ul>
-     * 
+     *
      * @param tables Only offTables are allowed (AICs start with a strong link)
      */
     private void checkAics(TableEntry[] tables) {
@@ -1361,42 +1413,33 @@ public class TablingSolver extends AbstractSolver {
      * If the first and the last cell of the chain are identical, the chain is a
      * Nice Loop.<br><br>
      *
-     * Discontinuous Nice Loop:
-     * <dl>
-     *    <dt>First and last link are weak for the same candidate:</dt>
-     *        <dd>Candidate can be eliminated from the start cell</dd>
-     *    <dt>First and last link are strong for the same candidate:</dt>
-     *        <dd>Candidate can be set in the start cell (in the step all
-     *            other candidates are eliminated from the cell, leads
-     *            to a naked single)</dd>
-     *    <dt>One link is weak and the other strong, they are for different candidates:</dt>
-     *        <dd>The candidate from the weak link can be eliminated from the start cell</dd>
-     * </dl>
-     * 
-     * Continuous Nice Loop:
-     * <dl>
-     *    <dt>Two weak links:</dt>
-     *        <dd>First cell must be bivalue, candidates must be different</dd>
-     *    <dt>Two strong links:</dt>
-     *        <dd>Candidates must be different</dd>
-     *    <dt>One link strong, the other weak:</dt>
-     *        <dd>Both links must be for the same candidate</dd>
-     * </dl>
-     * 
-     * If a Continuous nice Loop is present, the following eliminations are possible:
-     * <dl>
-     *    <dt>One cell reached and left with a strong link:</dt>
-     *        <dd>All candidates not present in the strong links can be eliminated from the cell</dd>
-     *    <dt>Weak link between cells:</dt>
-     *        <dd>Link candidate can be eliminated from all cells, that see both cells of the link</dd>
-     * </dl>
+     * Discontinuous Nice Loop: <dl> <dt>First and last link are weak for the
+     * same candidate:</dt> <dd>Candidate can be eliminated from the start
+     * cell</dd> <dt>First and last link are strong for the same candidate:</dt>
+     * <dd>Candidate can be set in the start cell (in the step all other
+     * candidates are eliminated from the cell, leads to a naked single)</dd>
+     * <dt>One link is weak and the other strong, they are for different
+     * candidates:</dt> <dd>The candidate from the weak link can be eliminated
+     * from the start cell</dd> </dl>
      *
-     * Chains are created backwards. We cant be sure, if the first link really leaves the cell before
-     * we have created the actual chain. All chains, which first link remains in the start cell,
-     * are ignored.
+     * Continuous Nice Loop: <dl> <dt>Two weak links:</dt> <dd>First cell must
+     * be bivalue, candidates must be different</dd> <dt>Two strong links:</dt>
+     * <dd>Candidates must be different</dd> <dt>One link strong, the other
+     * weak:</dt> <dd>Both links must be for the same candidate</dd> </dl>
+     *
+     * If a Continuous nice Loop is present, the following eliminations are
+     * possible: <dl> <dt>One cell reached and left with a strong link:</dt>
+     * <dd>All candidates not present in the strong links can be eliminated from
+     * the cell</dd> <dt>Weak link between cells:</dt> <dd>Link candidate can be
+     * eliminated from all cells, that see both cells of the link</dd> </dl>
+     *
+     * Chains are created backwards. We cant be sure, if the first link really
+     * leaves the cell before we have created the actual chain. All chains,
+     * which first link remains in the start cell, are ignored.
      *
      * @param entry TableEntry für den Start-Link
-     * @param entryIndex Index auf den vorletzten Link des Nice Loops (ist letzter Eintrag, der in der Table noch enthalten ist).
+     * @param entryIndex Index auf den vorletzten Link des Nice Loops (ist
+     * letzter Eintrag, der in der Table noch enthalten ist).
      */
     private void checkNiceLoop(TableEntry entry, int entryIndex) {
         // A Nice Loop must be at least 3 links long
@@ -1640,9 +1683,9 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * Checks whether the AIC does make an elimination; if so builds the step and
-     * adds it to steps.
-     * 
+     * Checks whether the AIC does make an elimination; if so builds the step
+     * and adds it to steps.
+     *
      * @param entry The entry for the start cell
      * @param entryIndex index of the end cell of the AIC
      */
@@ -1733,12 +1776,12 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * Fills the tables with all initial consequences. One table exists for every
-     * outcome (set/not set) of every candidate in the sudoku. If {@link #chainsOnly} 
-     * is set, only direct dependencies are recorded. If it is not set, 
-     * {@link #getTableEntry(solver.TableEntry, int, int, boolean) } is used to dig a 
-     * little deeper.<br><br>
-     * 
+     * Fills the tables with all initial consequences. One table exists for
+     * every outcome (set/not set) of every candidate in the sudoku. If {@link #chainsOnly}
+     * is set, only direct dependencies are recorded. If it is not set,
+     * {@link #getTableEntry(solver.TableEntry, int, int, boolean) } is used to
+     * dig a little deeper.<br><br>
+     *
      * All consequences depend on the original sudoku. Especially when searching
      * for nets this can be confusing: the current result (e.g. a Hidden Single)
      * comes from eliminating one candidate in a house. But if there were more
@@ -1854,40 +1897,33 @@ public class TablingSolver extends AbstractSolver {
             sudoku.set(savedSudoku);
         }
     }
-    
+
     /**
-     * Fills {@link #extendedTable } with all group nodes. Group nodes are always
-     * handled as chains - only direct implications are stored.<br><br>
-     * 
-     * Collect all group nodes. For every group node do: 
-     * <ul>
-     *      <li>make a table for every group node (on and off);</li>
-     *      <li>write the index in extendedTable into extendedTableMap (together with the group node entry)</li>
-     *      <li><dl>
-     *          <dt>for ON entries:</dt>
-     *              <dd>every candidate that can see all group node cells is turned OFF;
-     *              every other group node that can see (and doesnt overlap) the actual group node is turned OFF</dd>
-     *          <dt>for OFF entries:</dt>
-     *              <dd>if a single candidate in one of the houses of the group node exists, it is turned ON;
-     *              if only one other non-overlapping group node (without extra non-group nodes) exists in 
-     *              one of the houses, it is turned ON</dd>
-     *      </dl></li>
-     * </ul>
-     * Links to the group nodes have to be added in normal tables that trigger the group node:
-     * <ul>
-     *      <li><dl>
-     *          <dt>for ON entries:</dt>
-     *          <dd>if only one additional candidate exists in one of the houses, the entry 
-     *          is added to that candidate's offTable</dd>
-     *          <dt>for OFF entries:</dt>
-     *          <dd>the entry is added to the onTable of every candidate that sees the group node</dd>
-     *      </dl></li>
-     * </ul>
-     * 
-     * <b>CAUTION:</b> Must be called AFTER {@link #fillTables() } or the attributes 
-     * {@link #extendedTableMap } and {@link #extendedTableIndex } 
-     * will not be properly initialized; the initialization
-     * cannot be moved here, because it must be possible to call {@link #fillTablesWithGroupNodes() }
+     * Fills {@link #extendedTable } with all group nodes. Group nodes are
+     * always handled as chains - only direct implications are stored.<br><br>
+     *
+     * Collect all group nodes. For every group node do: <ul> <li>make a table
+     * for every group node (on and off);</li> <li>write the index in
+     * extendedTable into extendedTableMap (together with the group node
+     * entry)</li> <li><dl> <dt>for ON entries:</dt> <dd>every candidate that
+     * can see all group node cells is turned OFF; every other group node that
+     * can see (and doesnt overlap) the actual group node is turned OFF</dd>
+     * <dt>for OFF entries:</dt> <dd>if a single candidate in one of the houses
+     * of the group node exists, it is turned ON; if only one other
+     * non-overlapping group node (without extra non-group nodes) exists in one
+     * of the houses, it is turned ON</dd> </dl></li> </ul> Links to the group
+     * nodes have to be added in normal tables that trigger the group node: <ul>
+     * <li><dl> <dt>for ON entries:</dt> <dd>if only one additional candidate
+     * exists in one of the houses, the entry is added to that candidate's
+     * offTable</dd> <dt>for OFF entries:</dt> <dd>the entry is added to the
+     * onTable of every candidate that sees the group node</dd> </dl></li> </ul>
+     *
+     * <b>CAUTION:</b> Must be called AFTER {@link #fillTables() } or the
+     * attributes
+     * {@link #extendedTableMap } and {@link #extendedTableIndex }
+     * will not be properly initialized; the initialization cannot be moved
+     * here, because it must be possible to call {@link #fillTablesWithGroupNodes()
+     * }
      * and {@link #fillTablesWithAls() } in arbitrary order.
      */
     private void fillTablesWithGroupNodes() {
@@ -2036,54 +2072,52 @@ public class TablingSolver extends AbstractSolver {
 
     /**
      * Collect all ALS and handle them correctly.<br><br>
-     * 
-     * ALS can only be reached over weak links (single or multiple candidates), and they can
-     * be left via weak or strong links. Turning the candidate(s)
-     * off changes the ALS into a locked set that can provide eliminations or force
-     * a cell to a certain value (the candidate eliminations that force the cell
-     * are not stored in the chain, since we can't handle links with more than
-     * one candidate).<br><br>
-     * 
-     * Since every ALS can trigger different sets of eliminations depending on how it is reached, every ALS
-     * can have more than one table entry. The weak link that provides the locked set is not stored in the
-     * chain (it can affect multiple candidates, that don't form a group node, which we can't handle).
-     * Eliminations caused by locked sets can trigger other ALSes.<br><br>
-     * 
-     * For every ALS do:
-     * <ul>
-     *      <li>check all possible entries; if an entry provides eliminations or forces
-     *      cells make a table for that entry (only off)</li>
-     *      <li>write the index in {@link #extendedTable } into {@link #extendedTableMap } 
-     *      (together with the ALS entry)</li>
-     *      <li>add the ALS entry to the onTable of the  candidate/group node/als that provides the entry</li>
-     *      <li>every candidate/group node deleted by the resulting locked set is added to the ALS's table
-     *      as is every newly triggered ALS</li>
-     * </ul>
-     * 
-     * The ALS entry has the index of the first candidate that provides the entry set as index1, the
-     * index in the ALS-array set as index2.<br><br>
-     * 
-     * More detailed: for every ALS do
-     * <ul>
-     *      <li>for every candidate of the als find all remaining candidates
-     *      in the grid: they are all valid entries</li>
-     *      <li>if one of the entries from above is a member of a group node, that
-     *      doesn't overlap the als, the group node is an additional entry</li>
-     *      <li>if the remaining locked set provides eliminations, record them and
-     *      check for possible forcings; note that the eliminations could
-     *      provide an entry for another als; also, the eliminations could
-     *      form a group node</li>
-     * </ul>
-     * 
-     * <b>20090220:</b> BUG - alsBuddies contains only cells, that can see all cells of the ALS,
-     * its then used for finding possible entries and eliminations; this is incomplete:
-     * entries and eliminations only have to see all cells of the ALS that contain a 
-     * certain candidate!<br><br>
-     * 
-     * <b>CAUTION:</b> Must be called AFTER {@link #fillTables() } or the attributes 
-     * {@link #extendedTableMap } and {@link #extendedTableIndex } will not be properly 
-     * initialized; the initialization cannot be moved here, because it must be possible 
-     * to call {@link #fillTablesWithGroupNodes() } and 
+     *
+     * ALS can only be reached over weak links (single or multiple candidates),
+     * and they can be left via weak or strong links. Turning the candidate(s)
+     * off changes the ALS into a locked set that can provide eliminations or
+     * force a cell to a certain value (the candidate eliminations that force
+     * the cell are not stored in the chain, since we can't handle links with
+     * more than one candidate).<br><br>
+     *
+     * Since every ALS can trigger different sets of eliminations depending on
+     * how it is reached, every ALS can have more than one table entry. The weak
+     * link that provides the locked set is not stored in the chain (it can
+     * affect multiple candidates, that don't form a group node, which we can't
+     * handle). Eliminations caused by locked sets can trigger other
+     * ALSes.<br><br>
+     *
+     * For every ALS do: <ul> <li>check all possible entries; if an entry
+     * provides eliminations or forces cells make a table for that entry (only
+     * off)</li> <li>write the index in {@link #extendedTable } into {@link #extendedTableMap
+     * }
+     * (together with the ALS entry)</li> <li>add the ALS entry to the onTable
+     * of the candidate/group node/als that provides the entry</li> <li>every
+     * candidate/group node deleted by the resulting locked set is added to the
+     * ALS's table as is every newly triggered ALS</li> </ul>
+     *
+     * The ALS entry has the index of the first candidate that provides the
+     * entry set as index1, the index in the ALS-array set as index2.<br><br>
+     *
+     * More detailed: for every ALS do <ul> <li>for every candidate of the als
+     * find all remaining candidates in the grid: they are all valid
+     * entries</li> <li>if one of the entries from above is a member of a group
+     * node, that doesn't overlap the als, the group node is an additional
+     * entry</li> <li>if the remaining locked set provides eliminations, record
+     * them and check for possible forcings; note that the eliminations could
+     * provide an entry for another als; also, the eliminations could form a
+     * group node</li> </ul>
+     *
+     * <b>20090220:</b> BUG - alsBuddies contains only cells, that can see all
+     * cells of the ALS, its then used for finding possible entries and
+     * eliminations; this is incomplete: entries and eliminations only have to
+     * see all cells of the ALS that contain a certain candidate!<br><br>
+     *
+     * <b>CAUTION:</b> Must be called AFTER {@link #fillTables() } or the
+     * attributes
+     * {@link #extendedTableMap } and {@link #extendedTableIndex } will not be
+     * properly initialized; the initialization cannot be moved here, because it
+     * must be possible to call {@link #fillTablesWithGroupNodes() } and
      * {@link #fillTablesWithAls() } in arbitrary order.
      */
     private void fillTablesWithAls() {
@@ -2290,11 +2324,11 @@ public class TablingSolver extends AbstractSolver {
     /**
      * Tries to find an extended table entry for a given als with the given
      * entry candidate; if none can be found, null is returned.
-     * 
+     *
      * @param entryCellIndex
      * @param alsIndex
      * @param cand
-     * @return 
+     * @return
      */
     private TableEntry getAlsTableEntry(int entryCellIndex, int alsIndex, int cand) {
         int entry = Chain.makeSEntry(entryCellIndex, alsIndex, cand, false, Chain.ALS_NODE);
@@ -2306,11 +2340,11 @@ public class TablingSolver extends AbstractSolver {
 
     /**
      * Returns the next free {@link TableEntry } from {@link #extendedTable }
-     * (reuse of entries in multiple search runs). If no entry is left, 
-     * a new one is created and added to extendedTable.
-     * 
+     * (reuse of entries in multiple search runs). If no entry is left, a new
+     * one is created and added to extendedTable.
+     *
      * @param tableIndex
-     * @return 
+     * @return
      */
     private TableEntry getNextExtendedTableEntry(int tableIndex) {
         TableEntry entry = null;
@@ -2325,23 +2359,30 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * Collects all dependencies on one specific action (cell is set/candidate is deleted).
-     * To detect nets, the whole operation is repeated {@link Options#anzTableLookAhead} times.<br>
-     * 
-     * All operations have to be done on a copy of the original sudoku. The candidates
-     * in the {@link #finder} are not updated (they are not used and after the operation
-     * the sudoku has not changed).
-     * 
-     * If <code>set</code> is <code>true</code>, the cell is set and all newly created
-     * Hidden and Naked Singles are collected and executed. If it is <code>false</code>,
-     * it is eliminated. If that creates single(s), they are executed and handled as well.<br>
-     * 
-     * If a cell is set, this is delegated to {@link #setCell(int, int, solver.TableEntry, boolean, boolean, int) }.
-     * 
+     * Collects all dependencies on one specific action (cell is set/candidate
+     * is deleted). To detect nets, the whole operation is repeated {@link Options#anzTableLookAhead}
+     * times.<br>
+     *
+     * All operations have to be done on a copy of the original sudoku. The
+     * candidates in the {@link #finder} are not updated (they are not used and
+     * after the operation the sudoku has not changed).
+     *
+     * If
+     * <code>set</code> is
+     * <code>true</code>, the cell is set and all newly created Hidden and Naked
+     * Singles are collected and executed. If it is
+     * <code>false</code>, it is eliminated. If that creates single(s), they are
+     * executed and handled as well.<br>
+     *
+     * If a cell is set, this is delegated to {@link #setCell(int, int, solver.TableEntry, boolean, boolean, int)
+     * }.
+     *
      * @param entry The {@link TableEntry}
      * @param cellIndex the index of the current cell
      * @param cand The current candidate
-     * @param set <code>true</code> if the candidate is to be set, else <code>false</code>
+     * @param set
+     * <code>true</code> if the candidate is to be set, else
+     * <code>false</code>
      */
     private void getTableEntry(TableEntry entry, int cellIndex, int cand, boolean set) {
         if (set) {
@@ -2375,9 +2416,9 @@ public class TablingSolver extends AbstractSolver {
 
     /**
      * Setting a value in a cell is surprisingly complicated: Not only must all
-     * consequences be found but the sources of all actions have to be recorded as well
-     * (from the ORIGINAL sudoku!).
-     * 
+     * consequences be found but the sources of all actions have to be recorded
+     * as well (from the ORIGINAL sudoku!).
+     *
      * @param cellIndex
      * @param cand
      * @param entry
@@ -2458,13 +2499,14 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * Collect the entries for all candidates in a given house. All those canddiates 
-     * have to be eliminated before the cell can be set. Used by {@link #setCell(int, int, solver.TableEntry, boolean, boolean) }.
-     * 
+     * Collect the entries for all candidates in a given house. All those
+     * canddiates have to be eliminated before the cell can be set. Used by {@link #setCell(int, int, solver.TableEntry, boolean, boolean)
+     * }.
+     *
      * @param cellIndex
      * @param cand
      * @param houseSet
-     * @param entry 
+     * @param entry
      */
     private void getRetIndicesForHouse(int cellIndex, int cand, SudokuSet houseSet, TableEntry entry) {
         // get all original candidates in the house (cell itself excluded)
@@ -2481,21 +2523,25 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * Expands the tables: every {@link TableEntry } contains all direct implications
-     * for a given premise. Now every implication is expanded with all implication from 
-     * its own <code>TableEntry</code>.<br><br>
-     * 
-     * For every entry in <code>table[i].entries</code> all new implications are added.
-     * that is done till no implications are left or till <code>table[i].entries</code> is full.<br><br>
+     * Expands the tables: every {@link TableEntry } contains all direct
+     * implications for a given premise. Now every implication is expanded with
+     * all implication from its own
+     * <code>TableEntry</code>.<br><br>
      *
-     * If an entry is added, a reference is set to the originating table. If an entry already
-     * exists, the path length is checked: if the new entry gives a shorter chain,
-     * the old entry is overridden.<br><br>
+     * For every entry in
+     * <code>table[i].entries</code> all new implications are added. that is
+     * done till no implications are left or till
+     * <code>table[i].entries</code> is full.<br><br>
      *
-     * Group node table entries are never expanded (since we dont start or end with a group node,
-     * that wouldnt make any sense). They are however used as possible implications.
-     * 
-     * @param table 
+     * If an entry is added, a reference is set to the originating table. If an
+     * entry already exists, the path length is checked: if the new entry gives
+     * a shorter chain, the old entry is overridden.<br><br>
+     *
+     * Group node table entries are never expanded (since we dont start or end
+     * with a group node, that wouldnt make any sense). They are however used as
+     * possible implications.
+     *
+     * @param table
      */
     private void expandTables(TableEntry[] table) {
         // for every entry in tables do...
@@ -2613,25 +2659,27 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * Convenience method, delegates to {@link #addChain(solver.TableEntry, int, int, boolean, boolean, boolean) }.
-     * 
+     * Convenience method, delegates to {@link #addChain(solver.TableEntry, int, int, boolean, boolean, boolean)
+     * }.
+     *
      * @param entry
      * @param cellIndex
      * @param cand
-     * @param set 
+     * @param set
      */
     private void addChain(TableEntry entry, int cellIndex, int cand, boolean set) {
         addChain(entry, cellIndex, cand, set, false);
     }
 
     /**
-     * Convenience method, delegates to {@link #addChain(solver.TableEntry, int, int, boolean, boolean, boolean) }.
-     * 
+     * Convenience method, delegates to {@link #addChain(solver.TableEntry, int, int, boolean, boolean, boolean)
+     * }.
+     *
      * @param entry
      * @param cellIndex
      * @param cand
      * @param set
-     * @param isNiceLoop 
+     * @param isNiceLoop
      */
     private void addChain(TableEntry entry, int cellIndex, int cand, boolean set, boolean isNiceLoop) {
         addChain(entry, cellIndex, cand, set, isNiceLoop, false);
@@ -2639,18 +2687,21 @@ public class TablingSolver extends AbstractSolver {
 
     /**
      * Construct the chain for a premise and an implication. Since we have to
-     * build the chain from back to start via the retIndices, the chain must
-     * be reversed before it can be written into a {@link SolutionStep }.
+     * build the chain from back to start via the retIndices, the chain must be
+     * reversed before it can be written into a {@link SolutionStep }.
      *
      * @param entry premise for the chain (first step in the chain)
-     * @param cellIndex index of the cell of the implication (last step in the chain)
+     * @param cellIndex index of the cell of the implication (last step in the
+     * chain)
      * @param cand candidate of the implication
      * @param set last link in chain is strong or weak
-     * @param isNiceLoop like <code>isAic</code>, but the first link must leave the cell;
-     *          the last link may point to the start cell.
-     * @param isAic no element in the chain may link to the middleof the chain (but it
-     *          is allowed for two censecutive links to share the same cell). If the chain
-     *          is invalid, the method aborts. Links to the start cell are invalid too for AICs.
+     * @param isNiceLoop like
+     * <code>isAic</code>, but the first link must leave the cell; the last link
+     * may point to the start cell.
+     * @param isAic no element in the chain may link to the middleof the chain
+     * (but it is allowed for two censecutive links to share the same cell). If
+     * the chain is invalid, the method aborts. Links to the start cell are
+     * invalid too for AICs.
      */
     private void addChain(TableEntry entry, int cellIndex, int cand, boolean set, boolean isNiceLoop, boolean isAic) {
 //        if (cellIndex != 79 || cand != 6 || entry.getCellIndex(0) != 73 || entry.getCandidate(0) != 1) {
@@ -2737,19 +2788,21 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * Constructs a chain for a given premise and a given implication. It looks up
-     * the correct entry in <code>entry</code> and delegates the real work to
-     * {@link #buildChain(solver.TableEntry, int, int[], boolean, sudoku.SudokuSet) }.
-     * If the chain is a net, the net parts are constructed as well.<br><br>
-     * 
-     * The main chain is written to {@link #chain}, the net parts are written
-     * to {@link #mins}. The chain is from back to front, it is reversed by
-     * {@link #addChain(solver.TableEntry, int, int, boolean, boolean, boolean) }.
-     * 
+     * Constructs a chain for a given premise and a given implication. It looks
+     * up the correct entry in
+     * <code>entry</code> and delegates the real work to
+     * {@link #buildChain(solver.TableEntry, int, int[], boolean, sudoku.SudokuSet)
+     * }. If the chain is a net, the net parts are constructed as well.<br><br>
+     *
+     * The main chain is written to {@link #chain}, the net parts are written to {@link #mins}.
+     * The chain is from back to front, it is reversed by
+     * {@link #addChain(solver.TableEntry, int, int, boolean, boolean, boolean)
+     * }.
+     *
      * @param entry
      * @param cellIndex
      * @param cand
-     * @param set 
+     * @param set
      */
     private void buildChain(TableEntry entry, int cellIndex, int cand, boolean set) {
         // find the entry for the implication in the TableEntry
@@ -2783,28 +2836,33 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * <i>Really</i> constructs the chain for a given premise and a given implication :-).<br><br>
-     * <ul>
-     *  <li>Add the implication as first step in the chain</li>
-     *  <li>retIndex1 points to the entry that caused the implication -&gt; jump to it and handle it next</li>
-     *  <li>if there are more than 1 retIndices, the first is treated normally;
-     *  the others are stored in {@link #mins}/{@link #minIndexes], they are
+     * <i>Really</i> constructs the chain for a given premise and a given
+     * implication :-).<br><br> <ul> <li>Add the implication as first step in
+     * the chain</li> <li>retIndex1 points to the entry that caused the
+     * implication -&gt; jump to it and handle it next</li> <li>if there are
+     * more than 1 retIndices, the first is treated normally; the others are
+     * stored in {@link #mins}/{@link #minIndexes], they are
      *  evaluated at a later time</li>
      * </ul>
-     * The method returns, when the first entry in <code>entry</code> is reached.<br><br>
-     * 
-     * All cells of the main chain are stored in <code>chainSet</code>. When the method
-     * is called for a min (multiple inference - the net part of a chain - <code>isMin</code>
-     * is <code>true</code>), the method runs until a cell from the main chain is reached.
-     * 
-     * <b>CAUTION:</b> The chain is stored in <code>actChain</code> in reverse order!
-     * 
+     * The method returns, when the first entry in
+     * <code>entry</code> is reached.<br><br>
+     *
+     * All cells of the main chain are stored in
+     * <code>chainSet</code>. When the method is called for a min (multiple
+     * inference - the net part of a chain -
+     * <code>isMin</code> is
+     * <code>true</code>), the method runs until a cell from the main chain is
+     * reached.
+     *
+     * <b>CAUTION:</b> The chain is stored in
+     * <code>actChain</code> in reverse order!
+     *
      * @param entry
      * @param entryIndex
      * @param actChain
      * @param isMin
      * @param chainSet
-     * @return 
+     * @return
      */
     private int buildChain(TableEntry entry, int entryIndex, int[] actChain, boolean isMin, SudokuSet chainSet) {
         int actChainIndex = 0;
@@ -2888,9 +2946,9 @@ public class TablingSolver extends AbstractSolver {
 
     /**
      * Show the contents of one {@link TableEntry} (for debugging).
-     * 
+     *
      * @param title
-     * @param entry 
+     * @param entry
      */
     private void printTable(String title, TableEntry entry) {
         System.out.println(title + ": ");
@@ -2935,9 +2993,9 @@ public class TablingSolver extends AbstractSolver {
 
     /**
      * Show one {@link TableEntry} (for debugging).
-     * 
+     *
      * @param entry
-     * @return 
+     * @return
      */
     private String printTableEntry(int entry) {
         int index = Chain.getSCellIndex(entry);
@@ -2988,28 +3046,24 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * Compares two {@link SolutionStep SolutionSteps} that hold steps found
-     * by tabling. The sort order:
+     * Compares two {@link SolutionStep SolutionSteps} that hold steps found by
+     * tabling. The sort order:
      *
-     * <ol>
-     *   <li>steps that set cells beat steps that delete candidates</li>
-     *   <li>if both steps set cells:<ul>
-     *       <li>number of cells that can be set</li>
-     *       <li>equivalency (same cells?)</li>
-     *       <li>cells with lower indices go first</li>
-     *       <li>chain length in all chains</li></ul></li>
-     *   <li>if both steps eliminate candidates:<ul>
-     *       <li>number of candidates that can be deleted</li>
-     *       <li>equivalency (same cells affected?)</li>
-     *       <li>lower cells and lower candidates first</li>
-     *       <li>chain length in all chains</li></ul></li>
-     * </ol>
+     * <ol> <li>steps that set cells beat steps that delete candidates</li>
+     * <li>if both steps set cells:<ul> <li>number of cells that can be set</li>
+     * <li>equivalency (same cells?)</li> <li>cells with lower indices go
+     * first</li> <li>chain length in all chains</li></ul></li> <li>if both
+     * steps eliminate candidates:<ul> <li>number of candidates that can be
+     * deleted</li> <li>equivalency (same cells affected?)</li> <li>lower cells
+     * and lower candidates first</li> <li>chain length in all
+     * chains</li></ul></li> </ol>
      */
     class TablingComparator implements Comparator<SolutionStep> {
 
         /**
          * Compares two {@link SolutionStep SolutionSteps} obtained by tabling.
          * For details see description of the class itself.
+         *
          * @param o1
          * @param o2
          * @return
