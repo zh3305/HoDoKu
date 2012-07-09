@@ -119,7 +119,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
     /** One empty icon for disabled filter buttons - digits */
     private Icon emptyToggleButtonIconOrg = new ImageIcon(getClass().getResource("/img/f_0c.png"));
     /** One empty icon for disabled filter buttons */
-    private Icon emptyToggleButtonIconOrgColorKu = new ImageIcon(new ColorKuImage(32, Color.WHITE));
+    private Icon emptyToggleButtonIconOrgColorKu = new ImageIcon(new ColorKuImage(TOGGLE_BUTTON_ICON_SIZE, Color.WHITE));
 //    /** One empty icon for disabled filter buttons */
 //    private Icon emptyToggleButtonIcon = emptyToggleButtonIconOrg;
     private JRadioButtonMenuItem[] levelMenuItems = new JRadioButtonMenuItem[5];
