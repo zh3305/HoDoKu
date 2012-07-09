@@ -62,7 +62,7 @@ implements ListDragAndDropChange {
     private boolean listView = false; // absichtlich verkehrt, damit stepList gesetzt wird
     
     /** Creates new form ConfigSolverPanel */
-    @SuppressWarnings("ResultOfObjectAllocationIgnored")
+    @SuppressWarnings({"ResultOfObjectAllocationIgnored", "unchecked"})
     public ConfigSolverPanel() {
         initComponents();
         
@@ -398,6 +398,7 @@ implements ListDragAndDropChange {
         }
     }//GEN-LAST:event_stepListMouseClicked
     
+    @SuppressWarnings("unchecked")
     private void moveOneStep(int index, boolean up) {
         //System.out.println("move one step: " + index + "/" + up);
         int toIndex = up ? index + 1 : index - 1;
@@ -451,6 +452,7 @@ implements ListDragAndDropChange {
         Options.getInstance().adjustOrgSolverSteps();
     }
     
+    @SuppressWarnings("unchecked")
     private void initAll(boolean setDefault) {
         // Zuerst die Daten zurücksetzen
         if (setDefault) {

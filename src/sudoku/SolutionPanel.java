@@ -528,6 +528,7 @@ private void tabPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//
         }
     }
     
+    @SuppressWarnings("unchecked")
     private void setStepsInList() {
         getActTab();
         String[] data = new String[actSteps.size()];
@@ -597,6 +598,7 @@ private void tabPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//
         addTabPane(steps, titel);
     }
     
+    @SuppressWarnings("unchecked")
     private void addTabPane(List<SolutionStep> steps, String titel) {
         JList tmpList = new JList();
         tmpList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);

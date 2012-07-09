@@ -87,6 +87,7 @@ public class ExtendedPrintDialog extends javax.swing.JDialog {
      * @param parent
      * @param modal  
      */
+    @SuppressWarnings("unchecked")
     public ExtendedPrintDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();

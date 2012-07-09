@@ -40,6 +40,7 @@ public class ConfigFindAllStepsPanel extends javax.swing.JPanel {
     private String krakenFishCandidates;
 
     /** Creates new form ConfigFindAllStepsPanel */
+    @SuppressWarnings("unchecked")
     public ConfigFindAllStepsPanel() {
         initComponents();
 

@@ -82,7 +82,7 @@ implements ListDragAndDropChange {
     private boolean listView = false; // absichtlich verkehrt, damit stepList gesetzt wird
 
     /** Creates new form ConfigSolverPanel */
-    @SuppressWarnings("ResultOfObjectAllocationIgnored")
+    @SuppressWarnings({"ResultOfObjectAllocationIgnored", "unchecked"})
     public ConfigProgressPanel() {
         initComponents();
         
@@ -473,6 +473,7 @@ implements ListDragAndDropChange {
             stepTree.repaint();
         }
     }
+    @SuppressWarnings("unchecked")
     private void moveOneStep(int index, boolean up) {
         //System.out.println("move one step: " + index + "/" + up);
         int toIndex = up ? index + 1 : index - 1;
@@ -590,6 +591,7 @@ implements ListDragAndDropChange {
     /**
      * Rebuilds the list and the tree
      */
+    @SuppressWarnings("unchecked")
     private void resetView() {
         // Liste neu laden
         model.removeAllElements();

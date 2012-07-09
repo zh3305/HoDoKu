@@ -45,6 +45,7 @@ public class ConfigTrainigPanel extends javax.swing.JPanel {
     private boolean listView = true; // absichtlich verkehrt, damit stepTree initialisiert wird
     
     /** Creates new form ConfigSolverPanel */
+    @SuppressWarnings("unchecked")
     public ConfigTrainigPanel() {
         initComponents();
         
@@ -257,6 +258,7 @@ public class ConfigTrainigPanel extends javax.swing.JPanel {
         }
     }
     
+    @SuppressWarnings("unchecked")
     private void initAll(boolean setDefault) {
         // Zuerst die Daten zurücksetzen
         if (setDefault) {

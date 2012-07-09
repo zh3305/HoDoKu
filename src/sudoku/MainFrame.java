@@ -212,7 +212,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
     /** Creates new form MainFrame
      * @param launchFile 
      */
-    @SuppressWarnings({"LeakingThisInConstructor"})
+    @SuppressWarnings({"LeakingThisInConstructor", "unchecked"})
     public MainFrame(String launchFile) {
         // if a configuration file is given at the command line, load it before anything
         // else is done (helps restoring the screen layout)

@@ -267,6 +267,7 @@ public class ConfigGeneratorPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jComboBoxPatternsActionPerformed
 
+    @SuppressWarnings("unchecked")
     private void jButtonNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNewActionPerformed
         String defaultName = java.util.ResourceBundle.getBundle("intl/ConfigGeneratorPanel").getString("ConfigGeneratorPanel.pattern") +
                 " " + (patterns.size() + 1);
@@ -399,6 +400,7 @@ private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     /**
      * Fills {@link #jComboBoxPatterns} with the names from {@link #patterns}.
      */
+    @SuppressWarnings("unchecked")
     private void fillCombo(int index) {
         jComboBoxPatterns.removeAllItems();
         jComboBoxPatterns.addItem(java.util.ResourceBundle.getBundle("intl/ConfigGeneratorPanel").getString("ConfigGeneratorPanel.nopattern"));

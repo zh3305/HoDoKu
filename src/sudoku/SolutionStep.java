@@ -18,8 +18,6 @@
  */
 package sudoku;
 
-import solver.RestrictedCommon;
-import solver.Als;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,6 +30,8 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import solver.Als;
+import solver.RestrictedCommon;
 
 /**
  *

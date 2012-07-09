@@ -77,6 +77,7 @@ public class BackdoorSearchDialog extends javax.swing.JDialog implements Runnabl
      * @param modal
      * @param sudokuPanel  
      */
+    @SuppressWarnings("unchecked")
     public BackdoorSearchDialog(java.awt.Frame parent, boolean modal, SudokuPanel sudokuPanel) {
         super(parent, modal);
         initComponents();
@@ -550,6 +551,7 @@ public class BackdoorSearchDialog extends javax.swing.JDialog implements Runnabl
      * <b>CAUTION:</b> Must be called from within the swing thread (either
      * from an event handler or via {@link #updateRunnable}.
      */
+    @SuppressWarnings("unchecked")
     private void update() {
         String str = null;
         // first singlesResultList

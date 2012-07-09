@@ -48,7 +48,7 @@ public class WriteAsPNGDialog extends javax.swing.JDialog {
      * @param parent
      * @param modal
      * @param size
-     * @param aufl�sung
+     * @param aufloesung
      * @param einheit  
      */
     public WriteAsPNGDialog(java.awt.Frame parent, boolean modal,

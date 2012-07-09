@@ -425,6 +425,7 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
         Options.getInstance().setUseOrInsteadOfAndForFilter(toggleFilterAndOrCheckBox.isSelected());
     }
     
+    @SuppressWarnings("unchecked")
     private void initAll(boolean setDefault) {
         if (setDefault) {
             defaultSizeCheckBox.setSelected(Options.USE_DEFAULT_FONT_SIZE);

@@ -19,9 +19,9 @@
 
 package sudoku;
 
-import solver.Als;
 import java.util.ArrayList;
 import java.util.List;
+import solver.Als;
 
 /**
  *

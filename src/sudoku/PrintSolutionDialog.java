@@ -96,6 +96,7 @@ public class PrintSolutionDialog extends javax.swing.JDialog implements Printabl
      * @param stepsAsList
      * @param initialState  
      */
+    @SuppressWarnings("unchecked")
     public PrintSolutionDialog(java.awt.Frame parent, boolean modal, List<SolutionStep> stepsAsList, String initialState) {
         super(parent, modal);
         initComponents();
