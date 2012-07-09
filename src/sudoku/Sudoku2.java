@@ -1822,7 +1822,7 @@ public class Sudoku2 implements Cloneable {
      */
     public boolean setCell(int index, int value, boolean isFixed, boolean user) {
         if (value == 0) {
-            System.out.println("setCell(" + index + ", " + value + ", " + isFixed + ", " + user + ");");
+//            System.out.println("setCell(" + index + ", " + value + ", " + isFixed + ", " + user + ");");
         }
         if (values[index] == value) {
             // nothing to do

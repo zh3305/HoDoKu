@@ -106,18 +106,22 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
     private JToggleButton[] toggleButtons = new JToggleButton[10];
     /** Icons for the filter toggle buttons in the toolbar (original version) */
     private Icon[] toggleButtonIconsOrg = new Icon[10];
+    /** Icons for the filter toggle buttons in the toolbar (original version) */
+    private Icon[] emptyToggleButtonIconsOrg = new Icon[10];
     /** Images for the filter toggle button icons (ColorKu version) */
     private ColorKuImage[] toggleButtonImagesColorKu = new ColorKuImage[10];
     /** Icons for the filter toggle buttons in the toolbar (ColorKu version) */
     private Icon[] toggleButtonIconsColorKu = new Icon[10];
     /** Icons for the filter toggle buttons in the toolbar (currently displayed) */
     private Icon[] toggleButtonIcons = new Icon[10];
+    /** Icons for the filter toggle buttons in the toolbar (no candidates left) */
+    private Icon[] emptyToggleButtonIcons = new Icon[10];
     /** One empty icon for disabled filter buttons - digits */
     private Icon emptyToggleButtonIconOrg = new ImageIcon(getClass().getResource("/img/f_0c.png"));
     /** One empty icon for disabled filter buttons */
     private Icon emptyToggleButtonIconOrgColorKu = new ImageIcon(new ColorKuImage(32, Color.WHITE));
-    /** One empty icon for disabled filter buttons */
-    private Icon emptyToggleButtonIcon = emptyToggleButtonIconOrg;
+//    /** One empty icon for disabled filter buttons */
+//    private Icon emptyToggleButtonIcon = emptyToggleButtonIconOrg;
     private JRadioButtonMenuItem[] levelMenuItems = new JRadioButtonMenuItem[5];
     private JRadioButtonMenuItem[] modeMenuItems;
     private boolean oldShowDeviations = true;
@@ -423,6 +427,11 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         for (int i = 0, lim = toggleButtons.length; i < lim; i++) {
             toggleButtonIconsOrg[i] = toggleButtons[i].getIcon();
             toggleButtonIcons[i] = toggleButtons[i].getIcon();
+            if (i < 9) {
+                emptyToggleButtonIconsOrg[i] = new ImageIcon(getClass().getResource("/img/f_" + (i + 1) + "c_inactive.png"));
+            } else {
+                emptyToggleButtonIcons[i] = toggleButtons[i].getIcon();
+            }
         }
         setToggleButton(null, false);
         prepareToggleButtonIcons(Options.getInstance().isShowColorKu());
@@ -2580,13 +2589,15 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
                     toggleButtonIconsColorKu[i] = new ImageIcon(toggleButtonImagesColorKu[i]);
                 }
                 toggleButtonIcons[i] = toggleButtonIconsColorKu[i];
+                emptyToggleButtonIcons[i] = emptyToggleButtonIconOrgColorKu;
             }
-            emptyToggleButtonIcon = emptyToggleButtonIconOrgColorKu;
+//            emptyToggleButtonIcon = emptyToggleButtonIconOrgColorKu;
         } else {
             for (int i = 0, lim = toggleButtons.length - 1; i < lim; i++) {
                 toggleButtonIcons[i] = toggleButtonIconsOrg[i];
+                emptyToggleButtonIcons[i] = emptyToggleButtonIconsOrg[i];
             }
-            emptyToggleButtonIcon = emptyToggleButtonIconOrg;
+//            emptyToggleButtonIcon = emptyToggleButtonIconOrg;
         }
     }
 
@@ -3493,19 +3504,23 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
                 for (int i = 0; i < remainingCandidates.length; i++) {
                     JToggleButton button = toggleButtons[i];
                     // change the standard icons
-                    if (button.getIcon() != emptyToggleButtonIcon && button.getIcon() != toggleButtonIcons[i]) {
-                        button.setIcon(toggleButtonIcons[i]);
-                    }
+//                    if (button.getIcon() != emptyToggleButtonIcon && button.getIcon() != toggleButtonIcons[i]) {
+//                        button.setIcon(toggleButtonIcons[i]);
+//                    }
                     if (remainingCandidates[i]) {
 //                        if (!button.isEnabled()) {
                             //button.setEnabled(true);
+                        if (button.getIcon() != toggleButtonIcons[i]) {
                             button.setIcon(toggleButtonIcons[i]);
+                        }
 //                        }
                     } else {
 //                        if (button.isEnabled()) {
-                            button.setSelected(false);
+//                            button.setSelected(false);
                             //button.setEnabled(false);
-                            button.setIcon(emptyToggleButtonIcon);
+                        if (button.getIcon() != emptyToggleButtonIcons[i]) {
+                            button.setIcon(emptyToggleButtonIcons[i]);
+                        }
 //                        }
                     }
                 }
