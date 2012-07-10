@@ -541,27 +541,27 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         jMenuBar1 = new javax.swing.JMenuBar();
         dateiMenu = new javax.swing.JMenu();
         neuMenuItem = new javax.swing.JMenuItem();
-        jSeparator14 = new javax.swing.JSeparator();
+        jSeparator39 = new javax.swing.JPopupMenu.Separator();
         loadPuzzleMenuItem = new javax.swing.JMenuItem();
         savePuzzleMenuItem = new javax.swing.JMenuItem();
         savePuzzleAsMenuItem = new javax.swing.JMenuItem();
         loadConfigMenuItem = new javax.swing.JMenuItem();
         saveConfigAsMenuItem = new javax.swing.JMenuItem();
-        jSeparator4 = new javax.swing.JSeparator();
+        jSeparator38 = new javax.swing.JPopupMenu.Separator();
         seiteEinrichtenMenuItem = new javax.swing.JMenuItem();
         druckenMenuItem = new javax.swing.JMenuItem();
         extendedPrintMenuItem = new javax.swing.JMenuItem();
         speichernAlsBildMenuItem = new javax.swing.JMenuItem();
-        jSeparator15 = new javax.swing.JSeparator();
+        jSeparator37 = new javax.swing.JPopupMenu.Separator();
         spielEingebenMenuItem = new javax.swing.JMenuItem();
         spielEditierenMenuItem = new javax.swing.JMenuItem();
         spielSpielenMenuItem = new javax.swing.JMenuItem();
-        jSeparator16 = new javax.swing.JSeparator();
+        jSeparator36 = new javax.swing.JPopupMenu.Separator();
         beendenMenuItem = new javax.swing.JMenuItem();
         bearbeitenMenu = new javax.swing.JMenu();
         undoMenuItem = new javax.swing.JMenuItem();
         redoMenuItem = new javax.swing.JMenuItem();
-        jSeparator3 = new javax.swing.JSeparator();
+        jSeparator35 = new javax.swing.JPopupMenu.Separator();
         copyCluesMenuItem = new javax.swing.JMenuItem();
         copyFilledMenuItem = new javax.swing.JMenuItem();
         copyPmGridMenuItem = new javax.swing.JMenuItem();
@@ -569,10 +569,10 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         copyLibraryMenuItem = new javax.swing.JMenuItem();
         copySSMenuItem = new javax.swing.JMenuItem();
         pasteMenuItem = new javax.swing.JMenuItem();
-        jSeparator17 = new javax.swing.JSeparator();
+        jSeparator34 = new javax.swing.JPopupMenu.Separator();
         restartSpielMenuItem = new javax.swing.JMenuItem();
         resetSpielMenuItem = new javax.swing.JMenuItem();
-        jSeparator2 = new javax.swing.JSeparator();
+        jSeparator33 = new javax.swing.JPopupMenu.Separator();
         configMenuItem = new javax.swing.JMenuItem();
         modeMenu = new javax.swing.JMenu();
         playingMenuItem = new javax.swing.JRadioButtonMenuItem();
@@ -583,10 +583,10 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         showWrongValuesMenuItem = new javax.swing.JCheckBoxMenuItem();
         showDeviationsMenuItem = new javax.swing.JCheckBoxMenuItem();
         showColorKuMenuItem = new javax.swing.JCheckBoxMenuItem();
-        jSeparator10 = new javax.swing.JSeparator();
+        jSeparator32 = new javax.swing.JPopupMenu.Separator();
         colorCellsMenuItem = new javax.swing.JRadioButtonMenuItem();
         colorCandidatesMenuItem = new javax.swing.JRadioButtonMenuItem();
-        jSeparator19 = new javax.swing.JSeparator();
+        jSeparator31 = new javax.swing.JPopupMenu.Separator();
         levelMenu = new javax.swing.JMenu();
         levelLeichtMenuItem = new javax.swing.JRadioButtonMenuItem();
         levelMittelMenuItem = new javax.swing.JRadioButtonMenuItem();
@@ -597,23 +597,23 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         vageHintMenuItem = new javax.swing.JMenuItem();
         mediumHintMenuItem = new javax.swing.JMenuItem();
         loesungsSchrittMenuItem = new javax.swing.JMenuItem();
-        jSeparator21 = new javax.swing.JSeparator();
+        jSeparator30 = new javax.swing.JPopupMenu.Separator();
         backdoorSearchMenuItem = new javax.swing.JMenuItem();
         historyMenuItem = new javax.swing.JMenuItem();
         createSavePointMenuItem = new javax.swing.JMenuItem();
         restoreSavePointMenuItem = new javax.swing.JMenuItem();
-        jSeparator5 = new javax.swing.JSeparator();
+        jSeparator29 = new javax.swing.JPopupMenu.Separator();
         setGivensMenuItem = new javax.swing.JMenuItem();
-        jSeparator22 = new javax.swing.JSeparator();
+        jSeparator28 = new javax.swing.JPopupMenu.Separator();
         alleHiddenSinglesSetzenMenuItem = new javax.swing.JMenuItem();
         ansichtMenu = new javax.swing.JMenu();
         sudokuOnlyMenuItem = new javax.swing.JRadioButtonMenuItem();
-        jSeparator18 = new javax.swing.JSeparator();
+        jSeparator20 = new javax.swing.JPopupMenu.Separator();
         summaryMenuItem = new javax.swing.JRadioButtonMenuItem();
         solutionMenuItem = new javax.swing.JRadioButtonMenuItem();
         allStepsMenuItem = new javax.swing.JRadioButtonMenuItem();
         cellZoomMenuItem = new javax.swing.JRadioButtonMenuItem();
-        jSeparator7 = new javax.swing.JSeparator();
+        jSeparator6 = new javax.swing.JPopupMenu.Separator();
         showHintPanelMenuItem = new javax.swing.JCheckBoxMenuItem();
         showToolBarMenuItem = new javax.swing.JCheckBoxMenuItem();
         showHintButtonsCheckBoxMenuItem = new javax.swing.JCheckBoxMenuItem();
@@ -622,11 +622,11 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         resetViewMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         keyMenuItem = new javax.swing.JMenuItem();
-        jSeparator6 = new javax.swing.JSeparator();
+        jSeparator26 = new javax.swing.JPopupMenu.Separator();
         userManualMenuItem = new javax.swing.JMenuItem();
         solvingGuideMenuItem = new javax.swing.JMenuItem();
         projectHomePageMenuItem = new javax.swing.JMenuItem();
-        jSeparator20 = new javax.swing.JSeparator();
+        jSeparator27 = new javax.swing.JPopupMenu.Separator();
         reportErrorMenuItem = new javax.swing.JMenuItem();
         askQuestionMenuItem = new javax.swing.JMenuItem();
         jSeparator25 = new javax.swing.JPopupMenu.Separator();
@@ -1117,7 +1117,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             }
         });
         dateiMenu.add(neuMenuItem);
-        dateiMenu.add(jSeparator14);
+        dateiMenu.add(jSeparator39);
 
         loadPuzzleMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
         loadPuzzleMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.loadMenuItemMnemonic").charAt(0));
@@ -1167,7 +1167,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             }
         });
         dateiMenu.add(saveConfigAsMenuItem);
-        dateiMenu.add(jSeparator4);
+        dateiMenu.add(jSeparator38);
 
         seiteEinrichtenMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.seiteEinrichtenMenuItemMnemonic").charAt(0));
         seiteEinrichtenMenuItem.setText(bundle.getString("MainFrame.seiteEinrichtenMenuItem.text")); // NOI18N
@@ -1205,7 +1205,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             }
         });
         dateiMenu.add(speichernAlsBildMenuItem);
-        dateiMenu.add(jSeparator15);
+        dateiMenu.add(jSeparator37);
 
         spielEingebenMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.spielEingebenMenuItemMnemonic").charAt(0));
         spielEingebenMenuItem.setText(bundle.getString("MainFrame.spielEingebenMenuItem.text")); // NOI18N
@@ -1234,7 +1234,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             }
         });
         dateiMenu.add(spielSpielenMenuItem);
-        dateiMenu.add(jSeparator16);
+        dateiMenu.add(jSeparator36);
 
         beendenMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.ALT_MASK));
         beendenMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.beendenMenuItemMnemonic").charAt(0));
@@ -1272,7 +1272,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             }
         });
         bearbeitenMenu.add(redoMenuItem);
-        bearbeitenMenu.add(jSeparator3);
+        bearbeitenMenu.add(jSeparator35);
 
         copyCluesMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, java.awt.event.InputEvent.CTRL_MASK));
         copyCluesMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.copyCluesMenuItemMnemonic").charAt(0));
@@ -1339,7 +1339,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             }
         });
         bearbeitenMenu.add(pasteMenuItem);
-        bearbeitenMenu.add(jSeparator17);
+        bearbeitenMenu.add(jSeparator34);
 
         restartSpielMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
         restartSpielMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.restartSpielMenuItemMnemonic").charAt(0));
@@ -1359,7 +1359,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             }
         });
         bearbeitenMenu.add(resetSpielMenuItem);
-        bearbeitenMenu.add(jSeparator2);
+        bearbeitenMenu.add(jSeparator33);
 
         configMenuItem.setAccelerator(KeyStroke.getKeyStroke(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.configMenuItemAccelerator")));
         configMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.configMenuItemMnemonic").charAt(0));
@@ -1449,7 +1449,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             }
         });
         optionenMenu.add(showColorKuMenuItem);
-        optionenMenu.add(jSeparator10);
+        optionenMenu.add(jSeparator32);
 
         colorButtonGroup.add(colorCellsMenuItem);
         colorCellsMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.colorCellsMenuItem.mnemonic").charAt(0));
@@ -1471,7 +1471,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             }
         });
         optionenMenu.add(colorCandidatesMenuItem);
-        optionenMenu.add(jSeparator19);
+        optionenMenu.add(jSeparator31);
 
         levelMenu.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.levelMenuMnemonic").charAt(0));
         levelMenu.setText(bundle.getString("MainFrame.levelMenu.text")); // NOI18N
@@ -1558,7 +1558,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             }
         });
         raetselMenu.add(loesungsSchrittMenuItem);
-        raetselMenu.add(jSeparator21);
+        raetselMenu.add(jSeparator30);
 
         backdoorSearchMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.backdoorSearchMenuItem.mnemonic").charAt(0));
         backdoorSearchMenuItem.setText(bundle.getString("MainFrame.backdoorSearchMenuItem.text")); // NOI18N
@@ -1595,7 +1595,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             }
         });
         raetselMenu.add(restoreSavePointMenuItem);
-        raetselMenu.add(jSeparator5);
+        raetselMenu.add(jSeparator29);
 
         setGivensMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.setGivensMenuItem.mnemonic").charAt(0));
         setGivensMenuItem.setText(bundle.getString("MainFrame.setGivensMenuItem.text")); // NOI18N
@@ -1605,7 +1605,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             }
         });
         raetselMenu.add(setGivensMenuItem);
-        raetselMenu.add(jSeparator22);
+        raetselMenu.add(jSeparator28);
 
         alleHiddenSinglesSetzenMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F11, 0));
         alleHiddenSinglesSetzenMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.alleHiddenSinglesSetzenMenuItemMnemonic").charAt(0));
@@ -1633,7 +1633,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             }
         });
         ansichtMenu.add(sudokuOnlyMenuItem);
-        ansichtMenu.add(jSeparator18);
+        ansichtMenu.add(jSeparator20);
 
         summaryMenuItem.setAccelerator(KeyStroke.getKeyStroke("shift control " + java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.summaryMenuItemMnemonic").toUpperCase().charAt(0)));
         viewButtonGroup.add(summaryMenuItem);
@@ -1678,7 +1678,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             }
         });
         ansichtMenu.add(cellZoomMenuItem);
-        ansichtMenu.add(jSeparator7);
+        ansichtMenu.add(jSeparator6);
 
         showHintPanelMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.showHintPanelMenuItem.mnemonic").charAt(0));
         showHintPanelMenuItem.setSelected(true);
@@ -1742,7 +1742,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             }
         });
         helpMenu.add(keyMenuItem);
-        helpMenu.add(jSeparator6);
+        helpMenu.add(jSeparator26);
 
         userManualMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.userManualMenuItem.mnemonic").charAt(0));
         userManualMenuItem.setText(bundle.getString("MainFrame.userManualMenuItem.text")); // NOI18N
@@ -1770,7 +1770,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             }
         });
         helpMenu.add(projectHomePageMenuItem);
-        helpMenu.add(jSeparator20);
+        helpMenu.add(jSeparator27);
 
         reportErrorMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.reportErrorMenuItem.mnemonic").charAt(0));
         reportErrorMenuItem.setText(bundle.getString("MainFrame.reportErrorMenuItem.text")); // NOI18N
@@ -1789,8 +1789,6 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             }
         });
         helpMenu.add(askQuestionMenuItem);
-
-        jSeparator25.setPreferredSize(new java.awt.Dimension(0, 2));
         helpMenu.add(jSeparator25);
 
         aboutMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.aboutMenuItem.").charAt(0));
@@ -4072,28 +4070,28 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator10;
     private javax.swing.JSeparator jSeparator11;
     private javax.swing.JSeparator jSeparator12;
     private javax.swing.JSeparator jSeparator13;
-    private javax.swing.JSeparator jSeparator14;
-    private javax.swing.JSeparator jSeparator15;
-    private javax.swing.JSeparator jSeparator16;
-    private javax.swing.JSeparator jSeparator17;
-    private javax.swing.JSeparator jSeparator18;
-    private javax.swing.JSeparator jSeparator19;
-    private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JSeparator jSeparator20;
-    private javax.swing.JSeparator jSeparator21;
-    private javax.swing.JSeparator jSeparator22;
+    private javax.swing.JPopupMenu.Separator jSeparator20;
     private javax.swing.JPopupMenu.Separator jSeparator23;
     private javax.swing.JSeparator jSeparator24;
     private javax.swing.JPopupMenu.Separator jSeparator25;
-    private javax.swing.JSeparator jSeparator3;
-    private javax.swing.JSeparator jSeparator4;
-    private javax.swing.JSeparator jSeparator5;
-    private javax.swing.JSeparator jSeparator6;
-    private javax.swing.JSeparator jSeparator7;
+    private javax.swing.JPopupMenu.Separator jSeparator26;
+    private javax.swing.JPopupMenu.Separator jSeparator27;
+    private javax.swing.JPopupMenu.Separator jSeparator28;
+    private javax.swing.JPopupMenu.Separator jSeparator29;
+    private javax.swing.JPopupMenu.Separator jSeparator30;
+    private javax.swing.JPopupMenu.Separator jSeparator31;
+    private javax.swing.JPopupMenu.Separator jSeparator32;
+    private javax.swing.JPopupMenu.Separator jSeparator33;
+    private javax.swing.JPopupMenu.Separator jSeparator34;
+    private javax.swing.JPopupMenu.Separator jSeparator35;
+    private javax.swing.JPopupMenu.Separator jSeparator36;
+    private javax.swing.JPopupMenu.Separator jSeparator37;
+    private javax.swing.JPopupMenu.Separator jSeparator38;
+    private javax.swing.JPopupMenu.Separator jSeparator39;
+    private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JSeparator jSeparator8;
     private javax.swing.JSeparator jSeparator9;
     private javax.swing.JToolBar jToolBar1;

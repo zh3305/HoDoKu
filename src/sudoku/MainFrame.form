@@ -38,7 +38,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="neuMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JSeparator" name="jSeparator14">
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator39">
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="loadPuzzleMenuItem">
               <Properties>
@@ -115,7 +115,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveConfigAsMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JSeparator" name="jSeparator4">
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator38">
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="seiteEinrichtenMenuItem">
               <Properties>
@@ -172,7 +172,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="speichernAlsBildMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JSeparator" name="jSeparator15">
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator37">
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="spielEingebenMenuItem">
               <Properties>
@@ -214,7 +214,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="spielSpielenMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JSeparator" name="jSeparator16">
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator36">
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="beendenMenuItem">
               <Properties>
@@ -278,7 +278,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="redoMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JSeparator" name="jSeparator3">
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator35">
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="copyCluesMenuItem">
               <Properties>
@@ -380,7 +380,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pasteMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JSeparator" name="jSeparator17">
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator34">
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="restartSpielMenuItem">
               <Properties>
@@ -411,7 +411,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="resetSpielMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JSeparator" name="jSeparator2">
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator33">
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="configMenuItem">
               <Properties>
@@ -556,7 +556,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showColorKuMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JSeparator" name="jSeparator10">
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator32">
             </MenuItem>
             <MenuItem class="javax.swing.JRadioButtonMenuItem" name="colorCellsMenuItem">
               <Properties>
@@ -591,7 +591,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="colorCandidatesMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JSeparator" name="jSeparator19">
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator31">
             </MenuItem>
             <Menu class="javax.swing.JMenu" name="levelMenu">
               <Properties>
@@ -721,7 +721,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loesungsSchrittMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JSeparator" name="jSeparator21">
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator30">
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="backdoorSearchMenuItem">
               <Properties>
@@ -775,7 +775,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="restoreSavePointMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JSeparator" name="jSeparator5">
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator29">
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="setGivensMenuItem">
               <Properties>
@@ -790,7 +790,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="setGivensMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JSeparator" name="jSeparator22">
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator28">
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="alleHiddenSinglesSetzenMenuItem">
               <Properties>
@@ -840,7 +840,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sudokuOnlyMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JSeparator" name="jSeparator18">
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator20">
             </MenuItem>
             <MenuItem class="javax.swing.JRadioButtonMenuItem" name="summaryMenuItem">
               <Properties>
@@ -918,7 +918,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cellZoomMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JSeparator" name="jSeparator7">
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator6">
             </MenuItem>
             <MenuItem class="javax.swing.JCheckBoxMenuItem" name="showHintPanelMenuItem">
               <Properties>
@@ -1017,7 +1017,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="keyMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JSeparator" name="jSeparator6">
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator26">
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="userManualMenuItem">
               <Properties>
@@ -1058,7 +1058,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="projectHomePageMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JSeparator" name="jSeparator20">
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator27">
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="reportErrorMenuItem">
               <Properties>
@@ -1087,11 +1087,6 @@
               </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator25">
-              <Properties>
-                <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                  <Dimension value="[0, 2]"/>
-                </Property>
-              </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="aboutMenuItem">
               <Properties>
