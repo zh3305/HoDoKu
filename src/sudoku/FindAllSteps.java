@@ -121,8 +121,14 @@ public class FindAllSteps implements Runnable {
                     steps1 = stepFinder.findAllNakedXle(sudoku);
                     steps.addAll(steps1);
                     filterSteps(steps);
-                    if (isAllStepsEnabled(SolutionType.LOCKED_CANDIDATES)) {
+                    if (isAllStepsEnabled(SolutionType.LOCKED_CANDIDATES_1) && isAllStepsEnabled(SolutionType.LOCKED_CANDIDATES_2)) {
                         steps1 = stepFinder.findAllLockedCandidates(sudoku);
+                        steps.addAll(steps1);
+                    } else if (isAllStepsEnabled(SolutionType.LOCKED_CANDIDATES_1)) {
+                        steps1 = stepFinder.findAllLockedCandidates1(sudoku);
+                        steps.addAll(steps1);
+                    } else if (isAllStepsEnabled(SolutionType.LOCKED_CANDIDATES_2)) {
+                        steps1 = stepFinder.findAllLockedCandidates2(sudoku);
                         steps.addAll(steps1);
                     }
                     if (isAllStepsEnabled(SolutionType.SKYSCRAPER)) {

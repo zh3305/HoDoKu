@@ -423,6 +423,48 @@ public class SudokuStepFinder {
     }
 
     /**
+     * Finds all Locked Candidates Type 1 for a given sudoku.
+     * @param newSudoku
+     * @return
+     */
+    public List<SolutionStep> findAllLockedCandidates1(Sudoku2 newSudoku) {
+        initialize();
+        Sudoku2 oldSudoku = getSudoku();
+        setSudoku(newSudoku);
+        List<SolutionStep> steps = simpleSolver.findAllLockedCandidates();
+        setSudoku(oldSudoku);
+        // filter the steps
+        List<SolutionStep> resultList = new ArrayList<SolutionStep>();
+        for (SolutionStep step : steps) {
+            if (step.getType().equals(SolutionType.LOCKED_CANDIDATES_1)) {
+                resultList.add(step);
+            }
+        }
+        return resultList;
+    }
+
+    /**
+     * Finds all Locked Candidates Type 2 for a given sudoku.
+     * @param newSudoku
+     * @return
+     */
+    public List<SolutionStep> findAllLockedCandidates2(Sudoku2 newSudoku) {
+        initialize();
+        Sudoku2 oldSudoku = getSudoku();
+        setSudoku(newSudoku);
+        List<SolutionStep> steps = simpleSolver.findAllLockedCandidates();
+        setSudoku(oldSudoku);
+        // filter the steps
+        List<SolutionStep> resultList = new ArrayList<SolutionStep>();
+        for (SolutionStep step : steps) {
+            if (step.getType().equals(SolutionType.LOCKED_CANDIDATES_2)) {
+                resultList.add(step);
+            }
+        }
+        return resultList;
+    }
+
+    /**
      * Finds all fishes of a given size and shape.
      * @param newSudoku
      * @param minSize
