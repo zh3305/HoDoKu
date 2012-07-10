@@ -95,7 +95,7 @@ import solver.SudokuSolverFactory;
 public class MainFrame extends javax.swing.JFrame implements FlavorListener {
 
     private static final long serialVersionUID = 1L;
-    public static final String VERSION = "HoDoKu - v2.2.0 beta";
+    public static final String VERSION = "HoDoKu - v2.2.0";
 //    public static final String BUILD = "Build 16";
     public static final String BUILD;
     public static final String REV = "$LastChangedRevision$";
