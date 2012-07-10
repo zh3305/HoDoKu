@@ -626,6 +626,9 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         solvingGuideMenuItem = new javax.swing.JMenuItem();
         projectHomePageMenuItem = new javax.swing.JMenuItem();
         jSeparator20 = new javax.swing.JSeparator();
+        reportErrorMenuItem = new javax.swing.JMenuItem();
+        askQuestionMenuItem = new javax.swing.JMenuItem();
+        jSeparator25 = new javax.swing.JPopupMenu.Separator();
         aboutMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -1768,6 +1771,27 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         helpMenu.add(projectHomePageMenuItem);
         helpMenu.add(jSeparator20);
 
+        reportErrorMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.reportErrorMenuItem.mnemonic").charAt(0));
+        reportErrorMenuItem.setText(bundle.getString("MainFrame.reportErrorMenuItem.text")); // NOI18N
+        reportErrorMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reportErrorMenuItemActionPerformed(evt);
+            }
+        });
+        helpMenu.add(reportErrorMenuItem);
+
+        askQuestionMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.askQuestionMenuItem.mnemonic").charAt(0));
+        askQuestionMenuItem.setText(bundle.getString("MainFrame.askQuestionMenuItem.text")); // NOI18N
+        askQuestionMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                askQuestionMenuItemActionPerformed(evt);
+            }
+        });
+        helpMenu.add(askQuestionMenuItem);
+
+        jSeparator25.setPreferredSize(new java.awt.Dimension(0, 2));
+        helpMenu.add(jSeparator25);
+
         aboutMenuItem.setMnemonic(java.util.ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.aboutMenuItem.").charAt(0));
         aboutMenuItem.setText(bundle.getString("MainFrame.aboutMenuItem.text")); // NOI18N
         aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -2573,6 +2597,14 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
         check();
         fixFocus();
     }//GEN-LAST:event_showColorKuMenuItemActionPerformed
+
+    private void askQuestionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_askQuestionMenuItemActionPerformed
+        MyBrowserLauncher.getInstance().launchForum();
+    }//GEN-LAST:event_askQuestionMenuItemActionPerformed
+
+    private void reportErrorMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reportErrorMenuItemActionPerformed
+        MyBrowserLauncher.getInstance().launchTracker();
+    }//GEN-LAST:event_reportErrorMenuItemActionPerformed
 
     /**
      * Adjusts icons for hint toggle buttons according to the mode (normal/ColorKu) and according
@@ -3999,6 +4031,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
     private javax.swing.JRadioButtonMenuItem allStepsMenuItem;
     private javax.swing.JMenuItem alleHiddenSinglesSetzenMenuItem;
     private javax.swing.JMenu ansichtMenu;
+    private javax.swing.JMenuItem askQuestionMenuItem;
     private javax.swing.JMenuItem backdoorSearchMenuItem;
     private javax.swing.JMenu bearbeitenMenu;
     private javax.swing.JMenuItem beendenMenuItem;
@@ -4054,6 +4087,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
     private javax.swing.JSeparator jSeparator22;
     private javax.swing.JPopupMenu.Separator jSeparator23;
     private javax.swing.JSeparator jSeparator24;
+    private javax.swing.JPopupMenu.Separator jSeparator25;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
@@ -4092,6 +4126,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
     private javax.swing.JToggleButton redGreenToggleButton;
     private javax.swing.JMenuItem redoMenuItem;
     private javax.swing.JButton redoToolButton;
+    private javax.swing.JMenuItem reportErrorMenuItem;
     private javax.swing.JMenuItem resetSpielMenuItem;
     private javax.swing.JMenuItem resetViewMenuItem;
     private javax.swing.JMenuItem restartSpielMenuItem;

@@ -61,12 +61,24 @@
         <dd>Clicking a cell selects that cell. Pressing [ctrl] or [shift] while clicking
         selects a region of cells. Setting cells/candidates:
         <ul>
-            <li>Double clicking a candidate sets it in the cell</li>
-            <li>If a cell has only one candidate left, double clicking the cell
+            <li>Double click on a candidate sets it in the cell</li>
+            <li>If a cell has only one candidate left, double click on the cell
             sets that candidate in the cell</li>
-            <li>If filters are applied double clicking a filtered cell sets the
-            filtered candidate in the cell if it is a Hidden Single</li>
-            <li>Double clicking a candidate while pressing [ctrl] toggles the candidate</li>
+            <li>If filters are applied, double click on a filtered cell sets the
+            filtered candidate in the cell, if it is a Hidden Single</li>
+            <li>Double click on a candidate while pressing [ctrl] toggles the candidate</li>
+        </ul>
+        </dd>
+        <dt>Using the mouse (alternate mouse mode)</dt>
+        <dd>Region select as described above. Setting cells/candidates:
+        <ul>
+            <li>Left click a candidate sets it in the cell</li>
+            <li>If a cell has only one candidate left, left click on empty space in the cell
+            sets that candidate in the cell</li>
+            <li>If filters are applied, left click on empty space in a filtered cell sets the
+            filtered candidate in the cell, if it is a Hidden Single</li>
+            <li>Right click on a candidate eliminates the candidate, right click on empty
+            space in a cell enables the corresponding candidate</li>
         </ul>
         </dd>
         <dt>Using the mouse (coloring mode)</dt>
@@ -81,7 +93,7 @@
         <dt>[shift][left], [shift][up], [shift][right], [shift][down]</dt>
         <dd>Expands the range of selected cells.</dd>
         <dt>[shift][ctrl][left], [shift][ctrl][up], [shift][ctrl][right], [shift][ctrl][down]</dt>
-        <dd>If filters are applied the cursor is moved to the next unsolved cell,
+        <dd>If filters are applied, the cursor is moved to the next unsolved cell,
         that contains the filtered candidate.</dd>
         <dt>[ctrl][left], [ctrl][up], [ctrl][right], [ctrl][down]</dt>
         <dd>Moves the cursor to the next unsolved cell.</dd>
@@ -100,7 +112,7 @@
         <dd>Toggles the candidate in the highlighted cell.</dd>
         <dt>[blank]</dt>
         <dd>If a filter is set (see below) toggles the filtered candidate.</dd>
-        <dt>[del], [backspace]</dt>
+        <dt>[del], [backspace], [0]</dt>
         <dd>Deletes value in cell (givens cannot be deleted).</dd>
     </dl>
     <h1>Filters</h1>
@@ -110,11 +122,19 @@
     <dl>
         <dt>[F1] ... [F9]</dt>
         <dd>Sets/toggles the filtered digit.</dd>
-        <dt>[ctrl][F1] ... [ctrl][F9]</dt>
+        <dt>[shift][F1] ... [shift][F9]</dt>
         <dd>Sets/toggles the filtered digit and switches the filter mode (allowed/forbidden).</dd>
-        <dt>[&gt;]</dt>
+        <dt>[ctrl][F1] ... [ctrl][F9]</dt>
+        <dd>Adds/removes the candidate to/from the set of filtered candidates. If more than one candidate
+        is selected for filtering, either all cells are shown, that contain at least one filtered candidate ('OR'),
+        or only cells are shown, that contain all filtered candidates ('AND').</dd>
+        <dt>[space]</dt>
+        <dd>If a filter is active and the current cell is filtered, toggle the filtered candidate in the cell.</dd>
+        <dt>[enter]</dt>
+        <dd>If a filter is active and the current cell is filtered, set the filtered candidate in the cell.</dd>
+        <dt>[&gt;], [.]</dt>
         <dd>If a filter is active, set the next digit.</dd>
-        <dt>[&lt;]</dt>
+        <dt>[&lt;], [,]</dt>
         <dd>If a filter is active, set the previous digit.</dd>
     </dl>
     <h1>Coloring</h1>

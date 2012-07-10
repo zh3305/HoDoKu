@@ -68,6 +68,18 @@
             <li>[Strg] Doppelklick auf einen Kandidaten schaltet ihn ein oder aus</li>
         </ul>
         </dd>
+        <dt>Spielen mit der Maus (Alternativer Mausmodus)</dt>
+        <dd>Auswahl mehrer Zellen wie oben beschrieben. Werte/Kandidaten setzen:
+        <ul>
+            <li>Links-Klick auf einen Kandidaten setzt ihn in der Zelle</li>
+            <li>Wenn in einer Zelle nur noch ein Kandidat vorhanden ist, wird dieser
+            Kandidat durch Links-Klick auf eine beliebige Stelle in der Zelle gesetzt.</li>
+            <li>Sind Filter aktiv, wird der gefilterte Kandidat durch Links-Klick auf einen
+            freien Platz in der Zelle gesetzt, wenn er ein Hidden Single ist.</li>
+            <li>Rechts-Klick auf einen Kandidaten eliminiert ihn, Rechts-Klick auf einen leeren Platz
+            in der Zelle aktiviert den entsprechenden Kandidaten.</li>
+        </ul>
+        </dd>        
         <dt>Spielen mit der Maus (Färbemodus)</dt>
         <dd>Klick auf eine Farbe in der Statuszeile oder in der Ansicht "Aktive Zelle"
         schaltet den Färbemodus ein. Klick auf eine Zelle/einen Kandidaten schaltet die
@@ -101,7 +113,7 @@
         <dt>[Leerzeichen]</dt>
         <dd>Wenn ein Filter gesetzt ist (siehe unten), wird der gefilterte
         Kandidat ein-/ausgeschaltet.</dd>
-        <dt>[Entf], [Rückschritt]</dt>
+        <dt>[Entf], [Rückschritt], [0]</dt>
         <dd>Löscht den Wert in der aktiven Zelle (Angabe kann nicht gelöscht werden).</dd>
     </dl>
     <h1>Filter</h1>
@@ -111,12 +123,21 @@
     <dl>
         <dt>[F1] ... [F9]</dt>
         <dd>Setzt bzw. löscht die gefilterte Ziffer.</dd>
-        <dt>[Strg][F1] ... [Strg][F9]</dt>
+        <dt>[Umschalt][F1] ... [Umschalt][F9]</dt>
         <dd>Setzt bzw. löscht die gefilterte Ziffer und wechselt dabei den
         Filtermodus (erlaubt/verboten).</dd>
-        <dt>[&gt;]</dt>
+        <dt>[Strg][F1] ... [Strg][F9]</dt>
+        <dd>Fügt den Kandidaten zur Menge der gefilterten Kandidaten hinzu bzw. entfernt ihn.
+        Sind Filter für mehrere Kandidaten aktiv, werden entweder alle Zellen markiert, die
+        mindestens einen dieser Kandidaten enthalten ('ODER'), oder es werden alle Zellen
+        markiert, die alle diese Kandidaten enthalten ('UND').</dd>
+        <dt>[Leerzeichen]</dt>
+        <dd>Sind Filter aktiv und ist die aktuelle Zelle markiert, wird der gefilterte Kandidat in der Zelle umgeschaltet.</dd>
+        <dt>[Eingabetaste]</dt>
+        <dd>Sind Filter aktiv und ist die aktuelle Zelle markiert, wird der gefilterte Kandidat in der Zelle gesetzt.</dd>
+        <dt>[&gt;], [.]</dt>
         <dd>Ist ein Filter aktiv, wird die nächste Ziffer gesetzt.</dd>
-        <dt>[&lt;]</dt>
+        <dt>[&lt;], [,]</dt>
         <dd>Ist ein Filter aktiv, wird die vorhergehende Ziffer gesetzt.</dd>
     </dl>
     <h1>Coloring</h1>

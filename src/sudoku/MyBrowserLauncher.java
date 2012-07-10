@@ -93,6 +93,22 @@ public class MyBrowserLauncher {
         String url = HTTP_BASE + "index.php";
         browse(url);
     }
+    
+    /**
+     * Display the tracker
+     */
+    public void launchTracker() {
+        String url = "http://sourceforge.net/p/hodoku/bugs-and-feature-requests/";
+        browse(url);
+    }
+    
+    /**
+     * Display the help forum
+     */
+    public void launchForum() {
+        String url = "http://sourceforge.net/p/hodoku/discussion/907403/";
+        browse(url);
+    }
 
     /**
      * Tries to open the web site given by <code>url</code>
