@@ -209,6 +209,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         BUILD = "Build " + dummy[1];
     }
     
+    
     /** Creates new form MainFrame
      * @param launchFile 
      */
