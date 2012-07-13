@@ -209,6 +209,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         BUILD = "Build " + dummy[1];
     }
     
+    
     /** Creates new form MainFrame
      * @param launchFile 
      */
@@ -2770,18 +2771,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
      * @param sudoku
      */
     private void addSudokuToHistory(Sudoku2 sudoku) {
-        if (sudoku.getLevel() == null) {
-            //something went wrong, dont add it to the history
-            return;
-        }
-        List<String> history = Options.getInstance().getHistoryOfCreatedPuzzles();
-        while (history.size() > Options.getInstance().getHistorySize() - 1) {
-            history.remove(history.size() - 1);
-        }
-        String str = sudoku.getSudoku(ClipboardMode.CLUES_ONLY) + "#"
-                + sudoku.getLevel().getOrdinal() + "#" + sudoku.getScore() + "#"
-                + new Date().getTime();
-        history.add(0, str);
+        Options.getInstance().addSudokuToHistory(sudoku);
     }
 
     /**

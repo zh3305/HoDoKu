@@ -34,6 +34,7 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -469,7 +470,7 @@ public final class Options {
     public static final boolean SHOW_HINT_BUTTONS_IN_TOOLBAR = false;
     private boolean showHintButtonsInToolbar = SHOW_HINT_BUTTONS_IN_TOOLBAR;
     // history of created puzzles and savepoints
-    public static final int HISTORY_SIZE = 20;
+    public static final int HISTORY_SIZE = 50;
     public static final boolean HISTORY_PREVIEW = true;
     private int historySize = HISTORY_SIZE;
     private boolean historyPreview = HISTORY_PREVIEW;
@@ -547,6 +548,28 @@ public final class Options {
 //        if (!checkFont(smallFont)) {
 //            smallFont = new Font(SMALL_FONT.getName(), SMALL_FONT.getStyle(), SMALL_FONT.getSize());
 //        }
+    }
+
+    /**
+     * Adds a new sudoku to the creation history. The size of the history buffer
+     * is adjusted accordingly. New sudokus are always inserted at the start of
+     * the list and deleted from the end of the list, effectively turning the list in
+     * a queue (the performance overhead can be ignored here).
+     * @param sudoku
+     */
+    public void addSudokuToHistory(Sudoku2 sudoku) {
+        if (sudoku.getLevel() == null) {
+            //something went wrong, dont add it to the history
+            return;
+        }
+        List<String> history = getHistoryOfCreatedPuzzles();
+        while (history.size() > getHistorySize() - 1) {
+            history.remove(history.size() - 1);
+        }
+        String str = sudoku.getSudoku(ClipboardMode.CLUES_ONLY) + "#"
+                + sudoku.getLevel().getOrdinal() + "#" + sudoku.getScore() + "#"
+                + new Date().getTime();
+        history.add(0, str);
     }
 
     /**

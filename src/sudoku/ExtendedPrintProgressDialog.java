@@ -377,6 +377,8 @@ public class ExtendedPrintProgressDialog extends javax.swing.JDialog implements 
                     return false;
                 }
                 candidates[index] = withCandidates;
+                // put puzzle in history
+                Options.getInstance().addSudokuToHistory(sudokus[index]);
                 index++;
                 // update progress bar
                 setPercentage((int)Math.round(index * 100.0 / anzPuzzles));
