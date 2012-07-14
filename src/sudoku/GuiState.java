@@ -363,7 +363,11 @@ public class GuiState {
      */
     public void setTabSteps(List<List<SolutionStep>> tabSteps) {
         if (steps == null || steps.isEmpty()) {
-            steps = new ArrayList<SolutionStep>(tabSteps.get(0));
+            if (tabSteps.get(0) != null) {
+                steps = new ArrayList<SolutionStep>(tabSteps.get(0));
+            } else {
+                steps = new ArrayList<SolutionStep>();
+            }
         }
         this.tabSteps = tabSteps;
     }
