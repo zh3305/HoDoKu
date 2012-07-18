@@ -31,6 +31,7 @@ Version 2.2 (2012-??-??)
 
 Features added:
 
+  - #204: ColorKu mode added (thanks to ddyer and CCV)
   - #3486780: Complete ALS-Chain search in "find all steps"
   - #3476006: Improve keyboard handling
   - #3387327: Add mouse click detection
