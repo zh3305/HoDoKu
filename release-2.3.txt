@@ -26,7 +26,18 @@ heap size at startup.
 Change log
 ==========
 
-Version 2.2 (2012-??-??)
+Version 2.3 (2012-xx-xx)
+--------------------------
+
+Features added:
+
+  - #xxx: 
+
+Bugs fixed:
+
+  - #225: Extended print: wrong colors
+
+Version 2.2 (2012-07-31)
 --------------------------
 
 Features added:

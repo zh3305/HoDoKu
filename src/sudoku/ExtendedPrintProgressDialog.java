@@ -662,7 +662,7 @@ public class ExtendedPrintProgressDialog extends javax.swing.JDialog implements 
                 break;
         }
         Sudoku2 sudoku = sudokus[index];
-        panel.setSudoku(sudoku, true);
+        panel.setSudoku(sudoku.getSudoku(ClipboardMode.LIBRARY), true);
         panel.setShowCandidates(candidates[index]);
         panel.printSudoku(g2, startX, startY, imagePrintSize, allBlack, scale);
         if (printRating && sudoku != null && sudoku.getLevel() != null) {
