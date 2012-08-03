@@ -31,7 +31,7 @@ import sudoku.SudokuSet;
  * The format of an entry is described in class {@link Chain}.<br><br>
  *
  * An instance of <code>TableEntry</code> holds all possible outcomes for
- * one single premise. The premise itself is not part of the <code>TableEntry</code>.
+ * one single premise. The premise itself is the first element in the <code>TableEntry</code>.
  * The {@link TablingSolver} holds two arrays of <code>TableEntries</code>. The index of
  * the entry decides cell and candidate (<code>cell * 100 + candidate</code>), one
  * table is for "candidate is deleted from cell" and one is for "cell is set to that number".<br><br>
@@ -85,8 +85,8 @@ import sudoku.SudokuSet;
  * @author hobiwan
  */
 public class TableEntry {
-    /** Used by {@link #makeSRetIndex(int, int, int, int, int)}; access must be synchronized! */
-//    private static long[] rIndices = new long[5];
+    /** Debug flag */
+    private static final boolean DEBUG = true;
     /** Entry has been expanded from another table. */
     private static final long EXPANDED =       0x2000000000000000L;
     /** Bitmap indicating that the entry comes from {@link TablingSolver#onTable}. */
@@ -227,6 +227,11 @@ public class TableEntry {
             int ri2, int ri3, int ri4, int ri5, int penalty) {
         if (index >= entries.length) {
             // already full, some possible outcomes will be missed...
+            if (DEBUG) {
+                System.out.println("WARNING: addEntry(): TableEntry is already full (" + cellIndex1 + ", " + cellIndex2 + ", " + 
+                        cellIndex3 + ", " + nodeType + ", " + cand + ", " + set + ", " + ri1 + ", " + ri2 + ", " +
+                        ri3 + ", " + ri4 + ", " + ri5 + ", " + penalty);
+            }
             Logger.getLogger(getClass().getName()).log(Level.WARNING, "addEntry(): TableEntry is already full!");
             return;
         }
@@ -407,22 +412,6 @@ public class TableEntry {
         // construct the entry
         return (index5 << 42) + (index4 << 32) + (index3 << 22) +
                 (index2 << 12) + index1;
-//        rIndices[0] = index1;
-//        rIndices[1] = index2;
-//        rIndices[2] = index3;
-//        rIndices[3] = index4;
-//        rIndices[4] = index5;
-//        for (int i = rIndices.length - 1; i > 0; i--) {
-//            for (int j = 0; j < i; j++) {
-//                if (rIndices[j] < rIndices[j + 1]) {
-//                    long tmp = rIndices[j + 1];
-//                    rIndices[j + 1] = rIndices[j];
-//                    rIndices[j] = tmp;
-//                }
-//            }
-//        }
-//        return (rIndices[4] << 42) + (rIndices[3] << 32) + (rIndices[2] << 22) +
-//                (rIndices[1] << 12) + rIndices[0];
     }
     
     /**

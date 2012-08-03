@@ -86,12 +86,11 @@ import sudoku.SudokuSetBase;
  * @author hobiwan
  */
 public class TablingSolver extends AbstractSolver {
-
     private static final long CLEANUP_INTERVAL = 5 * 60 * 1000;
     /**
      * Enable additional output for debugging.
      */
-    private static boolean DEBUG = false;
+    private static boolean DEBUG = true;
     /**
      * Maximum recursion depth in buildung the tables.
      */
@@ -515,8 +514,7 @@ public class TablingSolver extends AbstractSolver {
 
         // expand tables
         ticks = System.currentTimeMillis();
-        expandTables(onTable);
-        expandTables(offTable);
+        expandTables();
         ticks = System.currentTimeMillis() - ticks;
         if (DEBUG) {
             System.out.println("expandTables(): " + ticks + "ms");
@@ -643,8 +641,7 @@ public class TablingSolver extends AbstractSolver {
 
         // expand the tables
         ticks = System.currentTimeMillis();
-        expandTables(onTable);
-        expandTables(offTable);
+        expandTables();
         ticks = System.currentTimeMillis() - ticks;
         if (DEBUG) {
             System.out.println("expandTables(): " + ticks + "ms");
@@ -682,6 +679,7 @@ public class TablingSolver extends AbstractSolver {
         ticks = System.currentTimeMillis() - ticks;
         if (DEBUG) {
             System.out.println("fillTables(): " + ticks + "ms");
+            printTables("after fillTables()");
         }
         printTableAnz();
         //printTable("r6c8=1 fill", onTable[521]);
@@ -689,11 +687,11 @@ public class TablingSolver extends AbstractSolver {
 
         // expand tables
         ticks = System.currentTimeMillis();
-        expandTables(onTable);
-        expandTables(offTable);
+        expandTables();
         ticks = System.currentTimeMillis() - ticks;
         if (DEBUG) {
             System.out.println("expandTables(): " + ticks + "ms");
+            printTables("after expandTables()");
         }
         printTableAnz();
         //printTable("r6c8=1 expand", onTable[521]);
@@ -2523,6 +2521,55 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
+     * Expand all the tables. The real work is delegated to
+     * {@link #expandTable(solver.TableEntry, int, int, boolean) }.
+     */
+    private void expandTables() {
+        // for every entry in all tables do...
+        for (int i = 0; i < onTable.length; i++) {
+            if (onTable[i].index == 0) {
+                // cell is set -> no implications
+                continue;
+            }
+            // expand it
+            expandTable(onTable[i], i / 10, i % 10, true);
+        }
+        for (int i = 0; i < offTable.length; i++) {
+            if (offTable[i].index == 0) {
+                // cell is set -> no implications
+                continue;
+            }
+            // expand it
+            expandTable(offTable[i], i / 10, i % 10, false);
+        }
+    }
+    
+    /**
+     * Goes through all outcomes in <code>src</code> and tries to determine,
+     * if a combination of outcomes can produce a new one.<br><br>
+     * 
+     * Currently the following patterns are checked:
+     * <ul>
+     * <li>Entries deleting all but one candiates in a house</li>
+     * <li>Entries deleting all but one candidate in a cell</li>
+     * </ul>
+     * The search is done via the {@link TableEntry#offSets} of
+     * <code>src</code>.<br><br>
+     * 
+     * If a new outcome is found, it is added to <code>src</code> and all
+     * predecessors are recorded in the entries {@link TableEntry#retIndices return index}.
+     * 
+     * @param src The {@link TableEntry} which is currently handled
+     */
+    private void createNet(TableEntry src) {
+        // houses first: check all 9 candidates in all 27 houses (time consuming...)
+        for (int cand = 1; cand <= src.offSets.length; cand++) {
+            tmpSet.setAnd(src.offSets[cand], finder.getCandidates()[cand]);
+//            if ()
+        }
+    }
+    
+    /**
      * Expands the tables: every {@link TableEntry } contains all direct
      * implications for a given premise. Now every implication is expanded with
      * all implication from its own
@@ -2541,118 +2588,117 @@ public class TablingSolver extends AbstractSolver {
      * with a group node, that wouldnt make any sense). They are however used as
      * possible implications.
      *
-     * @param table
+     * @param dest The table that sould be expanded
+     * @param index The cell index of the premise
+     * @param cand The candidate of the premise
+     * @param isOn <code>true</code>, if the candidate is set in the premise
      */
-    private void expandTables(TableEntry[] table) {
-        // for every entry in tables do...
-        for (int i = 0; i < table.length; i++) {
-//            if (i != 521) {
-//                continue;
-//            }
-            if (table[i].index == 0) {
-                // cell is set -> no implications
-                continue;
+    private void expandTable(TableEntry dest, int index, int cand, boolean isOn) {
+        boolean isFromOnTable = false;
+        boolean isFromExtendedTable = false;
+        // check every entry except the first (thats the premise)
+        for (int j = 1; j < dest.entries.length; j++) {
+            if (dest.entries[j] == 0) {
+                // ok -> done
+                break;
             }
-            // table that should be expanded
-            TableEntry dest = table[i];
+            if (dest.isFull()) {
+                if (DEBUG) {
+                    System.out.println("WARNING: TableEntry full (" + SolutionStep.getCellPrint(index) + (isOn ? "=" : "<>") + cand);
+                }
+                // nothing left to do...
+                Logger.getLogger(getClass().getName()).log(Level.WARNING, "TableEntry full!");
+                break;
+            }
+            // table for the current entry -> all entries in src have to be written into dest
+            TableEntry src = null;
 
-            boolean isFromOnTable = false;
-            boolean isFromExtendedTable = false;
-            // check every entry except the first (thats the premise)
-            for (int j = 1; j < dest.entries.length; j++) {
-                if (dest.entries[j] == 0) {
-                    // ok -> done
-                    break;
-                }
-                if (dest.isFull()) {
-                    // nothing left to do...
-                    Logger.getLogger(getClass().getName()).log(Level.WARNING, "TableEntry full!");
-                    break;
-                }
-                // table for the current entry -> all entries in src have to be written into dest
-                TableEntry src = null;
-
-                // find the table, where the current implication is the premise
-                int srcTableIndex = dest.getCellIndex(j) * 10 + dest.getCandidate(j);
-                isFromExtendedTable = false;
-                isFromOnTable = false;
-                if (Chain.getSNodeType(dest.entries[j]) != Chain.NORMAL_NODE) {
-                    Integer tmpSI = extendedTableMap.get(dest.entries[j]);
-                    if (tmpSI == null) {
-                        Logger.getLogger(getClass().getName()).log(Level.WARNING, "Table for {0} not found!", printTableEntry(dest.entries[j]));
-                        continue;
+            // find the table, where the current implication is the premise
+            int srcTableIndex = dest.getCellIndex(j) * 10 + dest.getCandidate(j);
+            isFromExtendedTable = false;
+            isFromOnTable = false;
+            if (Chain.getSNodeType(dest.entries[j]) != Chain.NORMAL_NODE) {
+                Integer tmpSI = extendedTableMap.get(dest.entries[j]);
+                if (tmpSI == null) {
+                    if (DEBUG) {
+                        System.out.println("WARNING: Table for " + printTableEntry(dest.entries[j]) + " not found!");
                     }
-                    srcTableIndex = tmpSI.intValue();
-                    src = extendedTable.get(srcTableIndex);
-                    isFromExtendedTable = true;
-                } else {
-                    if (dest.isStrong(j)) {
-                        src = onTable[srcTableIndex];
-                    } else {
-                        src = offTable[srcTableIndex];
-                    }
-                    isFromOnTable = dest.isStrong(j);
-                }
-                if (src.index == 0) {
-                    // should not be possible
-                    StringBuilder tmpBuffer = new StringBuilder();
-                    tmpBuffer.append("TableEntry for ").append(dest.entries[j]).append(" not found!\r\n");
-                    tmpBuffer.append("i == ").append(i).append(", j == ").append(j).append(", dest.entries[j] == ").append(dest.entries[j]).append(": ");
-                    tmpBuffer.append(printTableEntry(dest.entries[j]));
-                    Logger.getLogger(getClass().getName()).log(Level.WARNING, tmpBuffer.toString());
+                    Logger.getLogger(getClass().getName()).log(Level.WARNING, "Table for {0} not found!", printTableEntry(dest.entries[j]));
                     continue;
                 }
-                // ok -> expand it
-                int srcBaseDistance = dest.getDistance(j);
-                // check all entries from src
-                for (int k = 1; k < src.index; k++) {
-                    // we take only entries, that have not been expanded themselves
-                    if (src.isExpanded(k)) {
-                        // ignore it!
-                        continue;
-                    }
-                    int srcDistance = src.getDistance(k);
-                    if (dest.indices.containsKey(src.entries[k])) {
-                        // entry from src already exists in dest -> check path length
-                        int orgIndex = dest.getEntryIndex(src.entries[k]);
-                        // 20090213: prefer normal nodes to group nodes or als
+                srcTableIndex = tmpSI.intValue();
+                src = extendedTable.get(srcTableIndex);
+                isFromExtendedTable = true;
+            } else {
+                if (dest.isStrong(j)) {
+                    src = onTable[srcTableIndex];
+                } else {
+                    src = offTable[srcTableIndex];
+                }
+                isFromOnTable = dest.isStrong(j);
+            }
+            if (src.index == 0) {
+                // should not be possible
+                StringBuilder tmpBuffer = new StringBuilder();
+                tmpBuffer.append("TableEntry for ").append(dest.entries[j]).append(" not found!\r\n");
+                tmpBuffer.append("index == ").append(index).append(", j == ").append(j).append(", dest.entries[j] == ").append(dest.entries[j]).append(": ");
+                tmpBuffer.append(printTableEntry(dest.entries[j]));
+                if (DEBUG) {
+                    System.out.println("WARNING: " + tmpBuffer);
+                }
+                Logger.getLogger(getClass().getName()).log(Level.WARNING, tmpBuffer.toString());
+                continue;
+            }
+            // ok -> expand it
+            int srcBaseDistance = dest.getDistance(j);
+            // check all entries from src
+            for (int k = 1; k < src.index; k++) {
+                // we take only entries, that have not been expanded themselves
+                if (src.isExpanded(k)) {
+                    // ignore it!
+                    continue;
+                }
+                int srcDistance = src.getDistance(k);
+                if (dest.indices.containsKey(src.entries[k])) {
+                    // entry from src already exists in dest -> check path length
+                    int orgIndex = dest.getEntryIndex(src.entries[k]);
+                    // 20090213: prefer normal nodes to group nodes or als
 //                        if (dest.isExpanded(orgIndex) && dest.getDistance(orgIndex) > (srcBaseDistance + srcDistance)) {
-                        if (dest.isExpanded(orgIndex)
-                                && (dest.getDistance(orgIndex) > (srcBaseDistance + srcDistance)
-                                || dest.getDistance(orgIndex) == (srcBaseDistance + srcDistance)
-                                && dest.getNodeType(orgIndex) > src.getNodeType(k))) {
-                            // Alter Eintrag war länger oder komplizierter als neuer -> umschreiben
-                            // old entry had a longer path or was more complicated -> rewrite
-                            dest.retIndices[orgIndex] = TableEntry.makeSRetIndex(srcTableIndex, 0, 0, 0, 0);
-                            // expanded flag was lost -> set it again
-                            dest.setExpanded(orgIndex);
-                            if (isFromExtendedTable) {
-                                dest.setExtendedTable(orgIndex);
-                            } else if (isFromOnTable) {
-                                dest.setOnTable(orgIndex);
-                            }
-                            dest.setDistance(orgIndex, srcBaseDistance + srcDistance);
-                        }
-                    } else {
-                        // new entry
-                        int srcCellIndex = src.getCellIndex(k);
-                        int srcCand = src.getCandidate(k);
-                        boolean srcStrong = src.isStrong(k);
-                        if (Chain.getSNodeType(src.entries[k]) == Chain.NORMAL_NODE) {
-                            dest.addEntry(srcCellIndex, srcCand, srcStrong, srcTableIndex);
-                        } else {
-                            int tmp = src.entries[k];
-                            dest.addEntry(Chain.getSCellIndex(tmp), Chain.getSCellIndex2(tmp), Chain.getSCellIndex3(tmp),
-                                    Chain.getSNodeType(tmp), srcCand, srcStrong, srcTableIndex, 0, 0, 0, 0, 0);
-                        }
-                        dest.setExpanded(dest.index - 1);
+                    if (dest.isExpanded(orgIndex)
+                            && (dest.getDistance(orgIndex) > (srcBaseDistance + srcDistance)
+                            || dest.getDistance(orgIndex) == (srcBaseDistance + srcDistance)
+                            && dest.getNodeType(orgIndex) > src.getNodeType(k))) {
+                        // Alter Eintrag war länger oder komplizierter als neuer -> umschreiben
+                        // old entry had a longer path or was more complicated -> rewrite
+                        dest.retIndices[orgIndex] = TableEntry.makeSRetIndex(srcTableIndex, 0, 0, 0, 0);
+                        // expanded flag was lost -> set it again
+                        dest.setExpanded(orgIndex);
                         if (isFromExtendedTable) {
-                            dest.setExtendedTable(dest.index - 1);
+                            dest.setExtendedTable(orgIndex);
                         } else if (isFromOnTable) {
-                            dest.setOnTable(dest.index - 1);
+                            dest.setOnTable(orgIndex);
                         }
-                        dest.setDistance(dest.index - 1, srcBaseDistance + srcDistance);
+                        dest.setDistance(orgIndex, srcBaseDistance + srcDistance);
                     }
+                } else {
+                    // new entry
+                    int srcCellIndex = src.getCellIndex(k);
+                    int srcCand = src.getCandidate(k);
+                    boolean srcStrong = src.isStrong(k);
+                    if (Chain.getSNodeType(src.entries[k]) == Chain.NORMAL_NODE) {
+                        dest.addEntry(srcCellIndex, srcCand, srcStrong, srcTableIndex);
+                    } else {
+                        int tmp = src.entries[k];
+                        dest.addEntry(Chain.getSCellIndex(tmp), Chain.getSCellIndex2(tmp), Chain.getSCellIndex3(tmp),
+                                Chain.getSNodeType(tmp), srcCand, srcStrong, srcTableIndex, 0, 0, 0, 0, 0);
+                    }
+                    dest.setExpanded(dest.index - 1);
+                    if (isFromExtendedTable) {
+                        dest.setExtendedTable(dest.index - 1);
+                    } else if (isFromOnTable) {
+                        dest.setOnTable(dest.index - 1);
+                    }
+                    dest.setDistance(dest.index - 1, srcBaseDistance + srcDistance);
                 }
             }
         }
@@ -2945,19 +2991,54 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
+     * Print the contents of ALL tables (debugging only)
+     */
+    private void printTables(String title) {
+        if (! DEBUG) {
+            return;
+        }
+        System.out.println("==========================================");
+        System.out.println(title);
+        System.out.println("==========================================");
+        for (int i = 0; i < onTable.length; i++) {
+            int index = i / 10;
+            int candidate = i % 10;
+            if (candidate < 1 || candidate > 9) {
+                continue;
+            }
+            String cell = "r" + (Sudoku2.getLine(index) + 1) + "c" + (Sudoku2.getCol(index) + 1);
+            if (onTable[i].index == 0) {
+                System.out.println(cell + "=" + candidate + " is EMPTY!");
+            } else {
+                printTable(cell + "=" + candidate, onTable[i]);
+                System.out.println();
+            }
+            if (offTable[i].index == 0) {
+                System.out.println(cell + "<>" + candidate + " is EMPTY!");
+            } else {
+                printTable(cell + "<>" + candidate, offTable[i]);
+                System.out.println();
+            }
+        }
+    }
+    
+    /**
      * Show the contents of one {@link TableEntry} (for debugging).
      *
      * @param title
      * @param entry
      */
     private void printTable(String title, TableEntry entry) {
+        if (! DEBUG) {
+            return;
+        }
         System.out.println(title + ": ");
         int anz = 0;
         StringBuilder tmp = new StringBuilder();
         for (int i = 0; i < entry.index; i++) {
-            if (!entry.isStrong(i)) {
-                //continue;
-            }
+//            if (!entry.isStrong(i)) {
+//                //continue;
+//            }
             tmp.append(printTableEntry(entry.entries[i]));
             for (int j = 0; j < entry.getRetIndexAnz(i); j++) {
                 int retIndex = entry.getRetIndex(i, j);
@@ -2998,6 +3079,9 @@ public class TablingSolver extends AbstractSolver {
      * @return
      */
     private String printTableEntry(int entry) {
+        if (! DEBUG) {
+            return "";
+        }
         int index = Chain.getSCellIndex(entry);
         int candidate = Chain.getSCandidate(entry);
         boolean set = Chain.isSStrong(entry);
@@ -3169,13 +3253,15 @@ public class TablingSolver extends AbstractSolver {
         sudoku.setSudoku(":0711-4:59:...65+4+328+2458.31.+6+63+8....+459+7+31+4+5+86+2+42+1+38+6..+9+8+56..74+13.84.....7.......+8..6...+8.3.:175 275 975 185 285 785 985:578 974::7");
         //da geht gar nichts...
         sudoku.setSudoku(":0000:x:.......123......6+4+1...4..+8+59+1...+45+2......1+67..2....+1+4....35+64+9+1..14..8.+6.6....+2.+7:::");
+        //sollte chain r4c2=5 -> r7c3=2 / r4c2=5 -> r7c3<>2 geben
+        sudoku.setSudoku("100200300040030050003006007300600800010090060006004009500900700070050020008007005");
         finder.setSudoku(sudoku);
         List<SolutionStep> steps = null;
         long ticks = System.currentTimeMillis();
         int anzLoops = 1;
         for (int i = 0; i < anzLoops; i++) {
-            steps = finder.getAllForcingChains(sudoku);
-            //steps = ts.getAllForcingNets(sudoku);
+            //steps = finder.getAllForcingChains(sudoku);
+            steps = finder.getAllForcingNets(sudoku);
             //steps = ts.getAllNiceLoops(sudoku);
             //steps = finder.getAllGroupedNiceLoops(sudoku);
         }
