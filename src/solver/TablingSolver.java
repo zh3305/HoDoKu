@@ -86,11 +86,12 @@ import sudoku.SudokuSetBase;
  * @author hobiwan
  */
 public class TablingSolver extends AbstractSolver {
+
     private static final long CLEANUP_INTERVAL = 5 * 60 * 1000;
     /**
      * Enable additional output for debugging.
      */
-    private static boolean DEBUG = true;
+    private static boolean DEBUG = false;
     /**
      * Maximum recursion depth in buildung the tables.
      */
@@ -668,7 +669,7 @@ public class TablingSolver extends AbstractSolver {
     private void doGetForcingChains() {
         deletesMap.clear();
         // fill tables
-        long ticks = System.currentTimeMillis();
+        long nanos = System.nanoTime();
         fillTables();
         if (withGroupNodes) {
             fillTablesWithGroupNodes();
@@ -676,30 +677,97 @@ public class TablingSolver extends AbstractSolver {
         if (withAlsNodes) {
             fillTablesWithAls();
         }
-        ticks = System.currentTimeMillis() - ticks;
+        nanos = System.nanoTime() - nanos;
         if (DEBUG) {
-            System.out.println("fillTables(): " + ticks + "ms");
-            printTables("after fillTables()");
+            System.out.println("fillTables(): " + (nanos / 1000000l) + "ms");
+            //printTables("after fillTables()");
+            printTable("after fillTables() r4c3=5", onTable[285]);
         }
         printTableAnz();
         //printTable("r6c8=1 fill", onTable[521]);
         //printTable("r6c8<>1 fill", offTable[521]);
 
         // expand tables
-        ticks = System.currentTimeMillis();
+        nanos = System.nanoTime();
         expandTables();
-        ticks = System.currentTimeMillis() - ticks;
+        nanos = System.nanoTime() - nanos;
         if (DEBUG) {
-            System.out.println("expandTables(): " + ticks + "ms");
-            printTables("after expandTables()");
+            System.out.println("expandTables(): " + (nanos / 1000000l) + "ms");
+            //printTables("after expandTables()");
+            printTable("after expandTables() r4c3=5", onTable[285]);
         }
         printTableAnz();
         //printTable("r6c8=1 expand", onTable[521]);
         //printTable("r6c8<>1 expand", offTable[521]);
 
         // ok, hier beginnt der Spass!
-        ticks = System.currentTimeMillis();
+        nanos = System.nanoTime();
         checkForcingChains();
+        nanos = System.nanoTime() - nanos;
+        if (DEBUG) {
+            System.out.println("checkChains(): " + (nanos / 1000000l) + "ms");
+        }
+        
+        // now nets
+        if (chainsOnly == false) {
+            // try new net nodes
+//            System.out.println("======== CREATE NET1 =========");
+            nanos = System.nanoTime();
+            createAllNets();
+            nanos = System.nanoTime() - nanos;
+            if (DEBUG) {
+                System.out.println("createNets(): " + (nanos / 1000000l) + "ms");
+                //printTable("after createNets() r4c3=5", onTable[285]);
+            }
+            printTableAnz();
+
+//            // expand tables
+//            nanos = System.nanoTime();
+//            expandTables();
+//            nanos = System.nanoTime() - nanos;
+//            if (DEBUG) {
+//                System.out.println("expandTables(): " + (nanos / 1000000l) + "ms");
+//                //printTables("after expandTables()");
+//                printTable("after expandTables() r4c3=5", onTable[285]);
+//            }
+//            printTableAnz();
+
+            // ok, hier beginnt der Spass!
+            nanos = System.nanoTime();
+            checkForcingChains();
+            nanos = System.nanoTime() - nanos;
+            if (DEBUG) {
+                System.out.println("checkChains(): " + (nanos / 1000000l) + "ms");
+            }
+//            System.out.println("======== CREATE NET2 =========");
+//            nanos = System.nanoTime();
+//            createNets();
+//            nanos = System.nanoTime() - nanos;
+//            if (DEBUG) {
+//                System.out.println("createNets(): " + (nanos / 1000000l) + "ms");
+//                printTable("after createNets() r4c3=5", onTable[285]);
+//            }
+//            printTableAnz();
+//
+////            // expand tables
+////            nanos = System.nanoTime();
+////            expandTables();
+////            nanos = System.nanoTime() - nanos;
+////            if (DEBUG) {
+////                System.out.println("expandTables(): " + (nanos / 1000000l) + "ms");
+////                //printTables("after expandTables()");
+////                printTable("after expandTables() r4c3=5", onTable[285]);
+////            }
+////            printTableAnz();
+//
+//            // ok, hier beginnt der Spass!
+//            nanos = System.nanoTime();
+//            checkForcingChains();
+//            nanos = System.nanoTime() - nanos;
+//            if (DEBUG) {
+//                System.out.println("checkChains(): " + (nanos / 1000000l) + "ms");
+//            }
+        }
 //        // TODO: DEBUG
 //        for (SolutionStep step : steps) {
 //            if (step.getCandidatesToDelete().get(0).getIndex() == 3 && step.getCandidatesToDelete().get(0).getValue() == 5) {
@@ -712,10 +780,6 @@ public class TablingSolver extends AbstractSolver {
 //                System.out.println("==================================");
 //            }
 //        }
-        ticks = System.currentTimeMillis() - ticks;
-        if (DEBUG) {
-            System.out.println("checkChains(): " + ticks + "ms");
-        }
     }
 
     /**
@@ -2532,7 +2596,7 @@ public class TablingSolver extends AbstractSolver {
                 continue;
             }
             // expand it
-            expandTable(onTable[i], i / 10, i % 10, true);
+            expandTable(onTable[i], i / 10, i % 10, true, 1, -1);
         }
         for (int i = 0; i < offTable.length; i++) {
             if (offTable[i].index == 0) {
@@ -2540,35 +2604,263 @@ public class TablingSolver extends AbstractSolver {
                 continue;
             }
             // expand it
-            expandTable(offTable[i], i / 10, i % 10, false);
+            expandTable(offTable[i], i / 10, i % 10, false, 1, -1);
         }
     }
     
     /**
-     * Goes through all outcomes in <code>src</code> and tries to determine,
-     * if a combination of outcomes can produce a new one.<br><br>
-     * 
-     * Currently the following patterns are checked:
-     * <ul>
-     * <li>Entries deleting all but one candiates in a house</li>
-     * <li>Entries deleting all but one candidate in a cell</li>
-     * </ul>
-     * The search is done via the {@link TableEntry#offSets} of
-     * <code>src</code>.<br><br>
-     * 
-     * If a new outcome is found, it is added to <code>src</code> and all
-     * predecessors are recorded in the entries {@link TableEntry#retIndices return index}.
-     * 
-     * @param src The {@link TableEntry} which is currently handled
+     * Expands chains to nets as long as possible.
      */
-    private void createNet(TableEntry src) {
-        // houses first: check all 9 candidates in all 27 houses (time consuming...)
-        for (int cand = 1; cand <= src.offSets.length; cand++) {
-            tmpSet.setAnd(src.offSets[cand], finder.getCandidates()[cand]);
-//            if ()
-        }
+    private void createAllNets() {
+        int entryAnz = getTableAnz();
+        int count = 0;
+        int newEntryAnz = entryAnz;
+        long nanos= System.nanoTime();
+        do {
+            count++;
+            // TODO
+//            System.out.println("createNets() start: " + count + "/" + entryAnz);
+            entryAnz= newEntryAnz;
+            createNets();
+            newEntryAnz = getTableAnz();
+//            System.out.println("createNets() end: " + count + "/" + newEntryAnz);
+        } while (newEntryAnz > entryAnz);
+        nanos = System.nanoTime()- nanos;
+        //TODO
+//        System.out.println("createAllNets(): " + (nanos / 1000000l) + "ms (" + count + " iterations)");
     }
     
+    /**
+     * Tries to find nets in existing tables. Delegates to {@link #createNet(solver.TableEntry) }.
+     */
+    private void createNets() {
+        for (int i = 0; i < onTable.length; i++) {
+            if (onTable[i].index == 0) {
+                continue;
+            }
+            createNet(onTable[i], i / 10, i % 10, true);
+        }
+        for (int i = 0; i < offTable.length; i++) {
+            if (offTable[i].index == 0) {
+                continue;
+            }
+            createNet(offTable[i], i / 10, i % 10, true);
+        }
+    }
+
+    /**
+     * Goes through all outcomes in
+     * <code>src</code> and tries to determine, if a combination of outcomes can
+     * produce a new one.<br><br>
+     *
+     * Currently the following patterns are checked: <ul> <li>Entries deleting
+     * all but one candiates in a house</li> <li>Entries deleting all but one
+     * candidate in a cell</li> </ul> The search is done via the {@link TableEntry#offSets}
+     * of
+     * <code>src</code>.<br><br>
+     *
+     * If a new outcome is found, it is added to
+     * <code>src</code> and all predecessors are recorded in the entries {@link TableEntry#retIndices return index}.
+     *
+     * @param src The {@link TableEntry} which is currently handled
+     * @param srcIndex The cell index of the premise of <code>src</code>
+     * @param srcCand The candidate of the premise of <code>src</code>
+     * @param isOn <code>srcCand</code> is on/off in the premise
+     */
+    private void createNet(TableEntry src, int srcIndex, int srcCand, boolean isOn) {
+        // store the current amount of entries in the table (for expansion)
+        int currentTableIndex = src.index;
+        // houses first: check all 9 candidates in all 27 houses (time consuming...)
+        for (int cand = 1; cand < src.offSets.length; cand++) {
+            for (int constr = 0; constr < Sudoku2.ALL_CONSTRAINTS_TEMPLATES.length; constr++) {
+                // check all candidates in that house
+                if (finder.getSudoku().getFree()[constr][cand] < 3) {
+                    // there have to be at least three candidates in that house; if there
+                    // are less, its either a normal implication (has already been handled)
+                    // or there is nothing to do
+                    continue;
+                }
+                // get all implications (candidate off) for that candidate and house
+                tmpSet.setAnd(src.offSets[cand], Sudoku2.ALL_CONSTRAINTS_TEMPLATES[constr]);
+                if (tmpSet.isEmpty()) {
+                    // nothing to do
+                    continue;
+                }
+                // get all candidates in the house, for which no implications exist
+                tmpSet1.setAnd(finder.getCandidates()[cand], Sudoku2.ALL_CONSTRAINTS_TEMPLATES[constr]);
+                tmpSet1.andNot(tmpSet);
+                if (tmpSet1.size() == 1) {
+                    // there is exactly one candidate left -> is set by a net
+                    int index = tmpSet1.get(0);
+                    makeNetEntry(src, srcIndex, srcCand, isOn, index, cand, tmpSet, (short) 0);
+                } else if (tmpSet1.isEmpty()) {
+                    // no candidate left: every candidate in the house can be set by a net consisting
+                    // of all the other candidates
+                    for (int i = 0; i < tmpSet.size(); i++) {
+                        int index = tmpSet.get(i);
+                        makeNetEntry(src, srcIndex, srcCand, isOn, index, cand, tmpSet, (short) 0);
+                    }
+                }
+            }
+        }
+        // now all cells: if all but one candidates are removed from a cell, the
+        // last candidate can be set in the cell; if all candidates are removed,
+        // every candidate can be set; only applicable, if more than two
+        // candidates are still valid in the cell
+        Sudoku2 actSudoku = finder.getSudoku();
+        for (int index = 0; index < Sudoku2.LENGTH; index++) {
+            if (actSudoku.getValue(index) != 0) {
+                // cell already set -> ignore
+                continue;
+            }
+            if (actSudoku.getAnzCandidates(index) < 3) {
+                // no net possible
+                continue;
+            }
+            int cand = -1;
+            int anz = 0;
+            int[] cands = actSudoku.getAllCandidates(index);
+            for (int i = 0; i < cands.length; i++) {
+                if (!src.offSets[cands[i]].contains(index)) {
+                    anz++;
+                    if (anz > 1) {
+                        // thats the second missing candidate -> no net possible
+                        break;
+                    }
+                    cand = cands[i];
+                }
+            }
+            short mask = actSudoku.getCell(index);
+            if (anz == 1) {
+                // cand can be set due to the net
+                makeNetEntry(src, srcIndex, srcCand, isOn, index, cand, null, mask);
+            } else if (anz == 0) {
+                // every candidate is possible
+                for (int i = 0; i < cands.length; i++) {
+                    cand = cands[i];
+                    makeNetEntry(src, srcIndex, srcCand, isOn, index, cand, null, mask);
+                }
+            } else {
+                // no net possible
+                continue;
+            }
+        }
+        // now expand the new entries
+        expandTable(src, srcIndex, srcCand, isOn, currentTableIndex, -1);
+    }
+
+    /**
+     * Make a single new entry in
+     * <code>src</code> for setting
+     * <code>cand</code> in
+     * <code>index</code>.
+     * <code>entries</code> contains all other cells, which lead to the new net
+     * entry. If
+     * <code>entries</code> is
+     * <code>null</code>, a cell is set due to all but one candidate deleted
+     * from it and
+     * <code>cands</code> contains the candidates that lead to the new entry.
+     *
+     * @param src Table for which the new entry should be created
+     * @param srcIndex The cell index of the premise of <code>src</code>
+     * @param srcCand The candidate of the premise of <code>src</code>
+     * @param isOn <code>srcCand</code> is on/off in the premise
+     * @param index The index of the cell
+     * @param cand The candidate that can be set due to the net
+     * @param entries All other cells, that lead to the new entry
+     * @param cands All other candidates in the cell
+     */
+    private void makeNetEntry(TableEntry src, int srcIndex, int srcCand, boolean isOn, 
+            int index, int cand, SudokuSet entries, short cands) {
+        // TODO DEBUG!!
+        if (srcIndex != 28 || srcCand != 5 || ! isOn) {
+            return;
+        }
+//        System.out.println("makeNetEntry: " + SolutionStep.getCellPrint(srcIndex) + "/" + srcCand+ "/"+isOn+"  "+ SolutionStep.getCellPrint(index) + "/" + cand);
+        // check, if it already exists
+        boolean alreadyThere = false;
+        int oldDistance = 0;
+        int atIndex = -1;
+        int entry = Chain.makeSEntry(index, cand, true);
+        if (src.indices.containsKey(entry)) {
+            alreadyThere = true;
+            atIndex = src.indices.get(entry);
+            oldDistance = src.getDistance(atIndex);
+//            System.out.println("   already there: distance = " + oldDistance + " (" + atIndex+ ")");
+        }
+        //make a new net entry
+        int retIndex = 0;
+        int distance = 0;
+        if (entries != null) {
+            for (int i = 0; i < entries.size(); i++) {
+                int index1 = entries.get(i);
+                if (index1 == index) {
+                    // is destination-> ignore
+                    continue;
+                }
+                entry = Chain.makeSEntry(index1, cand, false);
+                if (!src.indices.containsKey(entry)) {
+                    //TODO
+//                    System.out.println("ERROR: Entry for net not in table (1 - " + index1 + "/" + cand);
+                    continue;
+                }
+                int ri = src.indices.get(entry);
+                if (retIndex < retIndices[0].length) {
+                    retIndices[0][retIndex++] = ri;
+                }
+                distance += (src.getDistance(ri) + 1);
+            }
+        } else {
+            int[] candsArr = Sudoku2.POSSIBLE_VALUES[cands];
+            for (int i = 0; i < candsArr.length; i++) {
+                int cand1 = candsArr[i];
+                if (cand1 == cand) {
+                    // is destination-> ignore
+                    continue;
+                }
+                entry = Chain.makeSEntry(index, cand1, false);
+                if (!src.indices.containsKey(entry)) {
+                    //TODO
+//                    System.out.println("ERROR: Entry for net not in table (1 - " + index + "/" + cand1);
+                    continue;
+                }
+                int ri = src.indices.get(entry);
+                if (retIndex < retIndices[0].length) {
+                    retIndices[0][retIndex++] = ri;
+                }
+                distance += (src.getDistance(ri) + 1);
+            }
+        }
+        // build the new entry if there are more than 5 retIndices, they are ignored
+        for (int i = retIndex; i < 5; i++) {
+            // reset unused indices
+            retIndices[0][i] = 0;
+        }
+        // write the entry
+//        System.out.println("   new distance: " + distance);
+        if (alreadyThere) {
+            if (distance < oldDistance) {
+//                System.out.println("   overwrite old entry");
+                // shorter distance when reached as net -> recode it
+                long newRetIndices = TableEntry.makeSRetIndex(retIndices[0][0], 
+                        retIndices[0][1], retIndices[0][2], retIndices[0][3], 
+                        retIndices[0][4]);
+                src.retIndices[atIndex] = newRetIndices;
+                src.setDistance(atIndex, distance);
+                // expand the single entry: recalculates distances all depending entries
+                expandTable(src, srcIndex, srcCand, isOn, 0, atIndex);
+            } else {
+                // do nothing
+            }
+        } else {
+//            System.out.println("   add new entry");
+            src.addEntry(index, -1, -1, Chain.NORMAL_NODE, cand, true,
+                    retIndices[0][0], retIndices[0][1], retIndices[0][2],
+                    retIndices[0][3], retIndices[0][4], 0);
+            src.setDistance(src.index - 1, distance);
+        }
+    }
+
     /**
      * Expands the tables: every {@link TableEntry } contains all direct
      * implications for a given premise. Now every implication is expanded with
@@ -2588,16 +2880,26 @@ public class TablingSolver extends AbstractSolver {
      * with a group node, that wouldnt make any sense). They are however used as
      * possible implications.
      *
-     * @param dest The table that sould be expanded
+     * @param dest The table that should be expanded
      * @param index The cell index of the premise
      * @param cand The candidate of the premise
-     * @param isOn <code>true</code>, if the candidate is set in the premise
+     * @param isOn
+     * <code>true</code>, if the candidate is set in the premise
+     * @param startIndex The index of the first entry to expand (1 to expand the whole table)
+     * @param singleEntry If not -1 the index of one single entry that should be expanded
+     * (is used to adjust distances when a single node has been replaced by a shorter net)
      */
-    private void expandTable(TableEntry dest, int index, int cand, boolean isOn) {
+    private void expandTable(TableEntry dest, int index, int cand, boolean isOn,
+            int startIndex, int singleEntry) {
         boolean isFromOnTable = false;
         boolean isFromExtendedTable = false;
         // check every entry except the first (thats the premise)
-        for (int j = 1; j < dest.entries.length; j++) {
+        int end = dest.entries.length;
+        if (singleEntry != -1) {
+            startIndex = singleEntry;
+            end = singleEntry + 1;
+        }
+        for (int j = startIndex; j < end; j++) {
             if (dest.entries[j] == 0) {
                 // ok -> done
                 break;
@@ -2802,7 +3104,9 @@ public class TablingSolver extends AbstractSolver {
             }
             lastCellIndex = newCellIndex;
             lastCellEntry = oldEntry;
-            tmpChain[j++] = oldEntry;
+            if (j < tmpChain.length) {
+                tmpChain[j++] = oldEntry;
+            }
             // "min" stands for "multiple implications" - the chain is a net
             // check for mins
             for (int k = 0; k < actMin; k++) {
@@ -2810,9 +3114,13 @@ public class TablingSolver extends AbstractSolver {
                     // is a min for the current entry -> add it (the first
                     // entry is skipped, it is already in the chain)
                     for (int l = minIndexes[k] - 2; l >= 0; l--) {
-                        tmpChain[j++] = -mins[k][l];
+                        if (j < tmpChain.length) {
+                            tmpChain[j++] = -mins[k][l];
+                        }
                     }
-                    tmpChain[j++] = Integer.MIN_VALUE;
+                    if (j < tmpChain.length) {
+                        tmpChain[j++] = Integer.MIN_VALUE;
+                    }
                 }
             }
         }
@@ -2973,8 +3281,10 @@ public class TablingSolver extends AbstractSolver {
                     // we dont show nets in nets; they can exist, but are not spelled out
                     if (entryIndex != 0 && !isMin) {
                         // 0 is not allowed, only possible for first retIndex!
-                        mins[actMin][0] = entry.entries[entryIndex];
-                        minIndexes[actMin++] = 1;
+                        if (actMin < mins.length) {
+                            mins[actMin][0] = entry.entries[entryIndex];
+                            minIndexes[actMin++] = 1;
+                        }
                     }
                 }
             }
@@ -2994,7 +3304,7 @@ public class TablingSolver extends AbstractSolver {
      * Print the contents of ALL tables (debugging only)
      */
     private void printTables(String title) {
-        if (! DEBUG) {
+        if (!DEBUG) {
             return;
         }
         System.out.println("==========================================");
@@ -3021,7 +3331,7 @@ public class TablingSolver extends AbstractSolver {
             }
         }
     }
-    
+
     /**
      * Show the contents of one {@link TableEntry} (for debugging).
      *
@@ -3029,7 +3339,7 @@ public class TablingSolver extends AbstractSolver {
      * @param entry
      */
     private void printTable(String title, TableEntry entry) {
-        if (! DEBUG) {
+        if (!DEBUG) {
             return;
         }
         System.out.println(title + ": ");
@@ -3079,7 +3389,7 @@ public class TablingSolver extends AbstractSolver {
      * @return
      */
     private String printTableEntry(int entry) {
-        if (! DEBUG) {
+        if (!DEBUG) {
             return "";
         }
         int index = Chain.getSCellIndex(entry);
@@ -3098,6 +3408,24 @@ public class TablingSolver extends AbstractSolver {
         }
     }
 
+    /**
+     * Calculates the total amount of entries in all tables;
+     * used for net creation
+     * @return 
+     */
+    public int getTableAnz() {
+        int entryAnz = 0;
+        for (int i = 0; i < onTable.length; i++) {
+            if (onTable[i] != null) {
+                entryAnz += onTable[i].index;
+            }
+            if (offTable[i] != null) {
+                entryAnz += offTable[i].index;
+            }
+        }
+        return entryAnz;
+    }
+    
     /**
      * Show the number of tables and entries in tables (debugging only).
      */
@@ -3255,6 +3583,8 @@ public class TablingSolver extends AbstractSolver {
         sudoku.setSudoku(":0000:x:.......123......6+4+1...4..+8+59+1...+45+2......1+67..2....+1+4....35+64+9+1..14..8.+6.6....+2.+7:::");
         //sollte chain r4c2=5 -> r7c3=2 / r4c2=5 -> r7c3<>2 geben
         sudoku.setSudoku("100200300040030050003006007300600800010090060006004009500900700070050020008007005");
+        // Easter monster: r5c9=6 -> r1c7=9 / r5c9<>6 -> r1c7<>9
+        sudoku.setSudoku("1.......2.9.4...5...6...7...5.9.3.......7.......85..4.7.....6...3...9.8...2.....1");
         finder.setSudoku(sudoku);
         List<SolutionStep> steps = null;
         long ticks = System.currentTimeMillis();
@@ -3262,6 +3592,18 @@ public class TablingSolver extends AbstractSolver {
         for (int i = 0; i < anzLoops; i++) {
             //steps = finder.getAllForcingChains(sudoku);
             steps = finder.getAllForcingNets(sudoku);
+            TablingSolver ts = finder.getTablingSolver();
+            for (int c = 1; c < 10; c++) {
+                System.out.println("==== Eliminations for candidate " + c + " ==============");
+                for (int j = 0; j < ts.onTable.length; j++) {
+                    if (ts.onTable[j].index > 0 && ! ts.onTable[j].offSets[c].isEmpty()) {
+                        System.out.println(SolutionStep.getCellPrint(j / 10) + "/" + (j % 10) + "/on:  " + ts.onTable[j].offSets[c]);
+                    }
+                    if (ts.offTable[j].index > 0 && ! ts.offTable[j].offSets[c].isEmpty()) {
+                        System.out.println(SolutionStep.getCellPrint(j / 10) + "/" + (j % 10) + "/off: " + ts.offTable[j].offSets[c]);
+                    }
+                }
+            }
             //steps = ts.getAllNiceLoops(sudoku);
             //steps = finder.getAllGroupedNiceLoops(sudoku);
         }

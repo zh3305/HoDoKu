@@ -299,7 +299,7 @@ public class TableEntry {
         ///*K*/ returns null???
         Integer ret = indices.get(Chain.makeSEntry(cellIndex, cand, set));
         if (ret == null) {
-            //Logger.getLogger(getClass().getName()).log(Level.SEVERE, "entry not found: " + cellIndex + ", " + cand + ", " + set);
+//            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "entry not found: " + cellIndex + ", " + cand + ", " + set);
             return 0;
         } else {
             return ret.intValue();
