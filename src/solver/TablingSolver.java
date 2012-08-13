@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.logging.Level;
@@ -721,17 +722,6 @@ public class TablingSolver extends AbstractSolver {
             }
             printTableAnz();
 
-//            // expand tables
-//            nanos = System.nanoTime();
-//            expandTables();
-//            nanos = System.nanoTime() - nanos;
-//            if (DEBUG) {
-//                System.out.println("expandTables(): " + (nanos / 1000000l) + "ms");
-//                //printTables("after expandTables()");
-//                printTable("after expandTables() r4c3=5", onTable[285]);
-//            }
-//            printTableAnz();
-
             // ok, hier beginnt der Spass!
             nanos = System.nanoTime();
             checkForcingChains();
@@ -739,34 +729,19 @@ public class TablingSolver extends AbstractSolver {
             if (DEBUG) {
                 System.out.println("checkChains(): " + (nanos / 1000000l) + "ms");
             }
-//            System.out.println("======== CREATE NET2 =========");
-//            nanos = System.nanoTime();
-//            createNets();
-//            nanos = System.nanoTime() - nanos;
-//            if (DEBUG) {
-//                System.out.println("createNets(): " + (nanos / 1000000l) + "ms");
-//                printTable("after createNets() r4c3=5", onTable[285]);
-//            }
-//            printTableAnz();
-//
-////            // expand tables
-////            nanos = System.nanoTime();
-////            expandTables();
-////            nanos = System.nanoTime() - nanos;
-////            if (DEBUG) {
-////                System.out.println("expandTables(): " + (nanos / 1000000l) + "ms");
-////                //printTables("after expandTables()");
-////                printTable("after expandTables() r4c3=5", onTable[285]);
-////            }
-////            printTableAnz();
-//
-//            // ok, hier beginnt der Spass!
-//            nanos = System.nanoTime();
-//            checkForcingChains();
-//            nanos = System.nanoTime() - nanos;
-//            if (DEBUG) {
-//                System.out.println("checkChains(): " + (nanos / 1000000l) + "ms");
-//            }
+            
+            //TODO: DEBUG
+            // lets find out, how many candidates (and combination of candidates)
+            // exist in the grid as by now
+            for (int c = 1; c <= 9; c++) {
+                List<SudokuSet> candSets = new ArrayList<SudokuSet>();
+                Map<SudokuSet,Integer> candSetAnzMap = new TreeMap<SudokuSet,Integer>();
+                for (int i = 0; i < onTable.length; i++) {
+                    if (onTable[i].index != 0) {
+                        
+                    }
+                }
+            }
         }
 //        // TODO: DEBUG
 //        for (SolutionStep step : steps) {

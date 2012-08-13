@@ -27,7 +27,7 @@ import java.util.logging.Logger;
  *
  * @author hobiwan
  */
-public class SudokuSetBase implements Cloneable, Serializable {
+public class SudokuSetBase implements Cloneable, Serializable, Comparable<SudokuSetBase> {
     private static final long serialVersionUID = 1L;
 
     public static final SudokuSet EMPTY_SET = new SudokuSet();
@@ -80,6 +80,21 @@ public class SudokuSetBase implements Cloneable, Serializable {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error while cloning", ex);
         }
         return newSet;
+    }
+
+    @Override
+    public int compareTo(SudokuSetBase o) {
+        long lRet = mask2 - o.mask2;
+        if (lRet == 0) {
+            lRet = mask1 - o.mask1;
+        }
+        int ret = 0;
+        if (lRet < 0) {
+            ret = -1;
+        } else if (lRet > 0) {
+            ret = 1;
+        }
+        return ret;
     }
 
     public boolean isEmpty() {
