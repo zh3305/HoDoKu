@@ -525,6 +525,8 @@ public class ExtendedPrintProgressDialog extends javax.swing.JDialog implements 
                 }
                 if (layout == 4) {
                     verticalGap = (int) ((pageFormat.getHeight() - pageFormat.getImageableHeight()) * scale);
+                    // less vertical gap
+                    verticalGap /= 2;
                     borderHeight = (borderHeight - verticalGap) / 2;
                 }
             }
