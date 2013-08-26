@@ -33,7 +33,7 @@ import sudoku.SudokuSet;
  * An instance of <code>TableEntry</code> holds all possible outcomes for
  * one single premise. The premise itself is the first element in the <code>TableEntry</code>.
  * The {@link TablingSolver} holds two arrays of <code>TableEntries</code>. The index of
- * the entry decides cell and candidate (<code>cell * 100 + candidate</code>), one
+ * the entry decides cell and candidate (<code>cell * 10 + candidate</code>), one
  * table is for "candidate is deleted from cell" and one is for "cell is set to that number".<br><br>
  *
  * A <code>TableEntry</code> consists mainly of two synchronized arrays: {@link #entries} contains
@@ -199,9 +199,6 @@ public class TableEntry {
     }
     
     /**
-     * Einträge werden nur hinzugefügt, wenn sie nicht schon existieren
-     */
-    /**
      * Adds entries to the table.
      * @param cellIndex1 The index of the cell for {@link Chain#NORMAL_NODE}; the index of the first
      *   cell for {@link Chain#GROUP_NODE}; the index of the cell that provides entry into an
@@ -237,6 +234,7 @@ public class TableEntry {
         }
         // check only for single cells -> group nodes, ALS etc. can not be start or end point
         // of a chain (in this implementation)
+        /*K*///What about shorter paths?
         if (nodeType == Chain.NORMAL_NODE) {
             if ((set && onSets[cand].contains(cellIndex1)) || (! set && offSets[cand].contains(cellIndex1))) {
                 // already there
@@ -299,12 +297,14 @@ public class TableEntry {
         ///*K*/ returns null???
         Integer ret = indices.get(Chain.makeSEntry(cellIndex, cand, set));
         if (ret == null) {
-//            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "entry not found: " + cellIndex + ", " + cand + ", " + set);
+            if (DEBUG) {
+                System.out.println("TableEntry.getEntryIndex() - entry not found: " + cellIndex + ", " + cand + ", " + set);
+            }
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "entry not found: {0}, {1}, {2}", new Object[]{cellIndex, cand, set});
             return 0;
         } else {
             return ret.intValue();
         }
-//        return indices.get(Chain.makeSEntry(cellIndex, cand, set));
     }
 
     /**
@@ -316,6 +316,9 @@ public class TableEntry {
     int getEntryIndex(int entry) {
         Integer tmp = indices.get(entry);
         if (tmp == null) {
+            if (DEBUG) {
+                System.out.println("TableEntry.getEntryIndex() - tmp == null: " + entry);
+            }
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "tmp == null: {0}", entry);
         }
         return indices.get(entry);
@@ -415,7 +418,7 @@ public class TableEntry {
     }
     
     /**
-     * Calculates the number of reverse indices contained in <code>retindex</code>.
+     * Calculates the number of reverse indices contained in <code>retIndex</code>.
      * The first reverse index is always set, even if it is 0.
      * @param retIndex
      * @return
