@@ -354,7 +354,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         showHintPanelMenuItem.setSelected(Options.getInstance().isShowHintPanel());
         showToolBarMenuItem.setSelected(Options.getInstance().isShowToolBar());
 
-        // Level-MenÃ¼s und Combo-Box
+        // Level-Menüs und Combo-Box
         levelMenuItems[0] = levelLeichtMenuItem;
         levelMenuItems[1] = levelMittelMenuItem;
         levelMenuItems[2] = levelKniffligMenuItem;
@@ -410,11 +410,11 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         // set back the saved difficulty level
         Options.getInstance().setActLevel(actLevel);
 
-        // MenÃ¼zustand prÃ¼fen, Ã¼bernimmt Werte von SudokuPanel; muss am Anfang stehen,
-        // weil die Werte spÃ¤ter in der Methode verwendet werden
+        // Menüzustand prüfen, übernimmt Werte von SudokuPanel; muss am Anfang stehen,
+        // weil die Werte später in der Methode verwendet werden
         check();
 
-        // Die ToggleButtons in ein Array stecken, ist spÃ¤ter einfacher
+        // Die ToggleButtons in ein Array stecken, ist später einfacher
         toggleButtons[0] = f1ToggleButton;
         toggleButtons[1] = f2ToggleButton;
         toggleButtons[2] = f3ToggleButton;
@@ -3190,7 +3190,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
             // Options
             writeOptionsWithWindowState(path);
         } else {
-            // Sudoku2 und Lï¿½sung
+            // Sudoku2 und Lösung
             String newLine = System.getProperty("line.separator");
             if (filterType == 1) {
                 sudokuFileType = 1;
