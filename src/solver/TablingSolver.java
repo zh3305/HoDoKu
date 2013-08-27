@@ -1006,7 +1006,7 @@ public class TablingSolver extends AbstractSolver {
         }
         dest.setEntity(src.getEntity());
         dest.setEntityNumber(src.getEntityNumber());
-        int i = 0;
+        int i;
         // copy the chains. if a debugChain already exists in dest
         // that can hold the debugChain from source, copy it. if not
         // create a new one.
@@ -1079,7 +1079,7 @@ public class TablingSolver extends AbstractSolver {
             oldChains.add((Chain) tmpChains[i].clone());
         }
 
-        String del = null;
+        String del;
         if (globalStep.getCandidatesToDelete().size() > 0) {
             // candidates can be deleted
             del = globalStep.getCandidateString();
@@ -2048,7 +2048,7 @@ public class TablingSolver extends AbstractSolver {
             int col1Index = -1;
             int blockAnz = 0;
             int block1Index = -1;
-            GroupNode gn2 = null;
+            GroupNode gn2;
             for (int j = 0; j < groupNodes.size(); j++) {
                 gn2 = groupNodes.get(j);
                 if (j == i) {
@@ -2227,7 +2227,7 @@ public class TablingSolver extends AbstractSolver {
                 }
                 // Eliminations are possible, create a table for the als with that entry
                 int entryIndex = als.indicesPerCandidat[j].get(0);
-                TableEntry offEntry = null;
+                TableEntry offEntry;
                 if ((offEntry = getAlsTableEntry(entryIndex, i, j)) == null) {
                     offEntry = getNextExtendedTableEntry(extendedTableIndex);
                     offEntry.addEntry(entryIndex, i, Chain.ALS_NODE, j, false, 0);
@@ -2407,7 +2407,7 @@ public class TablingSolver extends AbstractSolver {
      * @return
      */
     private TableEntry getNextExtendedTableEntry(int tableIndex) {
-        TableEntry entry = null;
+        TableEntry entry;
         if (tableIndex >= extendedTable.size()) {
             entry = new TableEntry();
             extendedTable.add(entry);
@@ -2622,9 +2622,10 @@ public class TablingSolver extends AbstractSolver {
             newEntryAnz = getTableAnz();
 //            System.out.println("createNets() end: " + count + "/" + newEntryAnz);
         } while (newEntryAnz > entryAnz);
-        nanos = System.nanoTime() - nanos;
-        //TODO
-//        System.out.println("createAllNets(): " + (nanos / 1000000l) + "ms (" + count + " iterations)");
+        if (DEBUG) {
+            nanos = System.nanoTime() - nanos;
+            System.out.println("createAllNets(): " + (nanos / 1000000l) + "ms (" + count + " iterations)");
+        }
     }
 
     /**
@@ -3144,13 +3145,13 @@ public class TablingSolver extends AbstractSolver {
     /**
      * Constructs a debugChain for a given premise and a given implication. It
      * looks up the correct entry in
-     * <code>entry</code> and delegates the real work to null     {@link #buildChain(solver.TableEntry, int, int[], boolean, sudoku.SudokuSet)
+     * <code>entry</code> and delegates the real work to null null     {@link #buildChain(solver.TableEntry, int, int[], boolean, sudoku.SudokuSet)
      * }. If the debugChain is a net, the net parts are constructed as
      * well.<br><br>
      *
      * The main debugChain is written to {@link #debugChain}, the net parts are
      * written to {@link #mins}. The debugChain is from back to front, it is
-     * reversed by null     {@link #addChain(solver.TableEntry, int, int, boolean, boolean, boolean)
+     * reversed by null null     {@link #addChain(solver.TableEntry, int, int, boolean, boolean, boolean)
      * }.
      *
      * @param entry
@@ -3587,7 +3588,7 @@ public class TablingSolver extends AbstractSolver {
         // Easter monster: r5c9=6 -> r1c7=9 / r5c9<>6 -> r1c7<>9
         sudoku.setSudoku("1.......2.9.4...5...6...7...5.9.3.......7.......85..4.7.....6...3...9.8...2.....1");
         finder.setSudoku(sudoku);
-        List<SolutionStep> steps = null;
+        List<SolutionStep> steps = new ArrayList<SolutionStep>();
         long ticks = System.currentTimeMillis();
         int anzLoops = 1;
         for (int i = 0; i < anzLoops; i++) {
