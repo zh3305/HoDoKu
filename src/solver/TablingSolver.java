@@ -265,15 +265,44 @@ public class TablingSolver extends AbstractSolver {
      * sorted by candidate
      */
     private SudokuSet[] alsEliminations = new SudokuSet[10];
-    private int[] chain = new int[Options.getInstance().getMaxTableEntryLength()]; // globale chain für buildChain()
-    private int chainIndex = 0; // Index des nächsten Elements in chain[]
-    private int[][] mins = new int[200][Options.getInstance().getMaxTableEntryLength()]; // globale chains für networks
-    private int[] minIndexes = new int[mins.length]; // Indexe der nächsten Elemente in mins[]
-    private int actMin = 0;                          // derzeit aktuelles min
-    private int[] tmpChain = new int[Options.getInstance().getMaxTableEntryLength()]; // globale chain für addChain()
+    /**
+     * Global chain for {@link #buildChain(solver.TableEntry, int, int[], boolean, sudoku.SudokuSet)}.
+     */
+    private int[] chain = new int[Options.getInstance().getMaxTableEntryLength()];
+    /**
+     * Index of the next freeelement in {@link #chain}.
+     */
+    private int chainIndex = 0;
+    /**
+     * Chains for nets. Every new partial chain of anet is stored here.
+     */
+    private int[][] mins = new int[200][Options.getInstance().getMaxTableEntryLength()];
+    /**
+     * For every {@link #min} theindex of the next free element.
+     */
+    private int[] minIndexes = new int[mins.length];
+    /**
+     * the {@link #min}that is currently built.
+     */
+    private int actMin = 0;
+    /**
+     * One global buffer chain for useby {@link #addChain(solver.TableEntry, int, int, boolean, boolean, boolean) }.
+     */
+    private int[] tmpChain = new int[Options.getInstance().getMaxTableEntryLength()];
+    /**
+     * Up to nine chains for temporary storage.
+     */
     private Chain[] tmpChains = new Chain[9];
+    /**
+     * Index of the next free element in the current {@link #tmpChain}.
+     */
     private int tmpChainsIndex = 0;
-    private SudokuSet lassoSet = new SudokuSet();  // für addChain: enthält alle Zellen-Indices der Chain
+    /**
+     * Contains all cell indices of the current chain. Used by
+     * {@link #addChain(solver.TableEntry, int, int, boolean, boolean, boolean)}
+     * for lasso checks (a lasso is a chain, that links back to themiddleof the chain).
+     */
+    private SudokuSet lassoSet = new SudokuSet();
 
     /**
      * Creates a new instance of TablingSolver
@@ -3165,7 +3194,7 @@ public class TablingSolver extends AbstractSolver {
         }
         if (src.indices.containsKey(entry)) {
             alreadyThere = true;
-            atIndex = src.indices.get(entry);
+            atIndex = src.getEntryIndex(entry);
             oldDistance = src.getDistance(atIndex);
 //            System.out.println("   already there: distance = " + oldDistance + " (" + atIndex+ ")");
         }
@@ -3188,7 +3217,7 @@ public class TablingSolver extends AbstractSolver {
                     }
                     continue;
                 }
-                int ri = src.indices.get(entry);
+                int ri = src.getEntryIndex(entry);
                 if (retIndex < retIndices[0].length) {
                     retIndices[0][retIndex++] = ri;
                 } else if (DEBUG) {
@@ -3222,7 +3251,7 @@ public class TablingSolver extends AbstractSolver {
                         // cant do anything!
                         return;
                     }
-                    int ri = src.indices.get(entry);
+                    int ri = src.getEntryIndex(entry);
                     int actDistance = src.getDistance(ri);
                     if (actDistance < checkDistance) {
                         if (checkDistance == 1000) {
@@ -3264,7 +3293,7 @@ public class TablingSolver extends AbstractSolver {
                         // cant do anything!
                         return;
                     }
-                    int ri = src.indices.get(entry);
+                    int ri = src.getEntryIndex(entry);
                     int actDistance = src.getDistance(ri);
                     if (actDistance < checkDistance) {
                         if (checkDistance == 1000) {
@@ -3295,7 +3324,7 @@ public class TablingSolver extends AbstractSolver {
                     }
                     continue;
                 }
-                int ri = src.indices.get(entry);
+                int ri = src.getEntryIndex(entry);
                 if (retIndex < retIndices[0].length) {
                     retIndices[0][retIndex++] = ri;
                 } else if (DEBUG) {
@@ -3386,17 +3415,17 @@ public class TablingSolver extends AbstractSolver {
         buildChain(entry, cellIndex, cand, set);
 
         // now check it and add it to the step if possible
-        int j = 0;
-        if (isNiceLoop || isAic) {
-            lassoSet.clear();
-            // for Nice Loops the last chain entry must link to the start cell, but it
-            // must not be in the start cell itself (would result in double chains that
-            // cannot be detected correctly)
-            if (isNiceLoop && Chain.getSCellIndex(chain[0]) == Chain.getSCellIndex(chain[1])) {
-                // a shorter version will come soon...
-                return;
-            }
+        int newChainIndex = 0;
+        if (isNiceLoop && Chain.getSCellIndex(chain[chainIndex - 1]) == Chain.getSCellIndex(chain[chainIndex - 2])) {
+            // the first link must leave the cell
+            return;
         }
+        if (isNiceLoop && Chain.getSCellIndex(chain[0]) == Chain.getSCellIndex(chain[1])) {
+            // the last link must be outside the cell
+            return;
+        }
+
+        lassoSet.clear();
         int lastCellIndex = -1;
         int lastCellEntry = -1;
         int firstCellIndex = Chain.getSCellIndex(chain[chainIndex - 1]);
@@ -3412,7 +3441,8 @@ public class TablingSolver extends AbstractSolver {
                     return;
                 }
                 // for Nice Loops a reference to the first cell is valid, for AICs it is not!
-                if (lastCellIndex != -1 && (lastCellIndex != firstCellIndex || isAic)) {
+                // TODO Check if ||isAic (originally) or || isNiceLoop (my latest version)
+                if (lastCellIndex != -1 && (lastCellIndex != firstCellIndex || isNiceLoop)) {
                     lassoSet.add(lastCellIndex);
                     // with group nodes: add all cells (nice loop may not cross a group node or als)
                     if (Chain.getSNodeType(lastCellEntry) == Chain.GROUP_NODE) {
@@ -3431,8 +3461,8 @@ public class TablingSolver extends AbstractSolver {
             }
             lastCellIndex = newCellIndex;
             lastCellEntry = oldEntry;
-            if (j < tmpChain.length) {
-                tmpChain[j++] = oldEntry;
+            if (newChainIndex < tmpChain.length) {
+                tmpChain[newChainIndex++] = oldEntry;
             }
             // "min" stands for "multiple implications" - the chain is a net
             // check for mins
@@ -3441,27 +3471,26 @@ public class TablingSolver extends AbstractSolver {
                     // is a min for the current entry -> add it (the first
                     // entry is skipped, it is already in the chain)
                     for (int l = minIndexes[k] - 2; l >= 0; l--) {
-                        if (j < tmpChain.length) {
-                            tmpChain[j++] = -mins[k][l];
+                        if (newChainIndex < tmpChain.length) {
+                            tmpChain[newChainIndex++] = -mins[k][l];
                         }
                     }
-                    if (j < tmpChain.length) {
-                        tmpChain[j++] = Integer.MIN_VALUE;
+                    if (newChainIndex < tmpChain.length) {
+                        tmpChain[newChainIndex++] = Integer.MIN_VALUE;
                     }
                 }
             }
         }
         // do we have a chain?
-        if (j > 0) {
-//            for (int i = 0; i < j; i++) {
-//                tmpChains[tmpChainsIndex].chain[i] = chain[i];
-//            }
+        if (newChainIndex > 0) {
             // add the new chain(s); tmpChains is reused for every step,
-            // this is allowed, since the chains are copied if the globalStep
+            // this is allowed, since the chains are copied, if the globalStep
             // is really added to the steps array
-            System.arraycopy(tmpChain, 0, tmpChains[tmpChainsIndex].getChain(), 0, j);
+            System.arraycopy(tmpChain, 0, tmpChains[tmpChainsIndex].getChain(), 0, newChainIndex);
             tmpChains[tmpChainsIndex].setStart(0);
-            tmpChains[tmpChainsIndex].setEnd(j - 1);
+            tmpChains[tmpChainsIndex].setEnd(newChainIndex - 1);
+            // trigger a recalculation of the chain length, including
+            // possible als penalties
             tmpChains[tmpChainsIndex].resetLength();
             globalStep.addChain(tmpChains[tmpChainsIndex]);
             tmpChainsIndex++;
@@ -3497,7 +3526,7 @@ public class TablingSolver extends AbstractSolver {
             }
             return;
         }
-        int index = entry.indices.get(chainEntry);
+        int index = entry.getEntryIndex(chainEntry);
 
         // reset the data structures for multiples inferences (nets)
         actMin = 0;
@@ -3517,31 +3546,33 @@ public class TablingSolver extends AbstractSolver {
 
     /**
      * <i>Really</i> constructs the chain for a given premise and a given
-     * implication :-).<br><br> <ul> <li>Add the implication as first step in
-     * the chain</li> <li>retIndex1 points to the entry that caused the
-     * implication -&gt; jump to it and handle it next</li> <li>if there are
-     * more than 1 retIndices, the first is treated normally; the others are
-     * stored in {@link #mins}/{@link #minIndexes], they are
-     *  evaluated at a later time</li>
+     * implication :-).<br><br> 
+     * 
+     * <ul> 
+     *  <li>Add the implication as first step in the chain</li> 
+     *  <li>retIndex1 points to the entry that caused the implication -&gt; 
+     *      jump to it and handle it next</li> 
+     *  <li>if there are more than one retIndices, the first is treated 
+     *      normally; the others are stored in {@link #mins}/{@link #minIndexes}, 
+     *      they are evaluated at a later time</li>
      * </ul>
-     * The method returns, when the first entry in
-     * <code>entry</code> is reached.<br><br>
+     * 
+     * The method returns, when the first entry in <code>entry</code> is 
+     * reached.<br><br>
      *
-     * All cells of the main chain are stored in
-     * <code>chainSet</code>. When the method is called for a min (multiple
-     * inference - the net part of a chain -
-     * <code>isMin</code> is
-     * <code>true</code>), the method runs until a cell from the main chain
-     * is reached.
+     * All cells of the main chain are stored in <code>chainSet</code>. When the 
+     * method is called for a min (multiple inference - the net part of a chain -
+     * <code>isMin</code> is <code>true</code>), the method runs until a cell 
+     * from the main chain is reached.
      *
      * <b>CAUTION:</b> The chain is stored in
      * <code>actChain</code> in reverse order!
      *
-     * @param entry
-     * @param entryIndex
-     * @param actChain
-     * @param isMin
-     * @param chainSet
+     * @param entry The table entry that holds the premise of the chain at index 0.
+     * @param entryIndex The index of the implication in <code>entry</code>.
+     * @param actChain The array in which the current chain or min is stored.
+     * @param isMin <code>true</code> if we are constructing part of a net.
+     * @param chainSet A set that holds all cells of the main chain.
      * @return
      */
     private int buildChain(TableEntry entry, int entryIndex, int[] actChain, boolean isMin, SudokuSet chainSet) {
@@ -3553,6 +3584,8 @@ public class TablingSolver extends AbstractSolver {
         while (firstEntryIndex != 0 && actChainIndex < actChain.length) {
             if (entry.isExpanded(firstEntryIndex)) {
                 // current entry comes from a different table -> jump to it!
+                // first ret index contains the table where the node came from
+                // or the index in extendedTable if the entry is a group or als node
                 if (entry.isExtendedTable(firstEntryIndex)) {
                     entry = extendedTable.get(orgEntry.getRetIndex(firstEntryIndex, 0));
                 } else if (entry.isOnTable(firstEntryIndex)) {
@@ -3575,20 +3608,21 @@ public class TablingSolver extends AbstractSolver {
                         // record all cells of the main chain
                         chainSet.add(entry.getCellIndex(entryIndex));
                         // group nodes
-                        if (Chain.getSNodeType(entry.entries[entryIndex]) == Chain.GROUP_NODE) {
-                            int tmp = Chain.getSCellIndex2(entry.entries[entryIndex]);
+                        int actTableEntry = entry.entries[entryIndex];
+                        if (Chain.getSNodeType(actTableEntry) == Chain.GROUP_NODE) {
+                            int tmp = Chain.getSCellIndex2(actTableEntry);
                             if (tmp != -1) {
                                 chainSet.add(tmp);
                             }
-                            tmp = Chain.getSCellIndex3(entry.entries[entryIndex]);
+                            tmp = Chain.getSCellIndex3(actTableEntry);
                             if (tmp != -1) {
                                 chainSet.add(tmp);
                             }
                         } else if (Chain.getSNodeType(entry.entries[entryIndex]) == Chain.ALS_NODE) {
-                            if (Chain.getSAlsIndex(entry.entries[entryIndex]) == -1) {
+                            if (Chain.getSAlsIndex(actTableEntry) == -1) {
                                 Logger.getLogger(getClass().getName()).log(Level.WARNING, "INVALID ALS_NODE: {0}", Chain.toString(entry.entries[entryIndex]));
                             }
-                            chainSet.or(alses.get(Chain.getSAlsIndex(entry.entries[entryIndex])).indices);
+                            chainSet.or(alses.get(Chain.getSAlsIndex(actTableEntry)).indices);
                         }
                     } else {
                         // if the current chain is a min, check if we have reached the main chain
@@ -3672,25 +3706,12 @@ public class TablingSolver extends AbstractSolver {
         int anz = 0;
         StringBuilder tmp = new StringBuilder();
         for (int i = 0; i < entry.index; i++) {
-//            if (!entry.isStrong(i)) {
-//                //continue;
-//            }
             tmp.append(printTableEntry(entry.entries[i]));
             for (int j = 0; j < entry.getRetIndexAnz(i); j++) {
                 int retIndex = entry.getRetIndex(i, j);
                 tmp.append(" (");
                 if (entry.isExpanded(i)) {
                     tmp.append("EX:").append(retIndex).append(":").append(entry.isExtendedTable(i)).append("/").append(entry.isOnTable(i)).append("/");
-//                    TableEntry actEntry = entry.isOnTable(i) ? onTable[retIndex] : offTable[retIndex];
-//                    int index1 = actEntry.getEntryIndex(entry.entries[i]);
-//                    // go back one level
-//                    for (int k = 0; k < actEntry.getRetIndexAnz(index1); k++) {
-//                        int retIndex1 = actEntry.getRetIndex(index1, k);
-//                        if (actEntry.isExpanded(index1)) {
-//                            tmp.append("EEX/");
-//                        }
-//                        tmp.append(retIndex1 + "/" + printTableEntry(actEntry.entries[retIndex1]) + ")");
-//                    }
                 } else {
                     tmp.append(retIndex).append("/").append(printTableEntry(entry.entries[retIndex])).append(")");
                 }
@@ -3788,14 +3809,23 @@ public class TablingSolver extends AbstractSolver {
      * Compares two {@link SolutionStep SolutionSteps} that hold steps found by
      * tabling. The sort order:
      *
-     * <ol> <li>steps that set cells beat steps that delete candidates</li>
-     * <li>if both steps set cells:<ul> <li>number of cells that can be set</li>
-     * <li>equivalency (same cells?)</li> <li>cells with lower indices go
-     * first</li> <li>chain length in all chains</li></ul></li> <li>if both
-     * steps eliminate candidates:<ul> <li>number of candidates that can be
-     * deleted</li> <li>equivalency (same cells affected?)</li> <li>lower cells
-     * and lower candidates first</li> <li>chain length in all
-     * chains</li></ul></li> </ol>
+     * <ol> 
+     *  <li>steps that set cells beat steps that delete candidates</li>
+     *  <li>if both steps set cells:
+     *  <ul> 
+     *      <li>number of cells that can be set</li>
+     *      <li>equivalency (same cells?)</li> 
+     *      <li>cells with lower indices go first</li> 
+     *      <li>chain length in all chains</li>
+     *  </ul></li> 
+     *  <li>if both steps eliminate candidates:
+     *  <ul> 
+     *      <li>number of candidates that can be deleted</li> 
+     *      <li>equivalency (same cells affected?)</li> 
+     *      <li>lower cells and lower candidates first</li> 
+     *      <li>chain length in all chains</li>
+     *  </ul></li> 
+     * </ol>
      */
     class TablingComparator implements Comparator<SolutionStep> {
 
