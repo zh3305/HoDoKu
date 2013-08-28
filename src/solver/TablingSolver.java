@@ -2369,102 +2369,98 @@ public class TablingSolver extends AbstractSolver {
                 // Eliminations are possible and possible entries exist, 
                 // create a table for the als with that entry
                 int entryIndex = als.indicesPerCandidat[entryCand].get(0);
-                TableEntry offEntry;
-                if ((offEntry = getAlsTableEntry(entryIndex, alsIndex, entryCand)) == null) {
-                    offEntry = getNextExtendedTableEntry(extendedTableIndex);
-                    offEntry.addEntry(entryIndex, alsIndex, Chain.ALS_NODE, entryCand, false, 0);
-                    extendedTableMap.put(offEntry.entries[0], extendedTableIndex);
+                TableEntry alsEntry;
+                if ((alsEntry = getAlsTableEntry(entryIndex, alsIndex, entryCand)) == null) {
+                    alsEntry = getNextExtendedTableEntry(extendedTableIndex);
+                    alsEntry.addEntry(entryIndex, alsIndex, Chain.ALS_NODE, entryCand, false, 0);
+                    extendedTableMap.put(alsEntry.entries[0], extendedTableIndex);
                     extendedTableIndex++;
                 }
                 // put the ALS into the onTables of all entry candidates:
                 // tmpSet already contains all possible entry candidates
-                int alsEntry = Chain.makeSEntry(entryIndex, alsIndex, entryCand, false, Chain.ALS_NODE);
                 for (int i = 0; i < tmpSet.size(); i++) {
                     int actIndex = tmpSet.get(i);
                     TableEntry tmp = onTable[actIndex * 10 + entryCand];
+                    // "false" because the ALS is triggered by an elimination
+                    // the following "true" would be that the ALS becomes a LS
                     tmp.addEntry(entryIndex, alsIndex, Chain.ALS_NODE, entryCand, false, 0);
-                    // every group node in which the candidate is a member and which doesn't overlap
-                    // the als is a valid entry too; since we look for an on entry for the group
-                    // node all group node cells have to see the appropriate cells of the als
-                    // not true: at least to group node candidates have to provide to
-                    // the entry, thats enough!
-                    for (int l = 0; l < groupNodes.size(); l++) {
-                        GroupNode gAct = groupNodes.get(l);
-                        if (gAct.cand == entryCand && gAct.indices.contains(actIndex)) {
-                            // first check overlapping
-                            tmpSet1.set(als.indices);
-                            if (!tmpSet1.andEmpty(gAct.indices)) {
-                                // group node overlaps als -> ignore
-                                continue;
-                            }
-                            // now check visibility: all group node cells have to be
-                            // buddies of the als cells that hold the entry candidate
-                            tmpSet1.set(als.indicesPerCandidat[entryCand]);
-                            if (!tmpSet1.andEquals(gAct.buddies)) {
-                                // invalid
-                                continue;
-                            }
-                            // the same group node could be found more than once
-                            int entry = Chain.makeSEntry(gAct.index1, gAct.index2, gAct.index3, entryCand, true, Chain.GROUP_NODE);
-                            // if we had had that node already, it's onTable contained the als
-                            TableEntry gTmp = extendedTable.get(extendedTableMap.get(entry));
-                            if (gTmp.indices.containsKey(alsEntry)) {
-                                // already present -> ignore
-                                continue;
-                            }
-                            // new group node -> add the als
-                            gTmp.addEntry(entryIndex, alsIndex, Chain.ALS_NODE, entryCand, false, 0);
-                        }
+                }
+                // every group node that doesnt overlap witz the ALS and contains
+                // at least two possible entry candidates, is a valid entry into
+                for (int i = 0; i < groupNodes.size(); i++) {
+                    GroupNode gAct = groupNodes.get(i);
+                    if (gAct.cand != entryCand) {
+                        // wrong candidate -> nothing to do
+                        continue;
+                    }
+                    // tmpSet contains all remaining buddies of the ALS; two of 
+                    // them have to be in the group node too
+                    tmpSet1.setAnd(tmpSet, gAct.indices);
+                    if (tmpSet1.isEmpty() || tmpSet1.size() < 2) {
+                        // nothing to do
+                        continue;
+                    }
+                    // now check overlapping
+                    tmpSet1.set(als.indices);
+                    if (!tmpSet1.andEmpty(gAct.indices)) {
+                        // group node overlaps als -> ignore
+                        continue;
+                    }
+                    // add the ALS to the group node
+                    int entry = Chain.makeSEntry(gAct.index1, gAct.index2, gAct.index3, entryCand, true, Chain.GROUP_NODE);
+                    TableEntry gTmp = extendedTable.get(extendedTableMap.get(entry));
+                    if (gTmp != null) {
+                        // if fillTables WithGroupNodes() has not yet been called, the
+                        // entry doesnt exist!
+                        gTmp.addEntry(entryIndex, alsIndex, Chain.ALS_NODE, entryCand, false, 0);
                     }
                 }
                 // now for the eliminations: candidates and group nodes
-                for (int k = 1; k <= 9; k++) {
-                    if (alsEliminations[k].isEmpty()) {
+                for (int actCand = 1; actCand <= 9; actCand++) {
+                    if (alsEliminations[actCand].isEmpty()) {
                         // no eliminations
                         continue;
                     }
                     // every single elimination must be recorded
-                    for (int l = 0; l < alsEliminations[k].size(); l++) {
+                    for (int i = 0; i < alsEliminations[actCand].size(); i++) {
                         // 20090213: add ALS penalty to distance
-                        offEntry.addEntry(alsEliminations[k].get(l), k, als.getChainPenalty(), false);
-//                        offEntry.addEntry(alsEliminations[k].get(l), k, false);
+                        alsEntry.addEntry(alsEliminations[actCand].get(i), actCand, als.getChainPenalty(), false);
                     }
                     // if a group node is a subset of the eliminations, it is turned off as well
-                    for (int l = 0; l < groupNodes.size(); l++) {
-                        GroupNode gAct = groupNodes.get(l);
-                        if (gAct.cand != k) {
+                    for (int j = 0; j < groupNodes.size(); j++) {
+                        GroupNode gAct = groupNodes.get(j);
+                        if (gAct.cand != actCand) {
                             // group node is for wrong candidate
                             continue;
                         }
                         tmpSet1.set(gAct.indices);
-                        if (!tmpSet1.andEquals(alsEliminations[k])) {
+                        if (!tmpSet1.andEquals(alsEliminations[actCand])) {
                             // not all group node cells are eliminated
                             continue;
                         }
                         // 20090213: adjust penalty for ALS
-                        offEntry.addEntry(gAct.index1, gAct.index2, gAct.index3, Chain.GROUP_NODE,
-                                k, false, 0, 0, 0, 0, 0, als.getChainPenalty());
-//                        offEntry.addEntry(gAct.index1, gAct.index2, gAct.index3, Chain.GROUP_NODE, k, false, 0, 0, 0, 0, 0);
+                        alsEntry.addEntry(gAct.index1, gAct.index2, gAct.index3, Chain.GROUP_NODE,
+                                actCand, false, 0, 0, 0, 0, 0, als.getChainPenalty());//                        offEntry.addEntry(gAct.index1, gAct.index2, gAct.index3, Chain.GROUP_NODE, k, false, 0, 0, 0, 0, 0);
                     }
                 }
                 // now als: if the eliminations for one candidate cover all cells with
                 // that candidate in another non-overlapping als, that als is triggered
                 // we do that here for performance reasons
-                for (int k = 0; k < alses.size(); k++) {
-                    if (k == alsIndex) {
+                for (int actAlsIndex = 0; actAlsIndex < alses.size(); actAlsIndex++) {
+                    if (actAlsIndex == alsIndex) {
                         // not for ourself
                         continue;
                     }
-                    Als tmpAls = alses.get(k);
+                    Als tmpAls = alses.get(actAlsIndex);
                     tmpSet1.set(als.indices);
                     if (!tmpSet1.andEmpty(tmpAls.indices)) {
                         // overlapping -> ignore
                         continue;
                     }
-                    for (int l = 1; l <= 9; l++) {
-                        if (alsEliminations[l] == null || alsEliminations[l].isEmpty()
-                                || tmpAls.indicesPerCandidat[l] == null
-                                || tmpAls.indicesPerCandidat[l].isEmpty()) {
+                    for (int actCand = 1; actCand <= 9; actCand++) {
+                        if (alsEliminations[actCand] == null || alsEliminations[actCand].isEmpty()
+                                || tmpAls.indicesPerCandidat[actCand] == null
+                                || tmpAls.indicesPerCandidat[actCand].isEmpty()) {
                             // nothing to do
                             continue;
                         }
@@ -2472,23 +2468,22 @@ public class TablingSolver extends AbstractSolver {
                         //   must contain tmpAls!
                         //tmpSet1.set(tmpAls.indicesPerCandidat[l]);
                         //if (!tmpSet1.andEquals(alsEliminations[l])) {
-                        tmpSet1.set(alsEliminations[l]);
-                        if (!tmpSet1.contains(tmpAls.indicesPerCandidat[l])) {
+                        tmpSet1.set(alsEliminations[actCand]);
+                        if (!tmpSet1.contains(tmpAls.indicesPerCandidat[actCand])) {
                             // no entry
                             continue;
                         }
                         // create the table for the triggered als (if it does not produce
                         // valid eliminations it would be missing later on)
-                        int tmpAlsIndex = tmpAls.indicesPerCandidat[l].get(0);
-                        if (getAlsTableEntry(tmpAlsIndex, k, l) == null) {
+                        int tmpAlsIndex = tmpAls.indicesPerCandidat[actCand].get(0);
+                        if (getAlsTableEntry(tmpAlsIndex, actAlsIndex, actCand) == null) {
                             TableEntry tmpAlsEntry = getNextExtendedTableEntry(extendedTableIndex);
-                            tmpAlsEntry.addEntry(tmpAlsIndex, k, Chain.ALS_NODE, l, false, 0);
+                            tmpAlsEntry.addEntry(tmpAlsIndex, actAlsIndex, Chain.ALS_NODE, actCand, false, 0);
                             extendedTableMap.put(tmpAlsEntry.entries[0], extendedTableIndex);
                             extendedTableIndex++;
                         }
                         // 20090213: adjust for ALS penalty
-                        offEntry.addEntry(tmpAlsIndex, k, Chain.ALS_NODE, l, false, als.getChainPenalty());
-//                        offEntry.addEntry(tmpAlsIndex, k, Chain.ALS_NODE, l, false);
+                        alsEntry.addEntry(tmpAlsIndex, actAlsIndex, Chain.ALS_NODE, actCand, false, als.getChainPenalty());
                     }
                 }
                 // last but not least: forcings
@@ -2497,24 +2492,23 @@ public class TablingSolver extends AbstractSolver {
                 // 20090220: use the correct buddies
                 // only necessary, if the cell contains more than 2 candidates (its
                 // handled correctly with only two candidates)
-                for (int k = 0; k < als.buddies.size(); k++) {
-                    int cellIndex = als.buddies.get(k);
+                for (int i = 0; i < als.buddies.size(); i++) {
+                    int cellIndex = als.buddies.get(i);
                     if (sudoku.getValue(cellIndex) != 0 || sudoku.getAnzCandidates(cellIndex) == 2) {
-                        // cell already set
+                        // cell already set or handled elsewhere
                         continue;
                     }
                     sudoku.getCandidateSet(cellIndex, tmpSet1);
-                    for (int l = 1; l <= 9; l++) {
-                        if (alsEliminations[l] != null && alsEliminations[l].contains(cellIndex)) {
+                    for (int actCand = 1; actCand <= 9; actCand++) {
+                        if (alsEliminations[actCand] != null && alsEliminations[actCand].contains(cellIndex)) {
                             // delete candidate
-                            tmpSet1.remove(l);
+                            tmpSet1.remove(actCand);
                         }
                     }
                     if (tmpSet1.size() == 1) {
                         // forcing!
                         // 20090213: adjust for ALS penalty (plus the extra omitted link)
-                        offEntry.addEntry(cellIndex, tmpSet1.get(0), als.getChainPenalty() + 1, true);
-//                        offEntry.addEntry(cellIndex, tmpSet1.get(0), true);
+                        alsEntry.addEntry(cellIndex, tmpSet1.get(0), als.getChainPenalty() + 1, true);
                     }
                 }
             }
