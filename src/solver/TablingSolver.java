@@ -116,7 +116,7 @@ public class TablingSolver extends AbstractSolver {
      * Enable additional output for debugging.
      */
     // TODO DEBUG
-    private static boolean DEBUG = true;
+    private static boolean DEBUG = false;
     /**
      * Maximum recursion depth in buildung the tables.
      */
@@ -1933,6 +1933,10 @@ public class TablingSolver extends AbstractSolver {
             }
             if (sudoku.isCandidate(endIndex, startCandidate)) {
                 globalStep.addCandidateToDelete(endIndex, startCandidate);
+            }
+            if (globalStep.getAnzCandidatesToDelete() < 2) {
+                // only one elimination, could conflict with type 1
+                return;
             }
         }
         if (globalStep.getAnzCandidatesToDelete() == 0) {

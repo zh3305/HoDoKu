@@ -33,7 +33,7 @@ public class ConfigFindAllStepsPanel extends javax.swing.JPanel {
     private static String[] fishSizes = {"2", "3", "4", "5", "6", "7"};
     private static String[] finSizes = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
     private static String[] fishTypes = {"Basic", "Basic/Franken", "Basic/Franken/Mutant"};
-    private static String[] alsChainLengths = {"4", "5", "6", "7"};
+    private static String[] alsChainLengths = {"4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"};
     private static final long serialVersionUID = 1L;
     private StepConfig[] steps;
     private String fishCandidates;
@@ -76,7 +76,7 @@ public class ConfigFindAllStepsPanel extends javax.swing.JPanel {
             fishTypeComboBox.addItem(fishTypes[i]);
             krakenFishTypeComboBox.addItem(fishTypes[i]);
         }
-        
+
         alsChainLengthComboBox.removeAllItems();
         for (int i = 0; i < alsChainLengths.length; i++) {
             alsChainLengthComboBox.addItem(alsChainLengths[i]);
@@ -466,34 +466,34 @@ public class ConfigFindAllStepsPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
 private void stepTreeMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_stepTreeMousePressed
-    TreePath path = stepTree.getPathForLocation(evt.getX(), evt.getY());
-    if (path == null) {
-        return;
-    }
-    CheckNode act = (CheckNode) path.getLastPathComponent();
-    CheckNode last = (CheckNode) stepTree.getLastSelectedPathComponent();
-    if (act != null && last != null && act == last) {
-        last.toggleSelectionState();
-        stepTree.repaint();
-    }
+        TreePath path = stepTree.getPathForLocation(evt.getX(), evt.getY());
+        if (path == null) {
+            return;
+        }
+        CheckNode act = (CheckNode) path.getLastPathComponent();
+        CheckNode last = (CheckNode) stepTree.getLastSelectedPathComponent();
+        if (act != null && last != null && act == last) {
+            last.toggleSelectionState();
+            stepTree.repaint();
+        }
 }//GEN-LAST:event_stepTreeMousePressed
 
 private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
-    initAll(true);
+        initAll(true);
 }//GEN-LAST:event_resetButtonActionPerformed
 
 private void fishCandidatesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fishCandidatesButtonActionPerformed
-    FishChooseCandidatesDialog dlg = new FishChooseCandidatesDialog(null, fishCandidates);
-    dlg.setVisible(true);
-    fishCandidates = dlg.getFishCandidates();
-    setCandidateLabel(fishCandidatesResultLabel, fishCandidates);
+        FishChooseCandidatesDialog dlg = new FishChooseCandidatesDialog(null, fishCandidates);
+        dlg.setVisible(true);
+        fishCandidates = dlg.getFishCandidates();
+        setCandidateLabel(fishCandidatesResultLabel, fishCandidates);
 }//GEN-LAST:event_fishCandidatesButtonActionPerformed
 
 private void krakenFishCandidatesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_krakenFishCandidatesButtonActionPerformed
-    FishChooseCandidatesDialog dlg = new FishChooseCandidatesDialog(null, krakenFishCandidates);
-    dlg.setVisible(true);
-    krakenFishCandidates = dlg.getFishCandidates();
-    setCandidateLabel(krakenFishCandidatesResultLabel, krakenFishCandidates);
+        FishChooseCandidatesDialog dlg = new FishChooseCandidatesDialog(null, krakenFishCandidates);
+        dlg.setVisible(true);
+        krakenFishCandidates = dlg.getFishCandidates();
+        setCandidateLabel(krakenFishCandidatesResultLabel, krakenFishCandidates);
 }//GEN-LAST:event_krakenFishCandidatesButtonActionPerformed
 
     public void okPressed() {
@@ -519,7 +519,7 @@ private void krakenFishCandidatesButtonActionPerformed(java.awt.event.ActionEven
                 }
             }
         }
-        
+
         // now the rest
         Options.getInstance().setAllStepsSearchFish(fishCheckBox.isSelected());
         Options.getInstance().setAllStepsMaxFishType(fishTypeComboBox.getSelectedIndex());
@@ -534,7 +534,7 @@ private void krakenFishCandidatesButtonActionPerformed(java.awt.event.ActionEven
         Options.getInstance().setAllStepsKrakenMaxFishSize(krakenFishToComboBox.getSelectedIndex() + 2);
         Options.getInstance().setAllStepsMaxKrakenFins(krakenFishMaxFinsComboBox.getSelectedIndex());
         Options.getInstance().setAllStepsMaxKrakenEndoFins(krakenFishMaxEndoFinsComboBox.getSelectedIndex());
-        
+
         Options.getInstance().setAllStepsFishCandidates(fishCandidates);
         Options.getInstance().setAllStepsKrakenFishCandidates(krakenFishCandidates);
 
@@ -546,7 +546,7 @@ private void krakenFishCandidatesButtonActionPerformed(java.awt.event.ActionEven
         // Zuerst die Daten zurücksetzen
         if (setDefault) {
             steps = Options.getInstance().copyStepConfigs(Options.DEFAULT_SOLVER_STEPS, true, false);
-            
+
             fishCheckBox.setSelected(Options.ALL_STEPS_SEARCH_FISH);
             fishTypeComboBox.setSelectedIndex(Options.ALL_STEPS_MAX_FISH_TYPE);
             fishFromComboBox.setSelectedIndex(Options.ALL_STEPS_MIN_FISH_SIZE - 2);
@@ -554,21 +554,21 @@ private void krakenFishCandidatesButtonActionPerformed(java.awt.event.ActionEven
             fishMaxFinsComboBox.setSelectedIndex(Options.ALL_STEPS_MAX_FINS);
             fishMaxEndoFinsComboBox.setSelectedIndex(Options.ALL_STEPS_MAX_ENDO_FINS);
             fishCheckTemplatesCheckBox.setSelected(Options.ALL_STEPS_CHECK_TEMPLATES);
-            
+
             krakenFishTypeComboBox.setSelectedIndex(Options.ALL_STEPS_MAX_KRAKEN_FISH_TYPE);
             krakenFishFromComboBox.setSelectedIndex(Options.ALL_STEPS_MIN_KRAKEN_FISH_SIZE - 2);
             krakenFishToComboBox.setSelectedIndex(Options.ALL_STEPS_MAX_KRAKEN_FISH_SIZE - 2);
             krakenFishMaxFinsComboBox.setSelectedIndex(Options.ALL_STEPS_MAX_KRAKEN_FINS);
             krakenFishMaxEndoFinsComboBox.setSelectedIndex(Options.ALL_STEPS_MAX_KRAKEN_ENDO_FINS);
-            
+
             fishCandidates = Options.ALL_STEPS_FISH_CANDIDATES;
             krakenFishCandidates = Options.ALL_STEPS_KRAKEN_FISH_CANDIDATES;
-            
+
             alsChainLengthComboBox.setSelectedIndex(Options.ALL_STEPS_ALS_CHAIN_LENGTH - 4);
             alsBiDirCheckBox.setSelected(Options.ALL_STEPS_ALS_CHAIN_FORWARD_ONLY);
         } else {
             steps = Options.getInstance().copyStepConfigs(Options.getInstance().solverSteps, true, false);
-            
+
             fishCheckBox.setSelected(Options.getInstance().isAllStepsSearchFish());
             fishTypeComboBox.setSelectedIndex(Options.getInstance().getAllStepsMaxFishType());
             fishFromComboBox.setSelectedIndex(Options.getInstance().getAllStepsMinFishSize() - 2);
@@ -576,30 +576,30 @@ private void krakenFishCandidatesButtonActionPerformed(java.awt.event.ActionEven
             fishMaxFinsComboBox.setSelectedIndex(Options.getInstance().getAllStepsMaxFins());
             fishMaxEndoFinsComboBox.setSelectedIndex(Options.getInstance().getAllStepsMaxEndoFins());
             fishCheckTemplatesCheckBox.setSelected(Options.getInstance().isAllStepsCheckTemplates());
-            
+
             krakenFishTypeComboBox.setSelectedIndex(Options.getInstance().getAllStepsKrakenMaxFishType());
             krakenFishFromComboBox.setSelectedIndex(Options.getInstance().getAllStepsKrakenMinFishSize() - 2);
             krakenFishToComboBox.setSelectedIndex(Options.getInstance().getAllStepsKrakenMaxFishSize() - 2);
             krakenFishMaxFinsComboBox.setSelectedIndex(Options.getInstance().getAllStepsMaxKrakenFins());
             krakenFishMaxEndoFinsComboBox.setSelectedIndex(Options.getInstance().getAllStepsMaxKrakenEndoFins());
-            
+
             fishCandidates = Options.getInstance().getAllStepsFishCandidates();
             krakenFishCandidates = Options.getInstance().getAllStepsKrakenFishCandidates();
-            
+
             alsChainLengthComboBox.setSelectedIndex(Options.getInstance().getAllStepsAlsChainLength() - 4);
             alsBiDirCheckBox.setSelected(Options.getInstance().isAllStepsAlsChainForwardOnly());
         }
         setCandidateLabels();
-        
+
         // Baum neu laden
         buildTree();
     }
-    
+
     private void setCandidateLabels() {
         setCandidateLabel(fishCandidatesResultLabel, fishCandidates);
         setCandidateLabel(krakenFishCandidatesResultLabel, krakenFishCandidates);
     }
-    
+
     private void setCandidateLabel(JLabel label, String values) {
         StringBuilder tmp = new StringBuilder();
         int index = 0;
@@ -636,24 +636,24 @@ private void krakenFishCandidatesButtonActionPerformed(java.awt.event.ActionEven
         }
         label.setText(tmp.toString());
     }
-    
+
     public void buildTree() {
         CheckNode root = new CheckNode();
         for (int i = 0; i < steps.length; i++) {
             // we dont show: all kinds of fish and Brute Force
-            if (steps[i].getCategory() == SolutionCategory.BASIC_FISH || 
-                    steps[i].getCategory() == SolutionCategory.FINNED_BASIC_FISH ||
-                    steps[i].getCategory() == SolutionCategory.FINNED_FRANKEN_FISH ||
-                    steps[i].getCategory() == SolutionCategory.FINNED_MUTANT_FISH ||
-                    steps[i].getCategory() == SolutionCategory.FRANKEN_FISH ||
-                    steps[i].getCategory() == SolutionCategory.MUTANT_FISH) {
+            if (steps[i].getCategory() == SolutionCategory.BASIC_FISH
+                    || steps[i].getCategory() == SolutionCategory.FINNED_BASIC_FISH
+                    || steps[i].getCategory() == SolutionCategory.FINNED_FRANKEN_FISH
+                    || steps[i].getCategory() == SolutionCategory.FINNED_MUTANT_FISH
+                    || steps[i].getCategory() == SolutionCategory.FRANKEN_FISH
+                    || steps[i].getCategory() == SolutionCategory.MUTANT_FISH) {
                 continue;
             }
             if (steps[i].getType() == SolutionType.BRUTE_FORCE) {
                 continue;
             }
             @SuppressWarnings("unchecked")
-            Enumeration<CheckNode> en = (Enumeration<CheckNode>)root.children();
+            Enumeration<CheckNode> en = (Enumeration<CheckNode>) root.children();
             CheckNode act = null;
             while (en.hasMoreElements()) {
                 act = en.nextElement();
@@ -672,7 +672,7 @@ private void krakenFishCandidatesButtonActionPerformed(java.awt.event.ActionEven
             act.add(new CheckNode(steps[i].getType().getStepName(), false,
                     steps[i].isAllStepsEnabled() ? CheckNode.FULL : CheckNode.NONE,
                     steps[i], true, false, false, null));
-            if (act.getSelectionState() == CheckNode.FULL && ! steps[i].isAllStepsEnabled()) {
+            if (act.getSelectionState() == CheckNode.FULL && !steps[i].isAllStepsEnabled()) {
                 act.setSelectionState(CheckNode.HALF);
             }
             if (act.getSelectionState() == CheckNode.NONE && steps[i].isAllStepsEnabled()) {
@@ -685,7 +685,6 @@ private void krakenFishCandidatesButtonActionPerformed(java.awt.event.ActionEven
         stepTree.setRootVisible(false);
         stepTree.setRowHeight(-1);
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox alsBiDirCheckBox;
     private javax.swing.JComboBox alsChainLengthComboBox;
@@ -726,5 +725,4 @@ private void krakenFishCandidatesButtonActionPerformed(java.awt.event.ActionEven
     private javax.swing.JButton resetButton;
     private javax.swing.JTree stepTree;
     // End of variables declaration//GEN-END:variables
-
 }
