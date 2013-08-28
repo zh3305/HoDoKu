@@ -2143,9 +2143,8 @@ public class TablingSolver extends AbstractSolver {
                     tmp.addEntry(gn.index1, gn.index2, gn.index3, Chain.GROUP_NODE, gn.cand, false, 0, 0, 0, 0, 0, 0);
                 }
                 // if in a given house only one additional candidate exists, it is turned on by the off-entry
-                // the candidates offTable triggers the offEntry
-                tmpSet1.set(tmpSet);
-                tmpSet1.and(Sudoku2.BLOCK_TEMPLATES[gn.block]);
+                // the candidates offTable triggers the onEntry
+                tmpSet1.setAnd(tmpSet, Sudoku2.BLOCK_TEMPLATES[gn.block]);
                 if (!tmpSet1.isEmpty() && tmpSet1.size() == 1) {
                     offEntry.addEntry(tmpSet1.get(0), gn.cand, true);
                     TableEntry tmp = offTable[tmpSet1.get(0) * 10 + gn.cand];
@@ -2221,6 +2220,7 @@ public class TablingSolver extends AbstractSolver {
             }
             // if in one house was only one additional group node and if there is no additional single candidate
             // in that same house -> group node is turned on by off-entry
+            // has to be done in seperate blocks,sincemore than one condition can be true!
             if (lineAnz == 1) {
                 gn2 = groupNodes.get(line1Index);
                 tmpSet.set(Sudoku2.LINE_TEMPLATES[gn.line]);
@@ -2274,26 +2274,34 @@ public class TablingSolver extends AbstractSolver {
      * handle). Eliminations caused by locked sets can trigger other
      * ALSes.<br><br>
      *
-     * For every ALS do: <ul> <li>check all possible entries; if an entry
-     * provides eliminations or forces cells make a table for that entry (only
-     * off)</li> <li>write the index in {@link #extendedTable } into {@link #extendedTableMap
-     * }
-     * (together with the ALS entry)</li> <li>add the ALS entry to the onTable
-     * of the candidate/group node/als that provides the entry</li> <li>every
-     * candidate/group node deleted by the resulting locked set is added to the
-     * ALS's table as is every newly triggered ALS</li> </ul>
+     * For every ALS do: 
+     * 
+     * <ul> 
+     *  <li>check all possible entries; if an entry provides eliminations or 
+     *      forces cells, make a table for that entry (only off)</li> 
+     *  <li>write the index in {@link #extendedTable } into 
+     *      {@link #extendedTableMap} (together with the ALS entry)</li> 
+     *  <li>add the ALS entry to the onTable of the candidate/group node/als 
+     *      that provides the entry</li> 
+     *  <li>every candidate/group node deleted by the resulting locked set is 
+     *      added to the ALS's table as is every newly triggered ALS</li> 
+     * </ul>
      *
      * The ALS entry has the index of the first candidate that provides the
      * entry set as index1, the index in the ALS-array set as index2.<br><br>
      *
-     * More detailed: for every ALS do <ul> <li>for every candidate of the als
-     * find all remaining candidates in the grid: they are all valid
-     * entries</li> <li>if one of the entries from above is a member of a group
-     * node, that doesn't overlap the als, the group node is an additional
-     * entry</li> <li>if the remaining locked set provides eliminations, record
-     * them and check for possible forcings; note that the eliminations could
-     * provide an entry for another als; also, the eliminations could form a
-     * group node</li> </ul>
+     * More detailed: for every ALS do 
+     * 
+     * <ul> 
+     *  <li>for every candidate (or group of candidates) of the als find all 
+     *      remaining buddies in the grid: they are all valid entries</li> 
+     *  <li>if one of the entries from above is a member of a group node, that 
+     *      doesn't overlap the als, the group node is an additional entry</li> 
+     *  <li>if the remaining locked set provides eliminations, record
+     *      them and check for possible forcings; note that the eliminations could
+     *      provide an entry for another als (think of them as resctricd common);
+     *      also, the eliminations could form a group node</li> 
+     * </ul>
      *
      * <b>20090220:</b> BUG - alsBuddies contains only cells, that can see all
      * cells of the ALS, its then used for finding possible entries and
@@ -2303,45 +2311,52 @@ public class TablingSolver extends AbstractSolver {
      * <b>CAUTION:</b> Must be called AFTER {@link #fillTables() } or the
      * attributes {@link #extendedTableMap } and {@link #extendedTableIndex }
      * will not be properly initialized; the initialization cannot be moved
-     * here, because it must be possible to call {@link #fillTablesWithGroupNodes()
-     * } and {@link #fillTablesWithAls() } in arbitrary order.
+     * here, because it must be possible to call {@link #fillTablesWithGroupNodes()} 
+     * and {@link #fillTablesWithAls() } in arbitrary order.
      */
     private void fillTablesWithAls() {
-        // get all ALSes
+        // get all ALSes,but exclude single cells with only two remaining candidates
         alses = finder.getAlses(true);
         // handle them
-        for (int i = 0; i < alses.size(); i++) {
-            Als als = alses.get(i);
+        for (int alsIndex = 0; alsIndex < alses.size(); alsIndex++) {
+            Als als = alses.get(alsIndex);
             if (als.indices.size() == 1) {
                 // alses with size one (= nodes with two candidates) are ignored
                 continue;
             }
-//            als.getBuddies(alsBuddies);
-            // for every candidate find all remaining candidates in the grid
-            for (int j = 1; j <= 9; j++) {
+            // for every possible entry candidate find all remaining candidates in the grid
+            for (int entryCand = 1; entryCand <= 9; entryCand++) {
                 // first check, if there are possible eliminations (nothing to do if not):
                 // for all other candidates get all cells, that contain that 
                 // candidate and can see all cells of the ALS;
                 // any such candidate can be eliminated
                 // 20090220: a candidiate doesnt have to see all cells of the ALS, only the cells
                 //    that contain that candidate
-                if (als.indicesPerCandidat[j] == null || als.indicesPerCandidat[j].isEmpty()) {
+                if (als.indicesPerCandidat[entryCand] == null || als.indicesPerCandidat[entryCand].isEmpty()) {
                     // nothing to do -> next candidate
                     continue;
                 }
+                // find all candidates, that can provide an entry into the als
+                // 20090220: use the correct buddies
+                tmpSet.setAnd(finder.getCandidates()[entryCand], als.buddiesPerCandidat[entryCand]);
+                if (tmpSet.isEmpty()) {
+                    // there is no possible entry candidate outside the ALS ->
+                    // the ALS cant be triggeredby that candidate
+                    continue;
+                }
+
+                // check for eliminations
                 boolean eliminationsPresent = false;
-                for (int k = 1; k <= 9; k++) {
-                    alsEliminations[k].clear();
-                    if (k == j) {
+                for (int actCand = 1; actCand <= 9; actCand++) {
+                    alsEliminations[actCand].clear();
+                    if (actCand == entryCand) {
                         // that candidate is not in the als anymore
                         continue;
                     }
-                    if (als.indicesPerCandidat[k] != null) {
-                        alsEliminations[k].set(finder.getCandidates()[k]);
+                    if (als.indicesPerCandidat[actCand] != null) {
                         // 20090220: use the correct buddies
-                        //alsEliminations[k].and(alsBuddies);
-                        alsEliminations[k].and(als.buddiesPerCandidat[k]);
-                        if (!alsEliminations[k].isEmpty()) {
+                        alsEliminations[actCand].setAnd(finder.getCandidates()[actCand], als.buddiesPerCandidat[actCand]);
+                        if (!alsEliminations[actCand].isEmpty()) {
                             // possible eliminations found
                             eliminationsPresent = true;
                         }
@@ -2351,32 +2366,31 @@ public class TablingSolver extends AbstractSolver {
                     // nothing to do -> next candidate
                     continue;
                 }
-                // Eliminations are possible, create a table for the als with that entry
-                int entryIndex = als.indicesPerCandidat[j].get(0);
+                // Eliminations are possible and possible entries exist, 
+                // create a table for the als with that entry
+                int entryIndex = als.indicesPerCandidat[entryCand].get(0);
                 TableEntry offEntry;
-                if ((offEntry = getAlsTableEntry(entryIndex, i, j)) == null) {
+                if ((offEntry = getAlsTableEntry(entryIndex, alsIndex, entryCand)) == null) {
                     offEntry = getNextExtendedTableEntry(extendedTableIndex);
-                    offEntry.addEntry(entryIndex, i, Chain.ALS_NODE, j, false, 0);
+                    offEntry.addEntry(entryIndex, alsIndex, Chain.ALS_NODE, entryCand, false, 0);
                     extendedTableMap.put(offEntry.entries[0], extendedTableIndex);
                     extendedTableIndex++;
                 }
                 // put the ALS into the onTables of all entry candidates:
-                // find all candidates, that can provide an entry into the als
-                tmpSet.set(finder.getCandidates()[j]);
-                // 20090220: use the correct buddies
-                //tmpSet.and(alsBuddies);
-                tmpSet.and(als.buddiesPerCandidat[j]);
-                int alsEntry = Chain.makeSEntry(entryIndex, i, j, false, Chain.ALS_NODE);
-                for (int k = 0; k < tmpSet.size(); k++) {
-                    int actIndex = tmpSet.get(k);
-                    TableEntry tmp = onTable[actIndex * 10 + j];
-                    tmp.addEntry(entryIndex, i, Chain.ALS_NODE, j, false, 0);
+                // tmpSet already contains all possible entry candidates
+                int alsEntry = Chain.makeSEntry(entryIndex, alsIndex, entryCand, false, Chain.ALS_NODE);
+                for (int i = 0; i < tmpSet.size(); i++) {
+                    int actIndex = tmpSet.get(i);
+                    TableEntry tmp = onTable[actIndex * 10 + entryCand];
+                    tmp.addEntry(entryIndex, alsIndex, Chain.ALS_NODE, entryCand, false, 0);
                     // every group node in which the candidate is a member and which doesn't overlap
                     // the als is a valid entry too; since we look for an on entry for the group
                     // node all group node cells have to see the appropriate cells of the als
+                    // not true: at least to group node candidates have to provide to
+                    // the entry, thats enough!
                     for (int l = 0; l < groupNodes.size(); l++) {
                         GroupNode gAct = groupNodes.get(l);
-                        if (gAct.cand == j && gAct.indices.contains(actIndex)) {
+                        if (gAct.cand == entryCand && gAct.indices.contains(actIndex)) {
                             // first check overlapping
                             tmpSet1.set(als.indices);
                             if (!tmpSet1.andEmpty(gAct.indices)) {
@@ -2385,13 +2399,13 @@ public class TablingSolver extends AbstractSolver {
                             }
                             // now check visibility: all group node cells have to be
                             // buddies of the als cells that hold the entry candidate
-                            tmpSet1.set(als.indicesPerCandidat[j]);
+                            tmpSet1.set(als.indicesPerCandidat[entryCand]);
                             if (!tmpSet1.andEquals(gAct.buddies)) {
                                 // invalid
                                 continue;
                             }
                             // the same group node could be found more than once
-                            int entry = Chain.makeSEntry(gAct.index1, gAct.index2, gAct.index3, j, true, Chain.GROUP_NODE);
+                            int entry = Chain.makeSEntry(gAct.index1, gAct.index2, gAct.index3, entryCand, true, Chain.GROUP_NODE);
                             // if we had had that node already, it's onTable contained the als
                             TableEntry gTmp = extendedTable.get(extendedTableMap.get(entry));
                             if (gTmp.indices.containsKey(alsEntry)) {
@@ -2399,7 +2413,7 @@ public class TablingSolver extends AbstractSolver {
                                 continue;
                             }
                             // new group node -> add the als
-                            gTmp.addEntry(entryIndex, i, Chain.ALS_NODE, j, false, 0);
+                            gTmp.addEntry(entryIndex, alsIndex, Chain.ALS_NODE, entryCand, false, 0);
                         }
                     }
                 }
@@ -2437,7 +2451,7 @@ public class TablingSolver extends AbstractSolver {
                 // that candidate in another non-overlapping als, that als is triggered
                 // we do that here for performance reasons
                 for (int k = 0; k < alses.size(); k++) {
-                    if (k == i) {
+                    if (k == alsIndex) {
                         // not for ourself
                         continue;
                     }
