@@ -547,7 +547,7 @@ public class RegressionTester {
                      (type == SolutionType.ALS_XY_WING && variant == 2)) {
                     Options.getInstance().setAllowAlsOverlap(true);
                 }
-                steps = stepFinder.getAllAlses(sudoku, type == SolutionType.ALS_XZ,
+                steps = stepFinder.getAllAlsSteps(sudoku, type == SolutionType.ALS_XZ,
                         type == SolutionType.ALS_XY_WING,
                         type == SolutionType.ALS_XY_CHAIN);
                 checkResults(testCase, steps, sudoku, start, failCase);

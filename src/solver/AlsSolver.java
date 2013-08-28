@@ -210,7 +210,7 @@ public class AlsSolver extends AbstractSolver {
         }
         if (TIMING) {
             millis1 = System.nanoTime() - millis1;
-//            System.out.println("getAllAlses() total: " + (millis1 / 1000000.0) + "ms");
+//            System.out.println("getAllAlsSteps() total: " + (millis1 / 1000000.0) + "ms");
         }
         steps = oldSteps;
         return resultSteps;
@@ -1302,12 +1302,12 @@ public class AlsSolver extends AbstractSolver {
         int itAnz = 1;
         List<SolutionStep> steps = null;
         for (int i = 0; i < itAnz; i++) {
-            steps = solver.getStepFinder().getAllAlses(sudoku, false, false, true);
+            steps = solver.getStepFinder().getAllAlsSteps(sudoku, false, false, true);
 //            as.getAlsXZ(true);
 //            as.getAlsXYWing();
 //            as.getAlsXYChain();
 //            as.getAlsDeathBlossom();
-//            as.steps = as.getAllAlses(sudoku);
+//            as.steps = as.getAllAlsSteps(sudoku);
         }
         millis = (System.nanoTime() - millis) / itAnz;
         System.out.println("Find all ALS-XX: " + (millis / 1000000.0) + "ms");

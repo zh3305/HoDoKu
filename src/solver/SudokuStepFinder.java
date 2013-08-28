@@ -628,7 +628,7 @@ public class SudokuStepFinder {
      * @param doChain 
      * @return
      */
-    public List<SolutionStep> getAllAlses(Sudoku2 newSudoku, boolean doXz, boolean doXy, boolean doChain) {
+    public List<SolutionStep> getAllAlsSteps(Sudoku2 newSudoku, boolean doXz, boolean doXy, boolean doChain) {
         initialize();
         Sudoku2 oldSudoku = getSudoku();
         setSudoku(newSudoku);

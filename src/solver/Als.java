@@ -22,9 +22,14 @@ import sudoku.SolutionStep;
 import sudoku.Sudoku2;
 import sudoku.SudokuSet;
 
-
 /**
- *
+ * An ALS is a number cells, that together contain one candidate more than the
+ * number of cells. A single cell with only two candidates left is by this
+ * definition a calid ALS.<br><br>
+ * 
+ * The search for ALSes is done by {@link SudokuStepFinder#getAlses()} which
+ * can restrict the search to exclude single cells.
+ * 
  * @author hobiwan
  */
 public class Als {
@@ -120,7 +125,7 @@ public class Als {
         if (o == null) {
             return false;
         }
-        if (! (o instanceof Als)) {
+        if (!(o instanceof Als)) {
             return false;
         }
         Als a = (Als) o;
@@ -138,10 +143,13 @@ public class Als {
         return hash;
     }
 
+    /**
+     * Human readable for for the ALS.
+     * @return 
+     */
     @Override
     public String toString() {
         //return "ALS: " + candidates.toString() + " - " + indices.toString();
         return "ALS: " + SolutionStep.getAls(this);
     }
-
 }
