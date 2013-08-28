@@ -115,7 +115,8 @@ public class TablingSolver extends AbstractSolver {
     /**
      * Enable additional output for debugging.
      */
-    private static boolean DEBUG = false;
+    // TODO DEBUG
+    private static boolean DEBUG = true;
     /**
      * Maximum recursion depth in buildung the tables.
      */
@@ -1644,7 +1645,14 @@ public class TablingSolver extends AbstractSolver {
         // A Nice Loop must be at least 3 links long
         if (entry.getDistance(entryIndex) <= 2) {
             // Chain too short -> no eliminations possible
+            if (DEBUG) {
+                System.out.println("Chain too short: " + printTableEntry(entry.entries[0]) + "/"
+                        + printTableEntry(entry.entries[entryIndex]) + "/" + entry.getDistance(entryIndex));
+            }
             return;
+        }
+        if (DEBUG) {
+            System.out.println("Longer chain found");
         }
 
         // check loop type
@@ -1655,6 +1663,9 @@ public class TablingSolver extends AbstractSolver {
                 entry.isStrong(entryIndex), true);
         if (globalStep.getChains().isEmpty()) {
             // invalid chain -> builds a lasso somewhere -> ignore it!
+            if (DEBUG) {
+                System.out.println("Chain is a lasso -> ignored");
+            }
             return;
         }
         Chain localTmpChain = globalStep.getChains().get(0);
@@ -3437,8 +3448,7 @@ public class TablingSolver extends AbstractSolver {
                     return;
                 }
                 // for Nice Loops a reference to the first cell is valid, for AICs it is not!
-                // TODO Check if ||isAic (originally) or || isNiceLoop (my latest version)
-                if (lastCellIndex != -1 && (lastCellIndex != firstCellIndex || isNiceLoop)) {
+                if (lastCellIndex != -1 && (lastCellIndex != firstCellIndex || isAic)) {
                     lassoSet.add(lastCellIndex);
                     // with group nodes: add all cells (nice loop may not cross a group node or als)
                     if (Chain.getSNodeType(lastCellEntry) == Chain.GROUP_NODE) {
