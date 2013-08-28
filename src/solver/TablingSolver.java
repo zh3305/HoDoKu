@@ -3416,10 +3416,6 @@ public class TablingSolver extends AbstractSolver {
 
         // now check it and add it to the step if possible
         int newChainIndex = 0;
-        if (isNiceLoop && Chain.getSCellIndex(chain[chainIndex - 1]) == Chain.getSCellIndex(chain[chainIndex - 2])) {
-            // the first link must leave the cell
-            return;
-        }
         if (isNiceLoop && Chain.getSCellIndex(chain[0]) == Chain.getSCellIndex(chain[1])) {
             // the last link must be outside the cell
             return;
