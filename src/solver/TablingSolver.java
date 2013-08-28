@@ -58,32 +58,54 @@ import sudoku.SudokuSetBase;
  *
  * Some tests currently implemented (every table holds an array with sets for
  * all cells than can be set to a certain candidate - onSets - and with set for
- * cell where that candidate can be eliminated - offSets): <ol> <li>only one
- * debugChain:<ul> <li>two values set in the same cell (AND onSets) -> premise
- * was wrong </li> <li>same value set twice in one house -> premise was
- * wrong</li>
- * <li>all candidates deleted from a cell -> premise was wrong</li>
- * <li>candidate cand be set in and deleted from a cell simultaneously ->
- * premise was wrong</li> <li>all candidates are deleted from a cell -> premise
- * was wrong</li></ul></li> <li>two chains for the same start candidate
- * (candidate set and deleted):<ul> <li>both chains lead to the same value in
- * onSets -> value can be set</li> <li>both chains lead to the same value in
- * offSets -> candidate can be deleted</li></ul></li> <li>chains for all
- * candidates in one house/cell set:<ul> <li>both chains lead to the same value
- * in onSets -> value can be set</li> <li>both chains lead to the same value in
- * offSets -> candidate can be deleted</li></ul></li> </ol>
+ * cells, where that candidate can be eliminated - offSets): 
+ * <ol> 
+ *      <li>only one debugChain:
+ *      <ul> 
+ *          <li>two values set in the same cell (AND onSets) -> premise
+ *              was wrong </li> 
+ *          <li>same value set twice in one house -> premise was
+ *              wrong</li>
+ *          <li>all candidates deleted from a cell -> premise was wrong</li>
+ *          <li>candidate can be set in and deleted from a cell simultaneously ->
+ *              premise was wrong</li> 
+ *          <li>all candidates are deleted from a house -> premise
+ *              was wrong</li>
+ *      </ul></li> 
+ *      <li>two chains for the same start candidate
+ *          (candidate set and deleted):
+ *      <ul> 
+ *          <li>both chains lead to the same value in
+ *              onSets -> value can be set</li> 
+ *          <li>both chains lead to the same value in
+ *              offSets -> candidate can be deleted</li>
+ *      </ul></li> 
+ *      <li>chains for all
+ *          candidates in one house/cell set:
+ *      <ul> 
+ *          <li>all chains lead to the same value
+ *              in onSets -> value can be set</li> 
+ *          <li>all chains lead to the same value in
+ *              offSets -> candidate can be deleted</li>
+ *      </ul></li> 
+ * </ol>
  *
- * 20081013: AIC added (combined with Nice Loops)<br><br> For every Nice Loop
+ * 20081013: AIC added (combined with Nice Loops)<br><br> 
+ * 
+ * For every Nice Loop
  * that starts with a strong inference out of the start cell and ends with a
  * weak inference into the start cell the AIC (start cell - last strong
  * inference) is checked. If it gives more than one elimination, it is stored as
  * AIC instead of as Nice Loop. The check is done for discontinuous loops
  * only.<br><br>
  *
- * AIC eliminations: <ul> <li>if the candidates of the endpoints are equal, all
- * candidates can be eliminated that see both endpoints</li> <li>if the
- * candidates are not equal, cand A can be eliminated in cell b and vice
- * versa</li> </ul>
+ * AIC eliminations: 
+ * <ul> 
+ *      <li>if the candidates of the endpoints are equal, all
+ *          candidates can be eliminated that see both endpoints</li> 
+ *      <li>if the candidates are not equal, cand A can be eliminated in 
+ *          cell b and vice versa</li> 
+ * </ul>
  *
  * @author hobiwan
  */
@@ -1129,8 +1151,8 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * <code>on</code> and
-     * <code>off</code> lead to the same conclusion. This is a verity and the
+     * <code>on</code> and <code>off</code> lead to the same conclusion. 
+     * This is a verity and the
      * conclusion has to be always true.<br><br>
      *
      * Note: If one of the chains gets back to the originating cell, the other
@@ -1191,19 +1213,19 @@ public class TablingSolver extends AbstractSolver {
      * Checks
      * <code>entry</code> for all combinations that lead to a conclusion.
      * <ul>
-     * <li>setting/deleting a candidate in/from a cell leades to that candidate
-     * beeing deleted from/set in that very cell -> original assumption was
-     * false.</li>
-     * <li>two chains from the same start lead to a candidate set in and deleted
-     * from the same cell -> assumption is false.</li>
-     * <li>two chains from the same start lead to two different values set in
-     * the same cell -> assumption is false.</li>
-     * <li>two chains from the same start lead to the same value set twice in
-     * one house -> assumption is false.</li>
-     * <li>chains from the same start lead to all instances of a candidate
-     * beeing removed from a cell -> assumption is false.</li>
-     * <li>chains from the same start lead to all instances of a candidate
-     * beeing removed from a house -> assumption is false.</li>
+     *      <li>setting/deleting a candidate in/from a cell leades to that candidate
+     *          beeing deleted from/set in that very cell -> original assumption was
+     *          false.</li>
+     *      <li>two chains from the same start lead to a candidate set in and deleted
+     *          from the same cell -> assumption is false.</li>
+     *      <li>two chains from the same start lead to two different values set in
+     *          the same cell -> assumption is false.</li>
+     *      <li>two chains from the same start lead to the same value set twice in
+     *          one house -> assumption is false.</li>
+     *      <li>chains from the same start lead to all instances of a candidate
+     *          beeing removed from a cell -> assumption is false.</li>
+     *      <li>chains from the same start lead to all instances of a candidate
+     *          beeing removed from a house -> assumption is false.</li>
      * </ul>
      *
      * @param entry
@@ -1286,18 +1308,27 @@ public class TablingSolver extends AbstractSolver {
         // CAUTION: exclude all cells in which a value is already set
         tmpSet.setAll();
         for (int i = 1; i < entry.offSets.length; i++) {
+            // all candidates, that can be deleted
             tmpSet1.set(entry.offSets[i]);
+            // CAUTION: the candidate might not be in that cell anymore,
+            // ANDing all candidates goes wrong then.
+            // SOLUTION: WE fake a delete by setting all cells 1 where
+            //           that candidate is not valid anymore
             tmpSet1.orNot(finder.getCandidates()[i]);
             tmpSet.and(tmpSet1);
         }
+        // if a candidate can be set in a cell deleting all candidates
+        // from that cell is impossible -> ignore those cells
         for (int i = 0; i < entry.onSets.length; i++) {
             tmpSet.andNot(entry.onSets[i]);
         }
+        //cells that have a value set already are irrevelant
         tmpSet2.clear();
         for (int i = 1; i < finder.getPositions().length; i++) {
             tmpSet2.or(finder.getPositions()[i]);
         }
         tmpSet.andNot(tmpSet2);
+        // tempSet now holds a one only for cells, where all candidates can be eliminated
         if (!tmpSet.isEmpty()) {
             for (int i = 0; i < tmpSet.size(); i++) {
                 globalStep.reset();
@@ -1329,10 +1360,15 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * Check, if all instances of a canddiate are delete from one house. If so,
-     * the assumption was invalid: <ul> <li>Get all instances of the candidate
-     * in the house</li> <li>If there are canddiates and the set equals the
-     * offSet, step was found</li> </ul>
+     * Check, if all instances of a candidate are deleted from one house. If so,
+     * the assumption was invalid: 
+     * 
+     * <ul> 
+     *      <li>Get all instances of the candidate
+     *          in the house</li> 
+     *      <li>If there are candidates and the set equals the
+     *          offSet, step was found</li>
+     * </ul>
      *
      * @param entry
      * @param houseSets
@@ -1371,7 +1407,7 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * Checks, if an assumptions leads to the same vaule set twice in one house.
+     * Checks, if an assumption leads to the same vaule set at least twice in one house.
      *
      * @param entry
      * @param houseSets
@@ -1429,13 +1465,16 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * AICs are checked separately: The end of the debugChain has to be: <ul>
-     * <li>on-entry for the same candidate as the start cell (Type 1), if the
-     * combined buddies of start and end cell can eliminate more than one
-     * candidate</li> <li>on-entry for a different candidate if the end cell
-     * sees the start cell and if the start cell contains a candidate of the
-     * debugChain end and the end cell contains a candidate of the debugChain
-     * start</li>
+     * AICs are checked separately: The end of the debugChain has to be: 
+     * 
+     * <ul>
+     *      <li>on-entry for the same candidate as the start cell (Type 1), if the
+     *          combined buddies of start and end cell can eliminate more than one
+     *          candidate</li> 
+     *      <li>on-entry for a different candidate if the end cell
+     *          sees the start cell and if the start cell contains a candidate of the
+     *          debugChain end and the end cell contains a candidate of the debugChain
+     *          start</li>
      * </ul>
      *
      * @param tables Only offTables are allowed (AICs start with a strong link)
@@ -1465,9 +1504,12 @@ public class TablingSolver extends AbstractSolver {
                         // cant be Type 2
                         continue;
                     }
-                    if (sudoku.isCandidate(tables[i].getCellIndex(j), startCandidate)
-                            && sudoku.isCandidate(startIndex, tables[i].getCandidate(j))) {
-                        // Type 2
+                    // it should be enough, that the end cell holds the start
+                    // candidate. Only the start cell holding the end candidate
+                    // is useless here, is covered as Nice Loop
+//                    if (sudoku.isCandidate(tables[i].getCellIndex(j), startCandidate)
+//                            && sudoku.isCandidate(startIndex, tables[i].getCandidate(j))) {
+                    if (sudoku.isCandidate(tables[i].getCellIndex(j), startCandidate)) {
                         checkAic(tables[i], j);
                     }
                 }
@@ -1479,33 +1521,53 @@ public class TablingSolver extends AbstractSolver {
      * If the first and the last cell of the debugChain are identical, the
      * debugChain is a Nice Loop.<br><br>
      *
-     * Discontinuous Nice Loop: <dl> <dt>First and last link are weak for the
-     * same candidate:</dt> <dd>Candidate can be eliminated from the start
-     * cell</dd> <dt>First and last link are strong for the same candidate:</dt>
-     * <dd>Candidate can be set in the start cell (in the step all other
-     * candidates are eliminated from the cell, leads to a naked single)</dd>
-     * <dt>One link is weak and the other strong, they are for different
-     * candidates:</dt> <dd>The candidate from the weak link can be eliminated
-     * from the start cell</dd> </dl>
+     * Discontinuous Nice Loop: 
+     * 
+     * <dl> 
+     *  <dt>First and last link are weak for the
+     *      same candidate:</dt> 
+     *  <dd>Candidate can be eliminated from the start
+     *      cell</dd> 
+     *  <dt>First and last link are strong for the same candidate:</dt>
+     *  <dd>Candidate can be set in the start cell (in the step all other
+     *      candidates are eliminated from the cell, leads to a naked single)</dd>
+     *  <dt>One link is weak and the other strong, they are for different
+     *      candidates:</dt> 
+     *  <dd>The candidate from the weak link can be eliminated
+     *      from the start cell</dd> 
+     * </dl>
      *
-     * Continuous Nice Loop: <dl> <dt>Two weak links:</dt> <dd>First cell must
-     * be bivalue, candidates must be different</dd> <dt>Two strong links:</dt>
-     * <dd>Candidates must be different</dd> <dt>One link strong, the other
-     * weak:</dt> <dd>Both links must be for the same candidate</dd> </dl>
+     * Continuous Nice Loop: 
+     * 
+     * <dl> 
+     *  <dt>Two weak links:</dt> 
+     *  <dd>First cell must be bivalue, candidates must be different</dd> 
+     *  <dt>Two strong links:</dt>
+     *  <dd>Candidates must be different</dd> 
+     *  <dt>One link strong, the other weak:</dt> 
+     *  <dd>Both links must be for the same candidate</dd> 
+     * </dl>
      *
      * If a Continuous nice Loop is present, the following eliminations are
-     * possible: <dl> <dt>One cell reached and left with a strong link:</dt>
-     * <dd>All candidates not present in the strong links can be eliminated from
-     * the cell</dd> <dt>Weak link between cells:</dt> <dd>Link candidate can be
-     * eliminated from all cells, that see both cells of the link</dd> </dl>
+     * possible: 
+     * 
+     * <dl> 
+     *  <dt>One cell reached and left with a strong link:</dt>
+     *  <dd>All candidates not present in the strong links can be eliminated from
+     *      the cell</dd> 
+     *  <dt>Weak link between cells:</dt> 
+     *  <dd>Link candidate can be eliminated from all cells, that see both cells 
+     *      of the link</dd> 
+     * </dl>
      *
      * Chains are created backwards. We cant be sure, if the first link really
      * leaves the cell before we have created the actual debugChain. All chains,
      * which first link remains in the start cell, are ignored.
      *
-     * @param entry TableEntry für den Start-Link
-     * @param entryIndex Index auf den vorletzten Link des Nice Loops (ist
-     * letzter Eintrag, der in der Table noch enthalten ist).
+     * @param entry TableEntry of the start link
+     * @param entryIndex Index of the second to last link in the chain 
+     *      (the last link links back to the start cell and is not present 
+     *      in the table)
      */
     private void checkNiceLoop(TableEntry entry, int entryIndex) {
         // A Nice Loop must be at least 3 links long
@@ -1518,9 +1580,10 @@ public class TablingSolver extends AbstractSolver {
         globalStep.reset();
         globalStep.setType(SolutionType.DISCONTINUOUS_NICE_LOOP);
         resetTmpChains();
-        addChain(entry, entry.getCellIndex(entryIndex), entry.getCandidate(entryIndex), entry.isStrong(entryIndex), true);
+        addChain(entry, entry.getCellIndex(entryIndex), entry.getCandidate(entryIndex),
+                entry.isStrong(entryIndex), true);
         if (globalStep.getChains().isEmpty()) {
-            // invalid debugChain -> build a lasso somewhere -> ignore it!
+            // invalid debugChain -> builds a lasso somewhere -> ignore it!
             return;
         }
         Chain localTmpChain = globalStep.getChains().get(0);
@@ -1775,11 +1838,9 @@ public class TablingSolver extends AbstractSolver {
             tmpSet.set(Sudoku2.buddies[startIndex]);
             tmpSet.and(Sudoku2.buddies[endIndex]);
             tmpSet.and(finder.getCandidates()[startCandidate]);
-            if (tmpSet.size() > 1) {
+            if (!tmpSet.isEmpty()) {
                 for (int i = 0; i < tmpSet.size(); i++) {
-                    if (tmpSet.get(i) != startIndex) {
-                        globalStep.addCandidateToDelete(tmpSet.get(i), startCandidate);
-                    }
+                    globalStep.addCandidateToDelete(tmpSet.get(i), startCandidate);
                 }
             }
         } else {
@@ -1800,6 +1861,9 @@ public class TablingSolver extends AbstractSolver {
         addChain(entry, entry.getCellIndex(entryIndex), entry.getCandidate(entryIndex), entry.isStrong(entryIndex), false, true);
         if (globalStep.getChains().isEmpty()) {
             // something is wrong with that debugChain
+            if (DEBUG) {
+                System.out.println("checkAIC(): Found eliminations, but no suitable chain!");
+            }
             return;
         }
         // check for group nodes
@@ -1826,19 +1890,20 @@ public class TablingSolver extends AbstractSolver {
             return;
         }
         // check for steps with the same eliminations
-        String del = globalStep.getCandidateString();
-        Integer oldIndex = deletesMap.get(del);
-        if (oldIndex != null && steps.get(oldIndex.intValue()).getChainLength() <= globalStep.getChains().get(0).getLength()) {
-            // a similar debugChain already exists and is shorter than the new one -> ignore it
-            return;
-        }
-        deletesMap.put(del, steps.size());
-        // debugChain must be copied
-        newChain = (Chain) globalStep.getChains().get(0).clone();
-        globalStep.getChains().clear();
-        globalStep.getChains().add(newChain);
-        adjustChains(globalStep);
-        steps.add((SolutionStep) globalStep.clone());
+        replaceOrCopyStep();
+//        String del = globalStep.getCandidateString();
+//        Integer oldIndex = deletesMap.get(del);
+//        if (oldIndex != null && steps.get(oldIndex.intValue()).getChainLength() <= globalStep.getChains().get(0).getLength()) {
+//            // a similar debugChain already exists and is shorter than the new one -> ignore it
+//            return;
+//        }
+//        deletesMap.put(del, steps.size());
+//        // debugChain must be copied
+//        newChain = (Chain) globalStep.getChains().get(0).clone();
+//        globalStep.getChains().clear();
+//        globalStep.getChains().add(newChain);
+//        adjustChains(globalStep);
+//        steps.add((SolutionStep) globalStep.clone());
     }
 
     /**
