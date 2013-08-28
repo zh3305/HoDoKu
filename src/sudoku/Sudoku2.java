@@ -33,14 +33,13 @@ import java.util.logging.Logger;
  */
 @SuppressWarnings("empty-statement")
 public class Sudoku2 implements Cloneable {
+
     /** conditional compilation */
     private static final boolean DEBUG = false;
-
     /** The number of cells in the sudoku */
     public static final int LENGTH = 81;
     /** Number of units in each constraint */
     public static final int UNITS = 9;
-
     /** The internal number for block units. */
     public static final int BLOCK = 0;
     /** The internal number for line units. */
@@ -49,7 +48,6 @@ public class Sudoku2 implements Cloneable {
     public static final int COL = 2;
     /** The internal number for cell units. */
     public static final int CELL = 3;
-
     /** All indices for every line */
     public static final int[][] LINES = {
         {0, 1, 2, 3, 4, 5, 6, 7, 8},
@@ -114,6 +112,34 @@ public class Sudoku2 implements Cloneable {
         6, 6, 6, 7, 7, 7, 8, 8, 8,
         6, 6, 6, 7, 7, 7, 8, 8, 8
     };
+    /**
+     * Every block for every line
+     */
+    public static final int[][] BLOCKS_FROM_LINES = {
+        {0, 1, 2},
+        {0, 1, 2},
+        {0, 1, 2},
+        {3, 4, 5},
+        {3, 4, 5},
+        {3, 4, 5},
+        {6, 7, 8},
+        {6, 7, 8},
+        {6, 7, 8}
+    };
+    /**
+     * Every block for every col
+     */
+    public static final int[][] BLOCKS_FROM_COLS = {
+        {0, 3, 6},
+        {0, 3, 6},
+        {0, 3, 6},
+        {1, 4, 7},
+        {1, 4, 7},
+        {1, 4, 7},
+        {2, 5, 8},
+        {2, 5, 8},
+        {2, 5, 8}
+    };
     /** The internal Unit for every constraint */
     public static final int[] CONSTRAINT_TYPE_FROM_CONSTRAINT = {
         LINE, LINE, LINE, LINE, LINE, LINE, LINE, LINE, LINE,
@@ -146,7 +172,6 @@ public class Sudoku2 implements Cloneable {
     /** The candidate represented by the least significant bit that is set in a candidate mask.
      *  If only one bit is set, the array contains the value of that bit (candidate). */
     public static final short[] CAND_FROM_MASK = new short[0x200];
-    
     // Templates
     //
     /** One template for every possible combination of 9 equal digits in the grid. */
@@ -179,7 +204,6 @@ public class Sudoku2 implements Cloneable {
     public static long[] ALL_CONSTRAINTS_TEMPLATES_M1 = new long[ALL_UNITS.length];
     /** The high order long from {@link #ALL_CONSTRAINTS_TEMPLATES} */
     public static long[] ALL_CONSTRAINTS_TEMPLATES_M2 = new long[ALL_UNITS.length];
-
     // The data of a Sudoku
     /** Candidate bitmaps for all cells. 0 stands for "cell already set". */
     private short[] cells = new short[LENGTH];
@@ -201,14 +225,13 @@ public class Sudoku2 implements Cloneable {
     /** The difficulty level of this puzzle */
     private DifficultyLevel level = null;
     /** The difficulty score of this puzzle */
-    private int score;    
+    private int score;
     /** the state in which this Sudoku was loaded (for "Reset Puzzle") */
     private String initialState = null;
     /** the state of the sudoku (for progress display) */
     private SudokuStatus status = SudokuStatus.EMPTY;
     /** the state of the sudoku if only the givens are taken into account */
     private SudokuStatus statusGivens = SudokuStatus.EMPTY;
-
     // Queues for detecting Singles: Naked Singles and Hidden Singles become obvious
     // while setting/deleting candidates; two synchronized arrays contain index/value pairs
     /** A queue for newly detected Naked Singles */
@@ -347,7 +370,7 @@ public class Sudoku2 implements Cloneable {
             initialState = src.initialState;
         }
         status = src.status;
-        statusGivens= src.statusGivens;
+        statusGivens = src.statusGivens;
         nsQueue.set(src.nsQueue);
         hsQueue.set(src.hsQueue);
     }
@@ -688,7 +711,7 @@ public class Sudoku2 implements Cloneable {
         boolean ssCellsRead = false;
         String ssCells = null;
         while (anzLines > 9 && anzLines % 9 == 0) {
-            if (! ssGivensRead) {
+            if (!ssGivensRead) {
                 ssGivens = getSSString(lines);
                 ssGivensRead = true;
                 ssCellsRead = true;
@@ -779,7 +802,7 @@ public class Sudoku2 implements Cloneable {
                         given = !solvedButNotGivens[sRow * 9 + sCol];
                     }
                     if (DEBUG) {
-                        System.out.println("sRow="+sRow+", sCol="+sCol+", digit="+Character.digit(ch,10)+", given="+given);
+                        System.out.println("sRow=" + sRow + ", sCol=" + sCol + ", digit=" + Character.digit(ch, 10) + ", given=" + given);
                     }
                     setCell(sRow, sCol, Character.digit(ch, 10), given);
                 }
@@ -810,7 +833,7 @@ public class Sudoku2 implements Cloneable {
                     for (int i = 1; i < cands1.length; i++) {
                         if (cands1[i] == 0 && isCandidate(cellIndex, i)) {
                             setCandidate(row, col, i, false);
-                        } else if (cands1[i] == 1 && ! isCandidate(cellIndex, i)) {
+                        } else if (cands1[i] == 1 && !isCandidate(cellIndex, i)) {
                             setCandidate(row, col, i, true);
                         }
                     }
@@ -871,7 +894,7 @@ public class Sudoku2 implements Cloneable {
             }
 //            Logger.getLogger(getClass().getName()).log(Level.FINE, tmpBuffer.toString());
         }
-        
+
         // for SimpleSudoku the givens are set in an extra pass
         if (ssGivensRead) {
             setGivens(ssGivens);
@@ -881,14 +904,14 @@ public class Sudoku2 implements Cloneable {
             //setInitialState(getSudoku(ClipboardMode.PM_GRID));
             setInitialState(getSudoku(ClipboardMode.LIBRARY));
         }
-        
+
         // we simply assume the sudoku is valid; for batch use, status
         // is ignored and statusGivens has to be VALID (no checks ar made).
         // for the GUI,status and statusGivens are checked elsewhere
         status = SudokuStatus.VALID;
         statusGivens = SudokuStatus.VALID;
     }
-    
+
     /**
      * Takes the first 9 Strings of <code>lines</code> and
      * condenses it into one 81 character string.
@@ -910,7 +933,7 @@ public class Sudoku2 implements Cloneable {
         }
         return ssTemp.toString();
     }
-    
+
     /**
      * Checks, if a necessary candidate is missing from {@link #userCells}.
      * "Necessary" means, that a candidate is missing, that has to be set
@@ -920,7 +943,7 @@ public class Sudoku2 implements Cloneable {
      * @return 
      */
     public boolean checkUserCands() {
-        if (! solutionSet) {
+        if (!solutionSet) {
             // we cant check without the solution!
             return false;
         }
@@ -1093,7 +1116,7 @@ public class Sudoku2 implements Cloneable {
                     }
                 }
                 // the candidate for the solution must be still there
-                if (solutionSet && ! isCandidate(index, solution[index])) {
+                if (solutionSet && !isCandidate(index, solution[index])) {
                     // sudoku cannot be solved
                     return false;
                 }
@@ -1109,7 +1132,6 @@ public class Sudoku2 implements Cloneable {
 //    public String getSudoku() {
 //        return getSudoku(ClipboardMode.PM_GRID, null);
 //    }
-
     /**
      * Returns the current state of the sudoku as string. The
      * desired format is given by <code>mode</code>.
@@ -1163,8 +1185,8 @@ public class Sudoku2 implements Cloneable {
                 out.append(":");
             }
         }
-        if (mode == ClipboardMode.CLUES_ONLY || mode == ClipboardMode.VALUES_ONLY ||
-                mode == ClipboardMode.LIBRARY) {
+        if (mode == ClipboardMode.CLUES_ONLY || mode == ClipboardMode.VALUES_ONLY
+                || mode == ClipboardMode.LIBRARY) {
             for (int i = 0; i < LENGTH; i++) {
                 if (getValue(i) == 0 || (mode == ClipboardMode.CLUES_ONLY && !isFixed(i))) {
                     //out.append(".");
@@ -1177,8 +1199,8 @@ public class Sudoku2 implements Cloneable {
                 }
             }
         }
-        if (mode == ClipboardMode.PM_GRID || mode == ClipboardMode.PM_GRID_WITH_STEP ||
-                mode == ClipboardMode.CLUES_ONLY_FORMATTED || mode == ClipboardMode.VALUES_ONLY_FORMATTED) {
+        if (mode == ClipboardMode.PM_GRID || mode == ClipboardMode.PM_GRID_WITH_STEP
+                || mode == ClipboardMode.CLUES_ONLY_FORMATTED || mode == ClipboardMode.VALUES_ONLY_FORMATTED) {
             // new: create one StringBuilder per cell with all candidates/values; add
             // special characters for step if necessary; if a '*' is added to a cell,
             // insert a blank in all other cells of that col that don't have a '*';
@@ -1187,7 +1209,7 @@ public class Sudoku2 implements Cloneable {
             for (int i = 0; i < cells.length; i++) {
                 cellBuffers[i] = new StringBuilder();
                 int value = getValue(i);
-                if (mode == ClipboardMode.CLUES_ONLY_FORMATTED && ! isFixed(i)) {
+                if (mode == ClipboardMode.CLUES_ONLY_FORMATTED && !isFixed(i)) {
                     // only clues!
                     value = 0;
                 }
@@ -1214,8 +1236,8 @@ public class Sudoku2 implements Cloneable {
                     cellsWithExtraChar[index] = true;
                 }
                 // fins and endo-fins
-                if (SolutionType.isFish(step.getType()) ||
-                        step.getType() == SolutionType.W_WING) {
+                if (SolutionType.isFish(step.getType())
+                        || step.getType() == SolutionType.W_WING) {
                     for (Candidate cand : step.getFins()) {
                         int index = cand.getIndex();
                         insertOrReplaceChar(cellBuffers[index], '#');
@@ -1848,7 +1870,7 @@ public class Sudoku2 implements Cloneable {
                 // candidates are deleted in userCells as well
                 // delCandidate does the check for Naked or Hidden Single
 //                if (! delCandidate(buddyIndex, value, true)) {
-                if (! setCandidate(buddyIndex, value, false)) {
+                if (!setCandidate(buddyIndex, value, false)) {
                     valid = false;
                 }
                 if (user) {
@@ -2041,9 +2063,9 @@ public class Sudoku2 implements Cloneable {
         for (int i = 0; i < 81; i++) {
             buddies[i] = new SudokuSet();
             for (int j = 0; j < 81; j++) {
-                if (i != j && (Sudoku2.getLine(i) == Sudoku2.getLine(j) ||
-                        Sudoku2.getCol(i) == Sudoku2.getCol(j) ||
-                        Sudoku2.getBlock(i) == Sudoku2.getBlock(j))) {
+                if (i != j && (Sudoku2.getLine(i) == Sudoku2.getLine(j)
+                        || Sudoku2.getCol(i) == Sudoku2.getCol(j)
+                        || Sudoku2.getBlock(i) == Sudoku2.getBlock(j))) {
                     // Zelle ist Buddy
                     buddies[i].add(j);
                 }
@@ -2194,7 +2216,6 @@ public class Sudoku2 implements Cloneable {
 //            buddiesOut.and(buddies[cells.get(i)]);
 //        }
 //    }
-
     /**
      * Create all 46656 possible templates. Since the calculation has become incredibly
      * slow on Windows 7 64bit, the templates are read from a file.
@@ -2206,7 +2227,7 @@ public class Sudoku2 implements Cloneable {
             //System.out.println("Start Templates lesen...");
             long ticks = System.currentTimeMillis();
             ObjectInputStream in = new ObjectInputStream(Sudoku2.class.getResourceAsStream("/templates.dat"));
-            templates = (SudokuSetBase[])in.readObject();
+            templates = (SudokuSetBase[]) in.readObject();
             in.close();
             ticks = System.currentTimeMillis() - ticks;
             //System.out.println("Templates lesen: " + ticks + "ms");
@@ -2267,7 +2288,6 @@ public class Sudoku2 implements Cloneable {
 //        }
 //        return index;
 //    }
-
     /**
      * Makes all cells editable; needed to edit a puzzle
      */
@@ -2312,7 +2332,7 @@ public class Sudoku2 implements Cloneable {
     private void addNakedSingle(int index, int value) {
         nsQueue.addSingle(index, value);
     }
-    
+
     /**
      * Adds a new Hidden Single to the Hidden Single queue formed by
      * the synchronized arrays {@link #hsIndices} and {@link #hsValues}.
@@ -2548,9 +2568,15 @@ public class Sudoku2 implements Cloneable {
      */
     public void setStatus(int numberOfSolutions) {
         switch (numberOfSolutions) {
-            case 0: status = SudokuStatus.INVALID; break;
-            case 1: status = SudokuStatus.VALID; break;
-            default: status = SudokuStatus.MULTIPLE_SOLUTIONS; break;
+            case 0:
+                status = SudokuStatus.INVALID;
+                break;
+            case 1:
+                status = SudokuStatus.VALID;
+                break;
+            default:
+                status = SudokuStatus.MULTIPLE_SOLUTIONS;
+                break;
         }
     }
 
@@ -2573,12 +2599,18 @@ public class Sudoku2 implements Cloneable {
      */
     public void setStatusGivens(int numberOfSolutions) {
         switch (numberOfSolutions) {
-            case 0: statusGivens = SudokuStatus.INVALID; break;
-            case 1: statusGivens = SudokuStatus.VALID; break;
-            default: statusGivens = SudokuStatus.MULTIPLE_SOLUTIONS; break;
+            case 0:
+                statusGivens = SudokuStatus.INVALID;
+                break;
+            case 1:
+                statusGivens = SudokuStatus.VALID;
+                break;
+            default:
+                statusGivens = SudokuStatus.MULTIPLE_SOLUTIONS;
+                break;
         }
     }
-    
+
     /**
      * Checks, if user candidate have been set in the Sudoku. Needed for
      * determining, how to switch between {@link #cells} and {@link #userCells}.
@@ -2604,12 +2636,12 @@ public class Sudoku2 implements Cloneable {
     public void switchToAllCandidates() {
         // first add necessary candidates (might not be necessary)
         for (int i = 0; i < userCells.length; i++) {
-            if (values[i] == 0 && solution[i] !=0){
+            if (values[i] == 0 && solution[i] != 0) {
                 userCells[i] |= MASKS[solution[i]];
             }
         }
         // now simply copy the user candidates over
-        System.arraycopy(userCells, 0, cells, 0,LENGTH);
+        System.arraycopy(userCells, 0, cells, 0, LENGTH);
         // rebuild internal data
         rebuildInternalData();
     }
@@ -2632,7 +2664,7 @@ public class Sudoku2 implements Cloneable {
         // rebuild internal data
         rebuildInternalData();
     }
-    
+
     /**
      * Print the contents of the singles queues to stdout. For debugging
      * only.
@@ -2644,7 +2676,7 @@ public class Sudoku2 implements Cloneable {
         System.out.println("Hidden Singles:\r\n");
         System.out.println(hsQueue);
     }
-    
+
     /**
      * Calculates, which candidates are still present in the unset cells
      * of the sudoku.

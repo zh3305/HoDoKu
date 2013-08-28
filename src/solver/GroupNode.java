@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with HoDoKu. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package solver;
 
 import java.util.ArrayList;
@@ -26,29 +25,76 @@ import sudoku.Sudoku2;
 import sudoku.SudokuSet;
 
 /**
+ * A class for finding and storing Group Nodes: A group node consists of
+ * up to three candidates, that occupy a single row or a single column
+ * within a single block.<br><br>
+ * 
+ * Every block can hold multiple group nodes, group nodes are allowed to
+ * overlap.<br><br>
+ * 
+ * Group nodes are created by the factory method {@link #getGroupNodes(solver.SudokuStepFinder)}.
+ * Creating a group node in any other way is not possible.
  *
  * @author hobiwan
  */
 public class GroupNode {
-    public SudokuSet indices = new SudokuSet(); // indices as bit mask
-    public SudokuSet buddies = new SudokuSet(); // all buddies that can see all cells in the group node
-    public int cand;      // candidate for grouped link
-    public int line = -1; // row (index in Sudoku2.ROWS), -1 if not applicable
-    public int col = -1;  // col (index in Sudoku2.COLS), -1 if not applicable
-    public int block;     // block (index in Sudoku2.BLOCKS)
-    public int index1;    // index of first cell
-    public int index2;    // index of second cell
-    public int index3;    // index of third cell or -1, if grouped node consists only of two cells
-    
-    private static SudokuSet candInHouse = new SudokuSet(); // all positions for a given candidate in a given house
-    private static SudokuSet tmpSet = new SudokuSet();      // for check with blocks
-    
+
     /**
-     * Creates a new instance of GroupNode
-     * @param cand
-     * @param indices  
+     * 
+     * Indices as bit mask.
      */
-    public GroupNode(int cand, SudokuSet indices) {
+    public SudokuSet indices = new SudokuSet();
+    /**
+     * All buddies that can see all cells in the group node.
+     */
+    public SudokuSet buddies = new SudokuSet();
+    /**
+     * Candidate for the group node.
+     */
+    public int cand;
+    /**
+     * The line of the group node (index in {@link Sudoku2#ROWS}), -1 if not applicable
+     */
+    public int line = -1;
+    /**
+     * The column of the group node (index in {@link Sudoku2#COLS}), -1 if not applicable
+     */
+    public int col = -1;
+    /**
+     * The block of the group node (index in {@link Sudoku2#BLOCKS}); every
+     * group node must have a block.
+     */
+    public int block;
+    /**
+     * Index of the first cell in the group node.
+     */
+    public int index1;
+    /**
+     * Index of the second cell in the group node.
+     */
+    public int index2;
+    /**
+     * Index of the third cell in the group node or -1, if the group node 
+     * consists only of two cells (which is a valid case)
+     */
+    public int index3;
+    /**
+     * All positions for a given candidate in a given house
+     */
+    private static SudokuSet candInHouse = new SudokuSet();
+    /**
+     * For checks with blocks.
+     */
+    private static SudokuSet tmpSet = new SudokuSet();
+
+    /**
+     * Creates a new instance of GroupNode. Group nodes are only
+     * created by the static factory methods.
+     * 
+     * @param cand The candidateof the group node.
+     * @param indices  The cells of the group node.
+     */
+    private GroupNode(int cand, SudokuSet indices) {
         this.cand = cand;
         this.indices.set(indices);
         index1 = indices.get(0);
@@ -71,61 +117,75 @@ public class GroupNode {
             buddies.and(Sudoku2.buddies[index3]);
         }
     }
-    
+
+    /**
+     * Presents a group node in human readable form.
+     * 
+     * @return 
+     */
     @Override
     public String toString() {
-        return "GroupNode: " + cand + " - " + SolutionStep.getCompactCellPrint(index1, index2, index3) + "  - " + index1 + "/" + index2 + "/" + index3 +
-                " (" + line + "/" + col + "/" + block + ")";
+        return "GroupNode: " + cand + " - " + SolutionStep.getCompactCellPrint(index1, index2, index3) + "  - " + index1 + "/" + index2 + "/" + index3
+                + " (" + line + "/" + col + "/" + block + ")";
     }
-    
+
     /**
      * Gets all group nodes from the given sudoku and puts them in an ArrayList.
      *
      * For all candidates in all lines and all cols do:
-     *   - check if they have a candidate left
-     *   - if so, check if an intersection of line/col and a block contains
-     *     more than one candidate; if yes -> group node found
-     * @param finder
+     * <ul>
+     *  <li>check if they have a candidate left</li>
+     *  <li>if so, check if an intersection of line/col and a block contains
+     *     more than one candidate; if yes -> group node found</li>
+     * </ul
+     * @param finder A current instance of {@link SudokuStepFinder} for the
+     *          sudoku. Used to find remaining candidates.
      * @return  
      */
     public static List<GroupNode> getGroupNodes(SudokuStepFinder finder) {
         List<GroupNode> groupNodes = new ArrayList<GroupNode>();
-        
-        getGroupNodesForHouseType(groupNodes, finder, Sudoku2.LINE_TEMPLATES);
-        getGroupNodesForHouseType(groupNodes, finder, Sudoku2.COL_TEMPLATES);
-        
+
+        getGroupNodesForHouseType(groupNodes, finder, Sudoku2.LINE_TEMPLATES, true);
+        getGroupNodesForHouseType(groupNodes, finder, Sudoku2.COL_TEMPLATES, false);
+
         return groupNodes;
     }
-    
-    private static void getGroupNodesForHouseType(List<GroupNode> groupNodes, SudokuStepFinder finder, SudokuSet[] houses) {
+
+    /**
+     * Does the real work in finding group nodes. If a line or a column has candidates
+     * left and two or more of them are confined to a block, a group node is added
+     * to <code>groupNodes</code>.
+     * 
+     * @param groupNodes A list with all group nodes.
+     * @param finder The finder for the current sudoku.
+     * @param houses Templates for all lines/cols
+     * @param isLines <code>true</code> if <code>houses</code> holds
+     *          lines, <code>false</code> for cols.
+     */
+    private static void getGroupNodesForHouseType(List<GroupNode> groupNodes,
+            SudokuStepFinder finder, SudokuSet[] houses, boolean isLines) {
         for (int i = 0; i < houses.length; i++) {
+            int[] blocks = isLines ? Sudoku2.BLOCKS_FROM_LINES[i] : Sudoku2.BLOCKS_FROM_COLS[i];
             for (int cand = 1; cand <= 9; cand++) {
-                candInHouse.set(houses[i]);
-                candInHouse.and(finder.getCandidates()[cand]);
+                candInHouse.setAnd(houses[i], finder.getCandidates()[cand]);
                 if (candInHouse.isEmpty()) {
                     // no candidates left in this house -> proceed
                     continue;
                 }
-                
+
                 // candidates left in house -> check blocks
-                for (int j = 0; j < Sudoku2.BLOCK_TEMPLATES.length; j++) {
-                    tmpSet.set(candInHouse);
-                    tmpSet.and(Sudoku2.BLOCK_TEMPLATES[j]);
-                    if (tmpSet.isEmpty()) {
-                        // no candidates in this house -> proceed with next block
-                        continue;
-                    } else {
-                        // rather complicated for performance reasons (isEmpty() is much faster than size())
-                        if (tmpSet.size() >= 2) {
-                            // group node found
-                            groupNodes.add(new GroupNode(cand, tmpSet));
-                        }
+                for (int j = 0; j < blocks.length; j++) {
+                    tmpSet.setAnd(candInHouse, Sudoku2.BLOCK_TEMPLATES[blocks[j]]);
+                    // isEmpty() is much faster than size()
+                    if (!tmpSet.isEmpty() && tmpSet.size() >= 2) {
+                        // group node found
+                        groupNodes.add(new GroupNode(cand, tmpSet));
                     }
                 }
             }
         }
     }
-    
+
     public static void main(String[] args) {
         Sudoku2 sudoku = new Sudoku2();
         sudoku.setSudoku(":0000:x:.4..1..........5.6......3.15.38.2...7......2..........6..5.7....2.....1....3.14..:211 213 214 225 235 448 465 366 566 468 469::");
