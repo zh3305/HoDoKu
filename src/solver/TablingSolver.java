@@ -1189,18 +1189,22 @@ public class TablingSolver extends AbstractSolver {
 
     /**
      * Checks
-     * <code>entry</code> for all combinations that lead to a conclusion. <ul>
+     * <code>entry</code> for all combinations that lead to a conclusion.
+     * <ul>
      * <li>setting/deleting a candidate in/from a cell leades to that candidate
-     * beeing deletedfrom/set in that very cell -> original assumption was
-     * false.</li> <li>two chains from the same start lead to a candidate set in
-     * and deleted from the same cell -> assumption is false.</i> <li>two chains
-     * from the same start lead to two different values set in the same cell ->
-     * assumption is false.</li> <li>two chains from the same start lead to the
-     * same value set twice in one house -> assumption is false.</li> <li>chains
-     * from the same start lead to all instances of a candidate beeing removed
-     * from a cell -> assumption is false.</li> <li>chains from the same start
-     * lead to all instances of a candidate beeing removed from a house ->
-     * assumption is false.</li> </ul>
+     * beeing deleted from/set in that very cell -> original assumption was
+     * false.</li>
+     * <li>two chains from the same start lead to a candidate set in and deleted
+     * from the same cell -> assumption is false.</li>
+     * <li>two chains from the same start lead to two different values set in
+     * the same cell -> assumption is false.</li>
+     * <li>two chains from the same start lead to the same value set twice in
+     * one house -> assumption is false.</li>
+     * <li>chains from the same start lead to all instances of a candidate
+     * beeing removed from a cell -> assumption is false.</li>
+     * <li>chains from the same start lead to all instances of a candidate
+     * beeing removed from a house -> assumption is false.</li>
+     * </ul>
      *
      * @param entry
      */
@@ -3145,14 +3149,15 @@ public class TablingSolver extends AbstractSolver {
     /**
      * Constructs a debugChain for a given premise and a given implication. It
      * looks up the correct entry in
-     * <code>entry</code> and delegates the real work to null null     {@link #buildChain(solver.TableEntry, int, int[], boolean, sudoku.SudokuSet)
-     * }. If the debugChain is a net, the net parts are constructed as
+     * <code>entry</code> and delegates the real work to null null null null     
+     * {@link #buildChain(solver.TableEntry, int, int[], boolean, sudoku.SudokuSet)}. 
+     * If the debugChain is a net, the net parts are constructed as
      * well.<br><br>
      *
      * The main debugChain is written to {@link #debugChain}, the net parts are
      * written to {@link #mins}. The debugChain is from back to front, it is
-     * reversed by null null     {@link #addChain(solver.TableEntry, int, int, boolean, boolean, boolean)
-     * }.
+     * reversed by null null null null    
+     * {@link #addChain(solver.TableEntry, int, int, boolean, boolean, boolean)}.
      *
      * @param entry
      * @param cellIndex
