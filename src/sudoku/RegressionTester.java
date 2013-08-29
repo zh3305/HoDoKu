@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with HoDoKu. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package sudoku;
 
 import java.io.BufferedReader;
@@ -199,6 +198,7 @@ public class RegressionTester {
         List<SolutionStep> steps1 = null;
         boolean oldOption = false;
         boolean oldOption2 = false;
+        boolean oldOption3 = false;
         switch (type) {
             case FULL_HOUSE:
                 steps = stepFinder.findAllFullHouses(sudoku);
@@ -346,9 +346,9 @@ public class RegressionTester {
                 oldOption = Options.getInstance().isOnlyOneChainPerStep();
                 oldOption2 = Options.getInstance().isAllowAlsInTablingChains();
                 Options.getInstance().setOnlyOneChainPerStep(false);
-                if ((type == SolutionType.GROUPED_CONTINUOUS_NICE_LOOP && variant == 2) ||
-                        (type == SolutionType.GROUPED_DISCONTINUOUS_NICE_LOOP && (variant == 3 || variant == 4)) ||
-                        (type == SolutionType.GROUPED_AIC && (variant == 3 || variant == 4))) {
+                if ((type == SolutionType.GROUPED_CONTINUOUS_NICE_LOOP && variant == 2)
+                        || (type == SolutionType.GROUPED_DISCONTINUOUS_NICE_LOOP && (variant == 3 || variant == 4))
+                        || (type == SolutionType.GROUPED_AIC && (variant == 3 || variant == 4))) {
                     Options.getInstance().setAllowAlsInTablingChains(true);
                 } else {
                     Options.getInstance().setAllowAlsInTablingChains(false);
@@ -387,7 +387,7 @@ public class RegressionTester {
             case FINNED_FRANKEN_SWORDFISH:
                 oldOption = Options.getInstance().isAllowDualsAndSiamese();
                 Options.getInstance().setAllowDualsAndSiamese(true);
-                if (! fastMode) {
+                if (!fastMode) {
                     steps = findAllFishes(sudoku, 3, 1);
                     checkResults(testCase, steps, sudoku, start, failCase);
                 } else {
@@ -400,7 +400,7 @@ public class RegressionTester {
             case FINNED_MUTANT_SWORDFISH:
                 oldOption = Options.getInstance().isAllowDualsAndSiamese();
                 Options.getInstance().setAllowDualsAndSiamese(true);
-                if (! fastMode) {
+                if (!fastMode) {
                     steps = findAllFishes(sudoku, 3, 2);
                     checkResults(testCase, steps, sudoku, start, failCase);
                 } else {
@@ -422,7 +422,7 @@ public class RegressionTester {
             case FINNED_FRANKEN_JELLYFISH:
                 oldOption = Options.getInstance().isAllowDualsAndSiamese();
                 Options.getInstance().setAllowDualsAndSiamese(true);
-                if (! fastMode) {
+                if (!fastMode) {
                     steps = findAllFishes(sudoku, 4, 1);
                     checkResults(testCase, steps, sudoku, start, failCase);
                 } else {
@@ -435,7 +435,7 @@ public class RegressionTester {
             case FINNED_MUTANT_JELLYFISH:
                 oldOption = Options.getInstance().isAllowDualsAndSiamese();
                 Options.getInstance().setAllowDualsAndSiamese(true);
-                if (! fastMode) {
+                if (!fastMode) {
                     steps = findAllFishes(sudoku, 4, 2);
                     checkResults(testCase, steps, sudoku, start, failCase);
                 } else {
@@ -452,7 +452,7 @@ public class RegressionTester {
                 break;
             case FRANKEN_SQUIRMBAG:
             case FINNED_FRANKEN_SQUIRMBAG:
-                if (! fastMode) {
+                if (!fastMode) {
                     steps = findAllFishes(sudoku, 5, 1);
                     checkResults(testCase, steps, sudoku, start, failCase);
                 } else {
@@ -462,7 +462,7 @@ public class RegressionTester {
                 break;
             case MUTANT_SQUIRMBAG:
             case FINNED_MUTANT_SQUIRMBAG:
-                if (! fastMode) {
+                if (!fastMode) {
                     steps = findAllFishes(sudoku, 5, 2);
                     checkResults(testCase, steps, sudoku, start, failCase);
                 } else {
@@ -473,7 +473,7 @@ public class RegressionTester {
             case WHALE:
             case FINNED_WHALE:
             case SASHIMI_WHALE:
-                if (! fastMode) {
+                if (!fastMode) {
                     steps = findAllFishes(sudoku, 6, 0);
                     checkResults(testCase, steps, sudoku, start, failCase);
                 } else {
@@ -483,7 +483,7 @@ public class RegressionTester {
                 break;
             case FRANKEN_WHALE:
             case FINNED_FRANKEN_WHALE:
-                if (! fastMode) {
+                if (!fastMode) {
                     steps = findAllFishes(sudoku, 6, 1);
                     checkResults(testCase, steps, sudoku, start, failCase);
                 } else {
@@ -493,7 +493,7 @@ public class RegressionTester {
                 break;
             case MUTANT_WHALE:
             case FINNED_MUTANT_WHALE:
-                if (! fastMode) {
+                if (!fastMode) {
                     steps = findAllFishes(sudoku, 6, 2);
                     checkResults(testCase, steps, sudoku, start, failCase);
                 } else {
@@ -504,7 +504,7 @@ public class RegressionTester {
             case LEVIATHAN:
             case FINNED_LEVIATHAN:
             case SASHIMI_LEVIATHAN:
-                if (! fastMode) {
+                if (!fastMode) {
                     steps = findAllFishes(sudoku, 7, 0);
                     checkResults(testCase, steps, sudoku, start, failCase);
                 } else {
@@ -514,7 +514,7 @@ public class RegressionTester {
                 break;
             case FRANKEN_LEVIATHAN:
             case FINNED_FRANKEN_LEVIATHAN:
-                if (! fastMode) {
+                if (!fastMode) {
                     steps = findAllFishes(sudoku, 7, 1);
                     checkResults(testCase, steps, sudoku, start, failCase);
                 } else {
@@ -524,7 +524,7 @@ public class RegressionTester {
                 break;
             case MUTANT_LEVIATHAN:
             case FINNED_MUTANT_LEVIATHAN:
-                if (! fastMode) {
+                if (!fastMode) {
                     steps = findAllFishes(sudoku, 7, 2);
                     checkResults(testCase, steps, sudoku, start, failCase);
                 } else {
@@ -541,10 +541,14 @@ public class RegressionTester {
             case ALS_XY_CHAIN:
                 oldOption = Options.getInstance().isOnlyOneAlsPerStep();
                 oldOption2 = Options.getInstance().isAllowAlsOverlap();
+                oldOption3 = Options.getInstance().isAllStepsAlsChainForwardOnly();
+                int oldOption4 = Options.getInstance().getAllStepsAlsChainLength();
                 Options.getInstance().setOnlyOneAlsPerStep(false);
                 Options.getInstance().setAllowAlsOverlap(false);
-                if ((type == SolutionType.ALS_XY_CHAIN && variant == 2) ||
-                     (type == SolutionType.ALS_XY_WING && variant == 2)) {
+                Options.getInstance().setAllStepsAlsChainForwardOnly(false);
+                Options.getInstance().setAllStepsAlsChainLength(6);
+                if ((type == SolutionType.ALS_XY_CHAIN && variant == 2)
+                        || (type == SolutionType.ALS_XY_WING && variant == 2)) {
                     Options.getInstance().setAllowAlsOverlap(true);
                 }
                 steps = stepFinder.getAllAlsSteps(sudoku, type == SolutionType.ALS_XZ,
@@ -553,6 +557,8 @@ public class RegressionTester {
                 checkResults(testCase, steps, sudoku, start, failCase);
                 Options.getInstance().setOnlyOneAlsPerStep(oldOption);
                 Options.getInstance().setAllowAlsOverlap(oldOption2);
+                Options.getInstance().setAllStepsAlsChainForwardOnly(oldOption3);
+                Options.getInstance().setAllStepsAlsChainLength(oldOption4);
                 break;
             case DEATH_BLOSSOM:
                 oldOption = Options.getInstance().isOnlyOneAlsPerStep();
