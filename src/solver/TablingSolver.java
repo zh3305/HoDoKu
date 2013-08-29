@@ -116,7 +116,7 @@ public class TablingSolver extends AbstractSolver {
      * Enable additional output for debugging.
      */
     // TODO DEBUG
-    private static boolean DEBUG = false;
+    private static boolean DEBUG = true;
     /**
      * Maximum recursion depth in buildung the tables.
      */
@@ -2686,7 +2686,7 @@ public class TablingSolver extends AbstractSolver {
         for (int i = 0; i < Sudoku2.CONSTRAINTS[cellIndex].length; i++) {
             int constrNumber = Sudoku2.CONSTRAINTS[cellIndex][i];
             if (sudoku.getFree()[constrNumber][cand] == 1) {
-                tmpSet1.setAnd(entry.offSets[cellIndex],
+                tmpSet1.setAnd(entry.offSets[cand],
                         Sudoku2.ALL_CONSTRAINTS_TEMPLATES[constrNumber]);
                 int dummy = tmpSet1.size();
                 if (dummy < entityNumberFree) {
@@ -3150,6 +3150,10 @@ public class TablingSolver extends AbstractSolver {
                 for (int cand = 1; cand <= 9; cand++) {
                     if ((als.candidates & cand) == 0) {
                         // candidate not in ALS -> nothing to do
+                        continue;
+                    }
+                    if (src.offSets[cand] == null || als.indicesPerCandidat[cand] == null) {
+                        // cant do anything
                         continue;
                     }
                     if (src.offSets[cand].contains(als.indicesPerCandidat[cand])) {
@@ -3947,18 +3951,19 @@ public class TablingSolver extends AbstractSolver {
         // es wird in 2.1beta nur die 1. gefunden
         sudoku.setSudoku(":0711-4:59:...65+4+328+2458.31.+6+63+8....+459+7+31+4+5+86+2+42+1+38+6..+9+8+56..74+13.84.....7.......+8..6...+8.3.:175 275 975 185 285 785 985:578 974::7");
         //da geht gar nichts...
-        sudoku.setSudoku(":0000:x:.......123......6+4+1...4..+8+59+1...+45+2......1+67..2....+1+4....35+64+9+1..14..8.+6.6....+2.+7:::");
+        //sudoku.setSudoku(":0000:x:.......123......6+4+1...4..+8+59+1...+45+2......1+67..2....+1+4....35+64+9+1..14..8.+6.6....+2.+7:::");
         //sollte chain r4c2=5 -> r7c3=2 / r4c2=5 -> r7c3<>2 geben
-        sudoku.setSudoku("100200300040030050003006007300600800010090060006004009500900700070050020008007005");
+        //sudoku.setSudoku("100200300040030050003006007300600800010090060006004009500900700070050020008007005");
         // Easter monster: r5c9=6 -> r1c7=9 / r5c9<>6 -> r1c7<>9
-        sudoku.setSudoku("1.......2.9.4...5...6...7...5.9.3.......7.......85..4.7.....6...3...9.8...2.....1");
+        //sudoku.setSudoku("1.......2.9.4...5...6...7...5.9.3.......7.......85..4.7.....6...3...9.8...2.....1");
         finder.setSudoku(sudoku);
         List<SolutionStep> steps = new ArrayList<SolutionStep>();
         long ticks = System.currentTimeMillis();
         int anzLoops = 1;
         for (int i = 0; i < anzLoops; i++) {
             //steps = finder.getAllForcingChains(sudoku);
-            steps = finder.getAllForcingNets(sudoku);
+            //steps = finder.getAllForcingNets(sudoku);
+            steps = finder.getAllGroupedNiceLoops(sudoku);
             TablingSolver ts = finder.getTablingSolver();
             for (int c = 1; c < 10; c++) {
                 System.out.println("==== Eliminations for candidate " + c + " ==============");

@@ -18,6 +18,7 @@
  */
 package sudoku;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,7 +38,7 @@ import solver.RestrictedCommon;
  *
  * @author hobiwan
  */
-public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
+public class SolutionStep implements Comparable<SolutionStep>, Cloneable, Serializable {
 
     private static final String[] entityNames = {
         java.util.ResourceBundle.getBundle("intl/SolutionStep").getString("SolutionStep.block"),
@@ -47,6 +48,7 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
     };
     private static final String[] entityShortNames = {"b", "r", "c", ""};
     private static final DecimalFormat FISH_FORMAT = new DecimalFormat("#00");
+    private static final long serialVersionUID = 1L;
     private SolutionType type;
     private SolutionType subType; // for kraken fish: holds the underlying fish type
     private int entity;
@@ -170,8 +172,8 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
                 inMin = false;
                 continue;
             }
-            if (!weakLinks && !Chain.isSStrong(chain[i]) &&
-                    (chain[i] > 0 || chain[i] < 0 && chain[i + 1] < 0 && chain[i + 1] != Integer.MIN_VALUE)) {
+            if (!weakLinks && !Chain.isSStrong(chain[i])
+                    && (chain[i] > 0 || chain[i] < 0 && chain[i + 1] < 0 && chain[i + 1] != Integer.MIN_VALUE)) {
                 // weak link überspringen, wenn er nicht am Ende eines inMins ist
                 // es gibt immer ein Element chain[i + 1], weil die Schleife nur bis zum
                 // vorletzten Element geht
@@ -415,8 +417,8 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
             } else {
                 String tmpStepName = getStepName();
                 if (isSiamese) {
-                    tmpStepName = java.util.ResourceBundle.getBundle("intl/SolutionStep").getString("SolutionStep.siamese") +
-                            " " + getStepName();
+                    tmpStepName = java.util.ResourceBundle.getBundle("intl/SolutionStep").getString("SolutionStep.siamese")
+                            + " " + getStepName();
                 }
                 //return candBuff.toString() + " (" + candidatesToDelete.size() + "):" + delPos.toString() + " (" + tmpStepName + ")";
                 return candBuff.toString() + " (" + getAnzCandidatesToDelete() + "):" + delPos.toString() + " (" + tmpStepName + ")";
@@ -596,8 +598,8 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
         if (type.isSingle()) {
             return 1;
         }
-        if (type == SolutionType.FORCING_CHAIN || type == SolutionType.FORCING_CHAIN_CONTRADICTION || type == SolutionType.FORCING_CHAIN_VERITY ||
-                type == SolutionType.FORCING_NET || type == SolutionType.FORCING_NET_CONTRADICTION || type == SolutionType.FORCING_NET_VERITY) {
+        if (type == SolutionType.FORCING_CHAIN || type == SolutionType.FORCING_CHAIN_CONTRADICTION || type == SolutionType.FORCING_CHAIN_VERITY
+                || type == SolutionType.FORCING_NET || type == SolutionType.FORCING_NET_CONTRADICTION || type == SolutionType.FORCING_NET_VERITY) {
             if (indices.size() > 0) {
                 return 1;
             }
@@ -758,9 +760,9 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
                     str += ": " + values.get(0);
                 }
                 if (art >= 2) {
-                    str += " " +
-                            java.util.ResourceBundle.getBundle("intl/SolutionStep").getString("SolutionStep.in") +
-                            " " + getEntityShortName() + getEntityNumber();
+                    str += " "
+                            + java.util.ResourceBundle.getBundle("intl/SolutionStep").getString("SolutionStep.in")
+                            + " " + getEntityShortName() + getEntityNumber();
                     tmp = new StringBuffer(str);
                     getCandidatesToDelete(tmp);
                     str = tmp.toString();
@@ -774,15 +776,15 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
                     str += ": " + values.get(0);
                 }
                 if (art >= 2) {
-                    str += " " + java.util.ResourceBundle.getBundle("intl/SolutionStep").getString("SolutionStep.in") + " " +
-                            getCompactCellPrint(indices, 0, 1);
+                    str += " " + java.util.ResourceBundle.getBundle("intl/SolutionStep").getString("SolutionStep.in") + " "
+                            + getCompactCellPrint(indices, 0, 1);
                     if (type == SolutionType.DUAL_TWO_STRING_KITE) {
-                        str += "/" + java.util.ResourceBundle.getBundle("intl/SolutionStep").getString("SolutionStep.in") + " " +
-                                getCompactCellPrint(indices, 4, 5);
+                        str += "/" + java.util.ResourceBundle.getBundle("intl/SolutionStep").getString("SolutionStep.in") + " "
+                                + getCompactCellPrint(indices, 4, 5);
                     }
-                    str += " (" +
-                            java.util.ResourceBundle.getBundle("intl/SolutionStep").getString("SolutionStep.connected_by") + " " +
-                            getCompactCellPrint(indices, 2, 3) + ")";
+                    str += " ("
+                            + java.util.ResourceBundle.getBundle("intl/SolutionStep").getString("SolutionStep.connected_by") + " "
+                            + getCompactCellPrint(indices, 2, 3) + ")";
                     tmp = new StringBuffer(str);
                     getCandidatesToDelete(tmp);
                     str = tmp.toString();
@@ -795,8 +797,8 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
                     str += ": " + values.get(0);
                 }
                 if (art >= 2) {
-                    str += " " + java.util.ResourceBundle.getBundle("intl/SolutionStep").getString("SolutionStep.in") + " " + getEntityShortName() + getEntityNumber() +
-                            " (" + getCompactCellPrint(indices, 0, 1);
+                    str += " " + java.util.ResourceBundle.getBundle("intl/SolutionStep").getString("SolutionStep.in") + " " + getEntityShortName() + getEntityNumber()
+                            + " (" + getCompactCellPrint(indices, 0, 1);
                     if (type == SolutionType.DUAL_EMPTY_RECTANGLE) {
                         str += "/" + getCompactCellPrint(indices, 2, 3);
                     }
@@ -931,8 +933,8 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
                     // Keine dezenten Hinweise bei Forcing Chains...
                 }
                 if (art >= 2) {
-                    if (type == SolutionType.FORCING_CHAIN_CONTRADICTION ||
-                            type == SolutionType.FORCING_NET_CONTRADICTION) {
+                    if (type == SolutionType.FORCING_CHAIN_CONTRADICTION
+                            || type == SolutionType.FORCING_NET_CONTRADICTION) {
                         str += " " + java.util.ResourceBundle.getBundle("intl/SolutionStep").getString("SolutionStep.in") + " " + getEntityShortNameNumber();
                     } else {
                         //str += " Verity";
@@ -1106,7 +1108,7 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
                     getAls(tmp, 1);
                     tmp.append(", X=");
                     getAlsXorZ(tmp, true);
-                    if (! fins.isEmpty()) {
+                    if (!fins.isEmpty()) {
                         tmp.append(", Z=");
                         getAlsXorZ(tmp, false);
                     }
@@ -1735,7 +1737,6 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
 //        }
 //        return false;
 //    }
-
     public int getChainLength() {
         int length = 0;
         for (int i = 0; i < chains.size(); i++) {
@@ -1944,17 +1945,17 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
     }
 
     public boolean isSingle(SolutionType type) {
-        return (type == SolutionType.FULL_HOUSE || type == SolutionType.HIDDEN_SINGLE || type == SolutionType.NAKED_SINGLE ||
-                type == SolutionType.TEMPLATE_SET);
+        return (type == SolutionType.FULL_HOUSE || type == SolutionType.HIDDEN_SINGLE || type == SolutionType.NAKED_SINGLE
+                || type == SolutionType.TEMPLATE_SET);
     }
 
     public boolean isForcingChainSet() {
-        if ((type == SolutionType.FORCING_CHAIN || type == SolutionType.FORCING_CHAIN_CONTRADICTION ||
-                type == SolutionType.FORCING_CHAIN_VERITY) && indices.size() > 0) {
+        if ((type == SolutionType.FORCING_CHAIN || type == SolutionType.FORCING_CHAIN_CONTRADICTION
+                || type == SolutionType.FORCING_CHAIN_VERITY) && indices.size() > 0) {
             return true;
         }
-        if ((type == SolutionType.FORCING_NET || type == SolutionType.FORCING_NET_CONTRADICTION ||
-                type == SolutionType.FORCING_NET_VERITY) && indices.size() > 0) {
+        if ((type == SolutionType.FORCING_NET || type == SolutionType.FORCING_NET_CONTRADICTION
+                || type == SolutionType.FORCING_NET_VERITY) && indices.size() > 0) {
             return true;
         }
         return false;
@@ -1997,7 +1998,7 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
 //            if (chainDiff != 0) {
 //                return chainDiff;
 //            }
-            
+
             // nicht äquivalent: nach Indexsumme der zu löschenden Kandidaten
             sum1 = getIndexSumme(candidatesToDelete);
             sum2 = getIndexSumme(o.candidatesToDelete);
@@ -2105,7 +2106,7 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
     public boolean isEqualValues(SolutionStep s) {
         return isEqualInteger(values, s.getValues());
     }
-    
+
     private boolean isEqualInteger(List<Integer> l1, List<Integer> l2) {
         if (l1.size() != l2.size()) {
             return false;
@@ -2131,7 +2132,7 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable {
     public boolean isEqualCandidate(SolutionStep s) {
         return isEqualCandidate(candidatesToDelete, s.getCandidatesToDelete());
     }
-    
+
     private boolean isEqualCandidate(List<Candidate> l1, List<Candidate> l2) {
         if (l1.size() != l2.size()) {
             return false;

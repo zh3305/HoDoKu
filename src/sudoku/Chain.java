@@ -18,6 +18,7 @@
  */
 package sudoku;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -72,7 +73,9 @@ import solver.TablingSolver;
  *
  * @author hobiwan
  */
-public class Chain implements Cloneable {
+public class Chain implements Cloneable, Serializable {
+
+    private static final long serialVersionUID = 1L;
     /** Mask for isolating candidate and indices (used for comparisons). */
     private static final int EQUALS_MASK = 0x3fffffef;
     /** Mask for isolating the candidate. */
@@ -656,7 +659,7 @@ public class Chain implements Cloneable {
             set.set(als.buddiesPerCandidat[candidate]);
         } else {
             set.clear();
-            Logger.getLogger(Chain.class.getName()).log(Level.SEVERE, "getSNodeBuddies() gesamt: invalid node type ({0})", 
+            Logger.getLogger(Chain.class.getName()).log(Level.SEVERE, "getSNodeBuddies() gesamt: invalid node type ({0})",
                     getSNodeType(entry));
         }
     }
@@ -664,7 +667,6 @@ public class Chain implements Cloneable {
 //    public static boolean equalsIndexCandidate(int entry1, int entry2) {
 //        return (entry1 & EQUALS_MASK) == (entry2 & EQUALS_MASK);
 //    }
-
     /**
      * Returns a string representation for the node contained in <code>entry</code>. Mostely used
      * for testing.
@@ -680,13 +682,13 @@ public class Chain implements Cloneable {
             sign = "-";
         }
         if (getSNodeType(entry) == ALS_NODE) {
-            return sign + TYPE_NAMES[getSNodeType(entry)] + "/" +
-                    getSAlsIndex(entry) + "/" +
-                    getSCellIndex(entry) + "/" + isSStrong(entry) + "/" + getSCandidate(entry);
+            return sign + TYPE_NAMES[getSNodeType(entry)] + "/"
+                    + getSAlsIndex(entry) + "/"
+                    + getSCellIndex(entry) + "/" + isSStrong(entry) + "/" + getSCandidate(entry);
         } else {
-            return sign + TYPE_NAMES[getSNodeType(entry)] + "/" +
-                    getSCellIndex3(entry) + "/" + getSCellIndex2(entry) + "/" +
-                    getSCellIndex(entry) + "/" + isSStrong(entry) + "/" + getSCandidate(entry);
+            return sign + TYPE_NAMES[getSNodeType(entry)] + "/"
+                    + getSCellIndex3(entry) + "/" + getSCellIndex2(entry) + "/"
+                    + getSCellIndex(entry) + "/" + isSStrong(entry) + "/" + getSCandidate(entry);
         }
     }
 
