@@ -442,6 +442,9 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable, Serial
     }
 
     public static String getCellPrint(int index, boolean withParen) {
+        if (index == -1) {
+            return "-1";
+        }
         if (withParen) {
             return "[r" + (Sudoku2.getLine(index) + 1) + "c" + (Sudoku2.getCol(index) + 1) + "]";
         } else {

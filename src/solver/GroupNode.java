@@ -39,6 +39,8 @@ import sudoku.SudokuSet;
  */
 public class GroupNode {
 
+    /** Debug flag */
+    private static final boolean DEBUG = false;
     /**
      * 
      * Indices as bit mask.
@@ -180,6 +182,9 @@ public class GroupNode {
                     if (!tmpSet.isEmpty() && tmpSet.size() >= 2) {
                         // group node found
                         groupNodes.add(new GroupNode(cand, tmpSet));
+                        if (DEBUG) {
+                            System.out.println("GroupNode found: " + groupNodes.get(groupNodes.size() - 1));
+                        }
                     }
                 }
             }

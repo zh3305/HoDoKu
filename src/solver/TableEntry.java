@@ -84,10 +84,9 @@ import sudoku.SudokuSet;
  * @author hobiwan
  */
 public class TableEntry {
-    // TODO DEBUG
 
     /** Debug flag */
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     /** Entry has been expanded from another table. */
     private static final long EXPANDED = 0x2000000000000000L;
     /** Bitmap indicating that the entry comes from {@link TablingSolver#onTable}. */
@@ -199,6 +198,26 @@ public class TableEntry {
     }
 
     /**
+     * Adds an ALS node with a possible penalty and up to five ret indices.
+     * @param cellIndex1
+     * @param alsIndex
+     * @param nodeType
+     * @param cand
+     * @param set
+     * @param ri1
+     * @param ri2
+     * @param ri3
+     * @param ri4
+     * @param ri5
+     * @param penalty
+     */
+    void addEntry(int cellIndex1, int alsIndex, int nodeType, int cand, boolean set, int ri1,
+            int ri2, int ri3, int ri4, int ri5, int penalty) {
+        addEntry(cellIndex1, Chain.getSLowerAlsIndex(alsIndex), Chain.getSHigherAlsIndex(alsIndex),
+                nodeType, cand, set, ri1, ri2, ri3, ri4, ri5, penalty);
+    }
+
+    /**
      * Adds entries to the table.
      * @param cellIndex1 The index of the cell for {@link Chain#NORMAL_NODE}; the index of the first
      *   cell for {@link Chain#GROUP_NODE}; the index of the cell that provides entry into an
@@ -229,7 +248,7 @@ public class TableEntry {
                         + cellIndex3 + ", " + nodeType + ", " + cand + ", " + set + ", " + ri1 + ", " + ri2 + ", "
                         + ri3 + ", " + ri4 + ", " + ri5 + ", " + penalty);
             }
-            Logger.getLogger(getClass().getName()).log(Level.WARNING, "addEntry(): TableEntry is already full!");
+            //Logger.getLogger(getClass().getName()).log(Level.WARNING, "addEntry(): TableEntry is already full!");
             return;
         }
         // check only for single cells -> group nodes, ALS etc. can not be start or end point
@@ -269,6 +288,12 @@ public class TableEntry {
         distance += penalty;
         setDistance(index, distance);
 
+        if (DEBUG) {
+            if (nodeType == Chain.GROUP_NODE && this.toString().equals("solver.TableEntry@c5384d")) {
+                System.out.println("GN added to table " + this + " (" + index + "/" + Chain.toString(entry) + ")");
+            }
+        }
+
         indices.put(entry, index);
         index++;
     }
@@ -294,12 +319,13 @@ public class TableEntry {
      * @return
      */
     int getEntryIndex(int cellIndex, boolean set, int cand) {
+        ///*K*/ returns null???
         Integer ret = indices.get(Chain.makeSEntry(cellIndex, cand, set));
         if (ret == null) {
             if (DEBUG) {
                 System.out.println("TableEntry.getEntryIndex() - entry not found: " + cellIndex + ", " + cand + ", " + set);
             }
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "entry not found: {0}, {1}, {2}", new Object[]{cellIndex, cand, set});
+            //Logger.getLogger(getClass().getName()).log(Level.SEVERE, "entry not found: {0}, {1}, {2}", new Object[]{cellIndex, cand, set});
             return 0;
         } else {
             return ret.intValue();
@@ -316,10 +342,10 @@ public class TableEntry {
         Integer tmp = indices.get(entry);
         if (tmp == null) {
             if (DEBUG) {
-                System.out.println("TableEntry.getEntryIndex() - tmp == null: " + entry);
+                System.out.println("TableEntry.getEntryIndex() - tmp == null: " + Chain.toString(entry) + " (" + entry + "/" + this + ")");
+                return 0;
             }
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "tmp == null: {0}", entry);
-            return 0;
+            //Logger.getLogger(getClass().getName()).log(Level.SEVERE, "tmp == null: {0}", entry);
         }
         return indices.get(entry);
     }

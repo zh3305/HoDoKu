@@ -213,6 +213,14 @@ public class AlsSolver extends AbstractSolver {
         if (doChain) {
             steps.clear();
             getAlsXYChainInt();
+            // TODO remove!
+            try {
+                ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("c:\\temp\\alschains.dat")));
+                out.writeObject(steps);
+                out.close();
+            } catch (Exception ex) {
+                Logger.getLogger(AlsSolver.class.getName()).log(Level.SEVERE, null, ex);
+            }
             Collections.sort(steps, alsComparator);
             resultSteps.addAll(steps);
         }
@@ -424,9 +432,9 @@ public class AlsSolver extends AbstractSolver {
                     continue;
                 }
                 // Identify C so we can check for eliminations
-                Als a = new Als(SudokuSet.EMPTY_SET, (short) 0);
-                Als b = a;
-                Als c = a;
+                Als a = null;
+                Als b = null;
+                Als c = null;
                 if (rc1.getAls1() == rc2.getAls1()) {
                     c = alses.get(rc1.getAls1());
                     a = alses.get(rc1.getAls2());
@@ -1272,7 +1280,6 @@ public class AlsSolver extends AbstractSolver {
                 + "  getRCs(): total " + (allRcsNanos / 1000) + "us, average: " + (allRcsNanos / anzCalls / 1000) + "us\r\n";
     }
 
-    @SuppressWarnings("unchecked")
     public static void main(String[] args) {
         //DEBUG = true;
         //Sudoku2 sudoku = new Sudoku2(true);
@@ -1309,9 +1316,9 @@ public class AlsSolver extends AbstractSolver {
 //        AlsSolver as = new AlsSolver(null);
         long millis = System.nanoTime();
         int itAnz = 1;
-        List<SolutionStep> steps = new ArrayList<SolutionStep>();
+        List<SolutionStep> steps = null;
         try {
-            ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream("d:\\temp\\alschains.dat")));
+            ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream("c:\\temp\\alschains.dat")));
             steps = (List<SolutionStep>) in.readObject();
             in.close();
         } catch (Exception ex) {
@@ -1321,8 +1328,7 @@ public class AlsSolver extends AbstractSolver {
         System.out.println("Anz ALS:" + steps.size());
         // all combinations of three steps
         long count = 0;
-        for (int i = 1586; i < steps.size(); i++) {
-            System.out.println("i = " + i);
+        for (int i = 0; i < steps.size(); i++) {
             for (int j = 1; j < steps.size(); j++) {
                 for (int k = 2; k < steps.size(); k++) {
                     SolutionStep s1 = steps.get(i);

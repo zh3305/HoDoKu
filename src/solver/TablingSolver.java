@@ -190,6 +190,10 @@ public class TablingSolver extends AbstractSolver {
      */
     private SudokuSet tmpSet2 = new SudokuSet();
     /**
+     * For temporary checks.
+     */
+    private SudokuSet tmpSet3 = new SudokuSet();
+    /**
      * For buildung chains.
      */
     private SudokuSet tmpSetC = new SudokuSet();
@@ -803,7 +807,7 @@ public class TablingSolver extends AbstractSolver {
         if (DEBUG) {
             System.out.println("expandTables(): " + (nanos / 1000000l) + "ms");
             //printTables("after expandTables()");
-            //printTable("after expandTables() r4c3=5", onTable[285]);
+            printTable("after expandTables() r4c3=5", onTable[285]);
         }
         printTableAnz();
         //printTable("r6c8=1 expand", onTable[521]);
@@ -841,17 +845,17 @@ public class TablingSolver extends AbstractSolver {
             //TODO: DEBUG
             // lets find out, how many candidates (and combination of candidates)
             // exist in the grid as by now
-//            for (int c = 1; c <= 9; c++) {
-//                List<SudokuSet> candSets = new ArrayList<SudokuSet>();
-//                Map<SudokuSet, Integer> candSetAnzMap = new TreeMap<SudokuSet, Integer>();
-//                for (int i = 0; i < onTable.length; i++) {
-//                    if (onTable[i].index != 0) {
-//                    }
-//                }
-//            }
+            for (int c = 1; c <= 9; c++) {
+                List<SudokuSet> candSets = new ArrayList<SudokuSet>();
+                Map<SudokuSet, Integer> candSetAnzMap = new TreeMap<SudokuSet, Integer>();
+                for (int i = 0; i < onTable.length; i++) {
+                    if (onTable[i].index != 0) {
+                    }
+                }
+            }
         }
 
-//        if (DEBUG) {
+        if (DEBUG) {
 //            for (SolutionStep step : steps) {
 //                if (step.getCandidatesToDelete().get(0).getIndex() == 3 && step.getCandidatesToDelete().get(0).getValue() == 5) {
 //                    System.out.println("==================================");
@@ -863,7 +867,7 @@ public class TablingSolver extends AbstractSolver {
 //                    System.out.println("==================================");
 //                }
 //            }
-//        }
+        }
     }
 
     /**
@@ -990,7 +994,7 @@ public class TablingSolver extends AbstractSolver {
                 // found a verity -> candidate(s) can be deleted
                 for (int k = 0; k < tmpOffSets[j].size(); k++) {
                     if (DEBUG && k > 0) {
-                        System.out.println("More than one chain/net found 2");
+                        System.out.println("More than one chein/net found 2");
                     }
                     globalStep.reset();
                     globalStep.setType(SolutionType.FORCING_CHAIN_VERITY);
@@ -1061,9 +1065,10 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * Replace <code>dest</code> with <code>src</code>. Used to overwrite a 
-     * longer chain/net already found with a shorter one that provides the 
-     * same outcome.<br><br>
+     * Replace
+     * <code>dest</code> with
+     * <code>src</code>. Used to overwrite a longer chain/net already found
+     * with a shorter one that provides the same outcome.<br><br>
      *
      * Note: Doesn't clone chains, so src must be an already cloned step.
      *
@@ -1083,7 +1088,6 @@ public class TablingSolver extends AbstractSolver {
         } else {
             dest.getCandidatesToDelete().clear();
             for (int i = 0; i < src.getCandidatesToDelete().size(); i++) {
-//                dest.getCandidatesToDelete().set(i, src.getCandidatesToDelete().get(i));
                 dest.getCandidatesToDelete().add(src.getCandidatesToDelete().get(i));
             }
         }
@@ -2028,6 +2032,7 @@ public class TablingSolver extends AbstractSolver {
                     }
                     // ok, valid candidate: collect the links
                     int cand = j;
+
                     onTable[i * 10 + cand].addEntry(i, cand, true);
                     offTable[i * 10 + cand].addEntry(i, cand, false);
                     // candidate ON deletes all other candidates from the cell and
@@ -2086,6 +2091,9 @@ public class TablingSolver extends AbstractSolver {
             // iterate through all cells and candidates: set and delete the
             // candidate and record all dependencies (look ahead more than one iteration).
             // one copy is enough, Sudoku2.set() copies the contents of the sudoku
+            if (DEBUG) {
+                System.out.println("BEGIN fillTables()");
+            }
             savedSudoku = sudoku.clone();
             simpleFinder.setSudoku(savedSudoku);
             for (int i = 0; i < savedSudoku.getCells().length; i++) {
@@ -2095,6 +2103,11 @@ public class TablingSolver extends AbstractSolver {
 //            }
                 if (savedSudoku.getValue(i) != 0) {
                     // cell is already set -> ignore it
+                    if (DEBUG) {
+                        if (i == 55) {
+                            System.out.println("Cell 55 not empty!");
+                        }
+                    }
                     continue;
                 }
                 int[] cands = savedSudoku.getAllCandidates(i);
@@ -2112,6 +2125,9 @@ public class TablingSolver extends AbstractSolver {
                 }
             }
             sudoku.set(savedSudoku);
+            if (DEBUG) {
+                System.out.println("END fillTables()");
+            }
         }
     }
 
@@ -2173,11 +2189,17 @@ public class TablingSolver extends AbstractSolver {
             onEntry.addEntry(gn.index1, gn.index2, gn.index3, Chain.GROUP_NODE, gn.cand, true, 0, 0, 0, 0, 0, 0);
             extendedTableMap.put(onEntry.entries[0], extendedTableIndex);
             extendedTableIndex++;
+            if (DEBUG) {
+                System.out.println("GN: " + Chain.toString(onEntry.entries[0]) + "(" + (extendedTableIndex - 1) + "/" + onEntry.entries[0] + ")");
+            }
             // and one for OFF
             TableEntry offEntry = getNextExtendedTableEntry(extendedTableIndex);
             offEntry.addEntry(gn.index1, gn.index2, gn.index3, Chain.GROUP_NODE, gn.cand, false, 0, 0, 0, 0, 0, 0);
             extendedTableMap.put(offEntry.entries[0], extendedTableIndex);
             extendedTableIndex++;
+            if (DEBUG) {
+                System.out.println("GN: " + Chain.toString(offEntry.entries[0]) + "(" + (extendedTableIndex - 1) + "/" + offEntry.entries[0] + ")");
+            }
 
             // ok: collect candidates that can see the group node
             tmpSet.setAnd(finder.getCandidates()[gn.cand], gn.buddies);
@@ -2624,6 +2646,9 @@ public class TablingSolver extends AbstractSolver {
      * <code>false</code>
      */
     private void getTableEntry(TableEntry entry, int cellIndex, int cand, boolean set) {
+        if (DEBUG) {
+            //System.out.println("getTableEntry() 1: " + cellIndex + "/" + cand + "/" + set);
+        }
         if (set) {
             // set the cell and record all dependencies
             setCell(cellIndex, cand, entry, false, false);
@@ -2634,6 +2659,9 @@ public class TablingSolver extends AbstractSolver {
             if (sudoku.getAnzCandidates(cellIndex) == 1) {
                 int setCand = sudoku.getAllCandidates(cellIndex)[0];
                 // getRetIndices == false causes retIndex == 0
+                if (DEBUG) {
+                    //System.out.println("getTableEntry() 2: " + cellIndex + "/" + setCand);
+                }
                 setCell(cellIndex, setCand, entry, false, true);
             }
         }
@@ -2647,6 +2675,9 @@ public class TablingSolver extends AbstractSolver {
             for (int i = 0; i < singleSteps.size(); i++) {
                 SolutionStep step = singleSteps.get(i);
                 int index = step.getIndices().get(0);
+                if (DEBUG) {
+                    //System.out.println("getTableEntry() 3: " + index + "/" + step.getValues().get(0) + "/" + step.getType().getStepName());
+                }
                 setCell(index, step.getValues().get(0), entry, true,
                         step.getType() == SolutionType.NAKED_SINGLE);
             }
@@ -2665,7 +2696,15 @@ public class TablingSolver extends AbstractSolver {
      * @param nakedSingle <code>true</code> if Named Single,
      *          <code>false</code> if Hidden Single
      */
-    private void setCell(int cellIndex, int cand, TableEntry entry, boolean getRetIndices, boolean nakedSingle) {
+    private void setCell(int cellIndex, int cand, TableEntry entry,
+            boolean getRetIndices, boolean nakedSingle) {
+        if (sudoku.getValue(cellIndex) != 0) {
+            // nothing to do
+            if (DEBUG) {
+                //System.out.println("TablungSolver.setCell(): Cell already set (" + cellIndex + "/" + cand + "/" + SolutionStep.getCellPrint(cellIndex) + ")");
+            }
+            return;
+        }
         // find all candidates that are eliminated by the set operation (dont forget
         // the candidates in the cell itself). The reason for the elimination is the
         // ON entry.
@@ -2674,6 +2713,8 @@ public class TablingSolver extends AbstractSolver {
         tmpSet.remove(cellIndex);
         tmpSet.and(Sudoku2.buddies[cellIndex]);
         int[] cands = sudoku.getAllCandidates(cellIndex);
+        // The candidates from the original Sudoku (for Naked Singles)
+        int[] cellCands = savedSudoku.getAllCandidates(cellIndex);
         // get the house with the smallest number of original candidates (needed for ret indices,
         // but must be done before the cell is set)
         // CAUTION: This cant be right! We are called from FillTables; we can only use a
@@ -2683,26 +2724,75 @@ public class TablingSolver extends AbstractSolver {
         //          it wouldnt be a single), that has had the least number of candidates removed
 //        int entityType = Sudoku2.LINE;
         int entityNumberFree = 100; // impossibly high
-        for (int i = 0; i < Sudoku2.CONSTRAINTS[cellIndex].length; i++) {
-            int constrNumber = Sudoku2.CONSTRAINTS[cellIndex][i];
-            if (sudoku.getFree()[constrNumber][cand] == 1) {
-                tmpSet1.setAnd(entry.offSets[cand],
-                        Sudoku2.ALL_CONSTRAINTS_TEMPLATES[constrNumber]);
-                int dummy = tmpSet1.size();
-                if (dummy < entityNumberFree) {
-//                    entityType = Sudoku2.CONSTRAINT_TYPE_FROM_CONSTRAINT[constrNumber];
-                    entityNumberFree = dummy;
+        tmpSet2 = SudokuSetBase.EMPTY_SET;
+        if (getRetIndices && !nakedSingle) {
+//            if (DEBUG) {
+//                if (cellIndex == 55 && cand == 4) {
+//                    printTable("", entry);
+//                }
+//            }
+            for (int i = 0; i < Sudoku2.CONSTRAINTS[cellIndex].length; i++) {
+                int constrNumber = Sudoku2.CONSTRAINTS[cellIndex][i];
+                if (DEBUG) {
+//                    if (cellIndex == 63 && cand == 5) {
+//                        System.out.println("63/5: " + constrNumber + "/" + sudoku.getFree()[constrNumber][cand]);
+//                        tmpSet1.setAnd(entry.offSets[cand],
+//                                Sudoku2.ALL_CONSTRAINTS_TEMPLATES[constrNumber]);
+//                        System.out.println("    : " + tmpSet1);
+//                        System.out.print("    : " + entry.offSets[cand]);
+//                        for (int h = 0; h < entry.offSets[cand].size(); h++) {
+//                            System.out.print("  " + SolutionStep.getCellPrint(entry.offSets[cand].get(h)));
+//                        }
+//                        System.out.println("");
+//                    }
                 }
-                // store for later use (candidate eliminations, that caused the Hidden Single)
-                tmpSet2.set(tmpSet1);
+                if (sudoku.getFree()[constrNumber][cand] <= 1) {
+                    // get all other candidates in the house
+                    tmpSet1.setAnd(finder.getCandidates()[cand], Sudoku2.ALL_CONSTRAINTS_TEMPLATES[constrNumber]);
+                    tmpSet1.remove(cellIndex);
+                    // check, if they are all removed
+//                    if (DEBUG) {
+//                        if (cellIndex == 63 && cand == 5) {
+//                            System.out.print("x   : " + tmpSet1);
+//                            for (int h = 0; h < tmpSet1.size(); h++) {
+//                                System.out.print("  " + SolutionStep.getCellPrint(tmpSet1.get(h)));
+//                            }
+//                            System.out.println("");
+//                            System.out.print("y   : " + entry.offSets[cand]);
+//                            for (int h = 0; h < entry.offSets[cand].size(); h++) {
+//                                System.out.print("  " + SolutionStep.getCellPrint(entry.offSets[cand].get(h)));
+//                            }
+//                            System.out.println("");
+//                        }
+//                    }
+                    if (tmpSet1.andEquals(entry.offSets[cand])) {
+                        int dummy = tmpSet1.size();
+                        if (dummy < entityNumberFree) {
+                            entityNumberFree = dummy;
+                            // store for later use (candidate eliminations, that caused the Hidden Single)
+                            tmpSet2.set(tmpSet1);
+                        }
+                    }
+                }
             }
-        }
-        if (DEBUG) {
-            if (entityNumberFree == 100) {
-                System.out.println("TablingSolver.setCell(): No house found!");
+            if (entityNumberFree == 100 && cellCands.length > 1) {
+                // its not a Hidden Single, but a Naked Single
+                if (DEBUG) {
+                    System.out.println("TablingSolver.setCell(): Switching to Naked Single (" + cellIndex + "/" + cand + ")");
+                }
+                nakedSingle = true;
+            }
+            if (DEBUG) {
+                if (getRetIndices && !nakedSingle && entityNumberFree == 100) {
+                    // only relevant for Hidden Singles
+                    System.out.println("TablingSolver.setCell(): No house found! " + cellIndex + "/" + cand + "/" + nakedSingle + "/" + getRetIndices);
+                }
             }
         }
         // now set the cell
+        if (DEBUG) {
+            //System.out.println("   setCell(): " + cellIndex + "/" + cand + " (" + SolutionStep.getCellPrint(cellIndex) + ")");
+        }
         sudoku.setCell(cellIndex, cand);
         int retIndex = entry.index;
         if (getRetIndices) {
@@ -2712,7 +2802,6 @@ public class TablingSolver extends AbstractSolver {
             }
             if (nakedSingle) {
                 // all other candidates in the cell
-                int[] cellCands = savedSudoku.getAllCandidates(cellIndex);
                 // +1 because the set candidate is still present here
                 if (cellCands.length > retIndices[0].length + 1) {
                     if (DEBUG) {
@@ -2726,6 +2815,9 @@ public class TablingSolver extends AbstractSolver {
                         continue;
                     }
                     retIndices[0][ri++] = entry.getEntryIndex(cellIndex, false, cellCands[i]);
+                    if (DEBUG) {
+                        //System.out.println("     NS - retIndices[0][" + (ri - 1) + "] = " + retIndices[0][ri - 1] + " (" + cellIndex + "/" + cellCands[i] + ")");
+                    }
                 }
             } else {
                 // all other candidates in the house with the smallest number of original candidates
@@ -2739,6 +2831,9 @@ public class TablingSolver extends AbstractSolver {
                 int ri = 0;
                 for (int i = 0; i < tmpSet2.size() && ri < retIndices[0].length; i++) {
                     retIndices[0][ri++] = entry.getEntryIndex(tmpSet2.get(i), false, cand);
+                    if (DEBUG) {
+                        //System.out.println("     HS - retIndices[0][" + (ri - 1) + "] = " + retIndices[0][ri - 1] + " (" + tmpSet2.get(i) + "/" + cand + ")");
+                    }
                 }
 //                if (entityType == Sudoku2.LINE) {
 //                    getRetIndicesForHouse(cellIndex, cand, Sudoku2.LINE_TEMPLATES[Sudoku2.getLine(cellIndex)], entry);
@@ -3117,54 +3212,59 @@ public class TablingSolver extends AbstractSolver {
                 continue;
             }
         }
-        // group nodes: if all candidates of a group node are deleted/set, the
-        // group node is triggered
+        // group nodes: if all candidates outside of a of a group node are 
+        // deleted/set, the group node is triggered
         if (withGroupNodes) {
             groupNodes = finder.getGroupNodes();
             for (int i = 0; i < groupNodes.size(); i++) {
                 GroupNode gn = groupNodes.get(i);
-                for (int cand = 1; cand <= 9; cand++) {
-                    // all candidates deleted
-                    if (src.offSets[cand].contains(gn.indices)) {
-                        // all candidates are eliminated, the group node is turned off!
-                        makeNetEntry(src, srcIndex, srcCand, isOn, gn.index1, gn.index2,
-                                gn.index3, cand, null, (short) 0, false,
-                                Chain.GROUP_NODE, gn, null);
-                    }
-                    // all candidates set
-                    if (src.onSets[cand].contains(gn.indices)) {
-                        // all candidates are set, the group node is turned on!
-                        makeNetEntry(src, srcIndex, srcCand, isOn, gn.index1, gn.index2,
-                                gn.index3, cand, null, (short) 0, true,
-                                Chain.GROUP_NODE, gn, null);
-                    }
+                // in the block or line/col containing the group node more
+                // than one candidate outside the group node itself must be set/deleted
+
+                // block
+                checkGroupNodeNetEntry(src, srcIndex, srcCand,
+                        isOn, gn, true, Sudoku2.BLOCK_TEMPLATES[gn.block]);
+                checkGroupNodeNetEntry(src, srcIndex, srcCand,
+                        isOn, gn, false, Sudoku2.BLOCK_TEMPLATES[gn.block]);
+                // now line or col
+                if (gn.line != -1) {
+                    // group node is in a line
+                    checkGroupNodeNetEntry(src, srcIndex, srcCand,
+                            isOn, gn, true, Sudoku2.LINE_TEMPLATES[gn.line]);
+                    checkGroupNodeNetEntry(src, srcIndex, srcCand,
+                            isOn, gn, false, Sudoku2.LINE_TEMPLATES[gn.line]);
+                } else {
+                    checkGroupNodeNetEntry(src, srcIndex, srcCand,
+                            isOn, gn, true, Sudoku2.COL_TEMPLATES[gn.col]);
+                    checkGroupNodeNetEntry(src, srcIndex, srcCand,
+                            isOn, gn, false, Sudoku2.COL_TEMPLATES[gn.col]);
                 }
             }
         }
         // ALS: If all instances of a candidate are eliminated from the ALS,
         // the ALS becomes a locked set
-//        if (withAlsNodes) {
-//            alses = finder.getAlses(true);
-//            for (int i = 0; i < alses.size(); i++) {
-//                Als als = alses.get(i);
-//                for (int cand = 1; cand <= 9; cand++) {
-//                    if ((als.candidates & cand) == 0) {
-//                        // candidate not in ALS -> nothing to do
-//                        continue;
-//                    }
-//                    if (src.offSets[cand] == null || als.indicesPerCandidat[cand] == null) {
-//                        // cant do anything
-//                        continue;
-//                    }
-//                    if (src.offSets[cand].contains(als.indicesPerCandidat[cand])) {
-//                        // all candidates are eliminated, the als becomes a locked set!
-//                        makeNetEntry(src, srcIndex, srcCand, isOn, als.indices.get(0),
-//                                i, -1, cand, null, (short) 0, false,
-//                                Chain.ALS_NODE, null, als);
-//                    }
-//                }
-//            }
-//        }
+        if (withAlsNodes) {
+            alses = finder.getAlses(true);
+            for (int i = 0; i < alses.size(); i++) {
+                Als als = alses.get(i);
+                for (int cand = 1; cand <= 9; cand++) {
+                    if ((als.candidates & cand) == 0) {
+                        // candidate not in ALS -> nothing to do
+                        continue;
+                    }
+                    if (src.offSets[cand] == null || als.indicesPerCandidat[cand] == null) {
+                        // cant do anything
+                        continue;
+                    }
+                    if (src.offSets[cand].contains(als.indicesPerCandidat[cand])) {
+                        // all candidates are eliminated, the als becomes a locked set!
+                        makeNetEntry(src, srcIndex, srcCand, isOn, als.indices.get(0),
+                                i, -1, cand, null, (short) 0, false,
+                                Chain.ALS_NODE, null, als);
+                    }
+                }
+            }
+        }
         // finally expand the new entries
         expandTable(src, srcIndex, srcCand, isOn, currentTableIndex, -1);
     }
@@ -3220,6 +3320,7 @@ public class TablingSolver extends AbstractSolver {
         //make a new net entry
         int retIndex = 0;
         int distance = 0;
+        // entries is set for normal nodes and group nodes
         if (entries != null && nodeType == Chain.NORMAL_NODE) {
             // normal node, entries contains all the cells, that
             // can be set by a net
@@ -3244,47 +3345,47 @@ public class TablingSolver extends AbstractSolver {
                 }
                 distance += (src.getDistance(ri) + 1);
             }
-        } else if (nodeType == Chain.GROUP_NODE) {
-            // entry for group node: collect the ret indices
-            // the group node is triggered by onSets/offSets of the source,
-            // that can see the group node cells.
-            // collect the on buddies
-            tmpSet.clear();
-            for (int i = 0; i < gn.indices.size(); i++) {
-                SudokuSet onOffSet = newOnOff ? src.offSets[cand] : src.onSets[cand];
-                int actIndex = gn.indices.get(i);
-                tmpSet1.setAnd(onOffSet, Sudoku2.buddies[actIndex]);
-                if (tmpSet1.isEmpty()) {
-                    if (DEBUG) {
-                        System.out.println("makeNetEntry: No buddies found for groupNode (" + actIndex + ")");
-                    }
-                    return;
-                }
-                int checkDistance = 1000;
-                for (int j = 0; j < tmpSet1.size(); j++) {
-                    entry = Chain.makeSEntry(tmpSet1.get(j), cand, !newOnOff);
-                    if (!src.indices.containsKey(entry)) {
-                        if (DEBUG) {
-                            System.out.println("makeNetEntry: Entry for net not in table (group node - " + index + "/" + cand);
-                        }
-                        // cant do anything!
-                        return;
-                    }
-                    int ri = src.getEntryIndex(entry);
-                    int actDistance = src.getDistance(ri);
-                    if (actDistance < checkDistance) {
-                        if (checkDistance == 1000) {
-                            // first time around -> new ret index
-                            retIndices[0][retIndex++] = ri;
-                        } else {
-                            // replace it
-                            retIndices[0][retIndex - 1] = ri;
-                        }
-                        checkDistance = actDistance;
-                    }
-                }
-                distance += (checkDistance + 1);
-            }
+//        } else if (nodeType == Chain.GROUP_NODE) {
+//            // entry for group node: collect the ret indices
+//            // the group node is triggered by onSets/offSets of the source,
+//            // that can see the group node cells.
+//            // collect the on buddies
+//            tmpSet.clear();
+//            for (int i = 0; i < entries.size(); i++) {
+//                SudokuSet onOffSet = newOnOff ? src.offSets[cand] : src.onSets[cand];
+//                int actIndex = gn.indices.get(i);
+//                tmpSet1.setAnd(onOffSet, Sudoku2.buddies[actIndex]);
+//                if (tmpSet1.isEmpty()) {
+//                    if (DEBUG) {
+//                        System.out.println("makeNetEntry: No buddies found for groupNode (" + actIndex + ")");
+//                    }
+//                    return;
+//                }
+//                int checkDistance = 1000;
+//                for (int j = 0; j < tmpSet1.size(); j++) {
+//                    entry = Chain.makeSEntry(tmpSet1.get(j), cand, !newOnOff);
+//                    if (!src.indices.containsKey(entry)) {
+//                        if (DEBUG) {
+//                            System.out.println("makeNetEntry: Entry for net not in table (group node - " + index + "/" + cand);
+//                        }
+//                        // cant do anything!
+//                        return;
+//                    }
+//                    int ri = src.getEntryIndex(entry);
+//                    int actDistance = src.getDistance(ri);
+//                    if (actDistance < checkDistance) {
+//                        if (checkDistance == 1000) {
+//                            // first time around -> new ret index
+//                            retIndices[0][retIndex++] = ri;
+//                        } else {
+//                            // replace it
+//                            retIndices[0][retIndex - 1] = ri;
+//                        }
+//                        checkDistance = actDistance;
+//                    }
+//                }
+//                distance += (checkDistance + 1);
+//            }
         } else if (nodeType == Chain.ALS_NODE) {
             // entry for als: collect the ret indices
             // the als is triggered by offSets of the source,
@@ -3298,7 +3399,7 @@ public class TablingSolver extends AbstractSolver {
                 tmpSet1.setAnd(onOffSet, Sudoku2.buddies[actIndex]);
                 if (tmpSet1.isEmpty()) {
                     if (DEBUG) {
-                        System.out.println("makeNetEntry: No buddies found for alsNode (" + actIndex + ")");
+                        System.out.println("makeNetEntry: No buddies found for groupNode (" + actIndex + ")");
                     }
                     return;
                 }
@@ -3307,14 +3408,14 @@ public class TablingSolver extends AbstractSolver {
                     entry = Chain.makeSEntry(tmpSet1.get(j), cand, true);
                     if (!src.indices.containsKey(entry)) {
                         if (DEBUG) {
-                            System.out.println("makeNetEntry: Entry for net not in table (als node - " + index + "/" + cand);
+                            System.out.println("makeNetEntry: Entry for net not in table (group node - " + index + "/" + cand);
                         }
                         // cant do anything!
                         return;
                     }
                     int ri = src.getEntryIndex(entry);
                     int actDistance = src.getDistance(ri);
-                    if (actDistance < checkDistance && retIndex < retIndices[0].length) {
+                    if (actDistance < checkDistance) {
                         if (checkDistance == 1000) {
                             // first time around -> new ret index
                             retIndices[0][retIndex++] = ri;
@@ -3375,10 +3476,54 @@ public class TablingSolver extends AbstractSolver {
             }
         } else {
 //            System.out.println("   add new entry");
-            src.addEntry(index, index2, index3, nodeType, cand, true,
-                    retIndices[0][0], retIndices[0][1], retIndices[0][2],
-                    retIndices[0][3], retIndices[0][4], 0);
+            if (nodeType == Chain.ALS_NODE) {
+                // index2 contains the ALS index
+                src.addEntry(index, index2, nodeType, cand, true,
+                        retIndices[0][0], retIndices[0][1], retIndices[0][2],
+                        retIndices[0][3], retIndices[0][4], 0);
+            } else {
+                src.addEntry(index, index2, index3, nodeType, cand, true,
+                        retIndices[0][0], retIndices[0][1], retIndices[0][2],
+                        retIndices[0][3], retIndices[0][4], 0);
+            }
             src.setDistance(src.index - 1, distance);
+        }
+    }
+
+    /**
+     * Checks, if a {@link GroupNode} entry can be turned on or off due to a net.<br><br>
+     * 
+     * A <code>GroupNode<code> can be turned on, when all other candidates in the
+     * containing house are deleted (there must be more than one candidate for a
+     * net to be possible), and it can be turned off, if all other candidates
+     * are set.
+     * 
+     * @param src The {@link TableEntry} of the source.
+     * @param srcIndex The current index in <code>entry</code>.
+     * @param srcCand The current candidate in <code>entry</code>.
+     * @param isOn The current state of the <code>entry</code>.
+     * @param gn The {@link GroupNode} itself.
+     * @param checkOn <code>true</code>, if checking for {@link GroupNode} is
+     *      turned on, <code>false</code> otherwise.
+     * @param template A {@link SudokuSet} containing all cells of the house to check.
+     */
+    private void checkGroupNodeNetEntry(TableEntry src, int srcIndex, int srcCand,
+            boolean isOn, GroupNode gn, boolean checkOn, SudokuSet template) {
+        int cand = gn.cand;
+        SudokuSet srcSet = checkOn ? src.offSets[cand] : src.onSets[cand];
+        // collect all candidates, that are deleted from/set in the house
+        // (exclude the group node itself)
+        tmpSet.setAnd(srcSet, template);
+        tmpSet.andNot(gn.indices);
+        // collect all candidates, that are still in the house
+        // (exclude the group node itself)
+        tmpSet1.setAnd(finder.getCandidates()[cand], template);
+        tmpSet1.andNot(gn.indices);
+        if (tmpSet.equals(tmpSet1) && !tmpSet.isEmpty() && tmpSet.size() > 1) {
+            // group node is turned on/turned off by the candidates in tmpSet
+            makeNetEntry(src, srcIndex, srcCand, isOn, gn.index1, gn.index2,
+                    gn.index3, cand, tmpSet, (short) 0, checkOn,
+                    Chain.GROUP_NODE, gn, null);
         }
     }
 
@@ -3760,12 +3905,7 @@ public class TablingSolver extends AbstractSolver {
         if (Chain.getSNodeType(entry) == Chain.GROUP_NODE) {
             cell = SolutionStep.getCompactCellPrint(index, Chain.getSCellIndex2(entry), Chain.getSCellIndex3(entry));
         } else if (Chain.getSNodeType(entry) == Chain.ALS_NODE) {
-            int index2 = Chain.getSAlsIndex(entry);
-            if (alses.size() < index2) {
-                cell = "UNKNOWN ALS!";
-            } else {
-                cell = "ALS:" + SolutionStep.getAls(alses.get(index2));
-            }
+            cell = "ALS:" + SolutionStep.getAls(alses.get(Chain.getSAlsIndex(entry)));
         }
         if (set) {
             return cell + "=" + candidate;
@@ -3822,6 +3962,12 @@ public class TablingSolver extends AbstractSolver {
         }
         System.out.println("Tables: " + onAnz + " onTableEntries, " + offAnz + " offTableEntries, "
                 + entryAnz + " Implikationen (" + maxEntryAnz + " max)");
+
+
+
+
+
+
     }
 
     /**
@@ -3966,9 +4112,9 @@ public class TablingSolver extends AbstractSolver {
         long ticks = System.currentTimeMillis();
         int anzLoops = 1;
         for (int i = 0; i < anzLoops; i++) {
-            steps = finder.getAllForcingChains(sudoku);
+            //steps = finder.getAllForcingChains(sudoku);
             //steps = finder.getAllForcingNets(sudoku);
-            //steps = finder.getAllGroupedNiceLoops(sudoku);
+            steps = finder.getAllGroupedNiceLoops(sudoku);
             TablingSolver ts = finder.getTablingSolver();
             for (int c = 1; c < 10; c++) {
                 System.out.println("==== Eliminations for candidate " + c + " ==============");

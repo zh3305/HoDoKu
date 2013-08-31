@@ -684,11 +684,12 @@ public class Chain implements Cloneable, Serializable {
         if (getSNodeType(entry) == ALS_NODE) {
             return sign + TYPE_NAMES[getSNodeType(entry)] + "/"
                     + getSAlsIndex(entry) + "/"
-                    + getSCellIndex(entry) + "/" + isSStrong(entry) + "/" + getSCandidate(entry);
+                    + SolutionStep.getCellPrint(getSCellIndex(entry))
+                    + "/" + isSStrong(entry) + "/" + getSCandidate(entry);
         } else {
             return sign + TYPE_NAMES[getSNodeType(entry)] + "/"
-                    + getSCellIndex3(entry) + "/" + getSCellIndex2(entry) + "/"
-                    + getSCellIndex(entry) + "/" + isSStrong(entry) + "/" + getSCandidate(entry);
+                    + SolutionStep.getCompactCellPrint(getSCellIndex(entry), getSCellIndex2(entry), getSCellIndex3(entry)) + "/"
+                    + isSStrong(entry) + "/" + getSCandidate(entry);
         }
     }
 
