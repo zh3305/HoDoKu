@@ -686,9 +686,13 @@ public class Chain implements Cloneable, Serializable {
                     + getSAlsIndex(entry) + "/"
                     + SolutionStep.getCellPrint(getSCellIndex(entry))
                     + "/" + isSStrong(entry) + "/" + getSCandidate(entry);
-        } else {
+        } else if (getSNodeType(entry) == GROUP_NODE) {
             return sign + TYPE_NAMES[getSNodeType(entry)] + "/"
                     + SolutionStep.getCompactCellPrint(getSCellIndex(entry), getSCellIndex2(entry), getSCellIndex3(entry)) + "/"
+                    + isSStrong(entry) + "/" + getSCandidate(entry);
+        } else {
+            return sign + TYPE_NAMES[getSNodeType(entry)] + "/"
+                    + SolutionStep.getCellPrint(getSCellIndex(entry)) + "/"
                     + isSStrong(entry) + "/" + getSCandidate(entry);
         }
     }

@@ -342,7 +342,8 @@ public class TableEntry {
         Integer tmp = indices.get(entry);
         if (tmp == null) {
             if (DEBUG) {
-                System.out.println("TableEntry.getEntryIndex() - tmp == null: " + Chain.toString(entry) + " (" + entry + "/" + this + ")");
+                System.out.println("TableEntry.getEntryIndex() - tmp == null: " + Chain.toString(entry) + " (" + entry + ") (" + Chain.getSCellIndex(entry) + "/" + Chain.getSCellIndex2(entry) + "/" + Chain.getSCellIndex3(entry) + ")");
+                TablingSolver.printTable("tmp == null", this, null);
                 return 0;
             }
             //Logger.getLogger(getClass().getName()).log(Level.SEVERE, "tmp == null: {0}", entry);
