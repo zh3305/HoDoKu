@@ -268,7 +268,6 @@ public class Main {
             in.close();
             int anz = puzzleList.size();
             Collections.sort(puzzleList, new Comparator<String>() {
-
                 @Override
                 public int compare(String s1, String s2) {
                     int index1 = s1.indexOf('#');
@@ -317,12 +316,14 @@ public class Main {
         Handler[] handlers = rootLogger.getHandlers();
         for (Handler handler : handlers) {
             if (handler instanceof ConsoleHandler) {
-                handler.setLevel(Level.ALL);
+                //handler.setLevel(Level.ALL);
                 //handler.setLevel(Level.CONFIG);
                 //handler.setLevel(Level.SEVERE);
                 //handler.setLevel(Level.FINER);
+                handler.setLevel(Level.OFF);
             }
-            handler.setLevel(Level.ALL);
+            //handler.setLevel(Level.ALL);
+            handler.setLevel(Level.OFF);
         }
         // When configuring a logger we need a strong reference or
         // it may be garbage collected and the configuration will be lost
@@ -866,7 +867,6 @@ public class Main {
         }
         final String lf = launchFile;
         java.awt.EventQueue.invokeLater(new Runnable() {
-
             @Override
             public void run() {
                 new MainFrame(lf).setVisible(true);
@@ -906,7 +906,6 @@ public class Main {
 //            return false;
 //        }
 //    }
-
     /**
      * Prints all remaining (unused) options in argMap except "option"
      * @param Option option that is currently worked on

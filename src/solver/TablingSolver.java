@@ -790,7 +790,7 @@ public class TablingSolver extends AbstractSolver {
         if (DEBUG) {
             System.out.println("fillTables(): " + (nanos / 1000000l) + "ms");
             //printTables("after fillTables()");
-            printTable("after fillTables() r4c3=5", onTable[285]);
+            //printTable("after fillTables() r4c3=5", onTable[285]);
         }
         printTableAnz();
         //printTable("r6c8=1 fill", onTable[521]);
@@ -803,7 +803,7 @@ public class TablingSolver extends AbstractSolver {
         if (DEBUG) {
             System.out.println("expandTables(): " + (nanos / 1000000l) + "ms");
             //printTables("after expandTables()");
-            printTable("after expandTables() r4c3=5", onTable[285]);
+            //printTable("after expandTables() r4c3=5", onTable[285]);
         }
         printTableAnz();
         //printTable("r6c8=1 expand", onTable[521]);
@@ -841,29 +841,29 @@ public class TablingSolver extends AbstractSolver {
             //TODO: DEBUG
             // lets find out, how many candidates (and combination of candidates)
             // exist in the grid as by now
-            for (int c = 1; c <= 9; c++) {
-                List<SudokuSet> candSets = new ArrayList<SudokuSet>();
-                Map<SudokuSet, Integer> candSetAnzMap = new TreeMap<SudokuSet, Integer>();
-                for (int i = 0; i < onTable.length; i++) {
-                    if (onTable[i].index != 0) {
-                    }
-                }
-            }
+//            for (int c = 1; c <= 9; c++) {
+//                List<SudokuSet> candSets = new ArrayList<SudokuSet>();
+//                Map<SudokuSet, Integer> candSetAnzMap = new TreeMap<SudokuSet, Integer>();
+//                for (int i = 0; i < onTable.length; i++) {
+//                    if (onTable[i].index != 0) {
+//                    }
+//                }
+//            }
         }
 
-        if (DEBUG) {
-            for (SolutionStep step : steps) {
-                if (step.getCandidatesToDelete().get(0).getIndex() == 3 && step.getCandidatesToDelete().get(0).getValue() == 5) {
-                    System.out.println("==================================");
-                    System.out.println("   " + step.toString(2));
-                    List<Chain> chains = step.getChains();
-                    for (Chain debugChain : chains) {
-                        System.out.println("   chain: " + debugChain);
-                    }
-                    System.out.println("==================================");
-                }
-            }
-        }
+//        if (DEBUG) {
+//            for (SolutionStep step : steps) {
+//                if (step.getCandidatesToDelete().get(0).getIndex() == 3 && step.getCandidatesToDelete().get(0).getValue() == 5) {
+//                    System.out.println("==================================");
+//                    System.out.println("   " + step.toString(2));
+//                    List<Chain> chains = step.getChains();
+//                    for (Chain debugChain : chains) {
+//                        System.out.println("   chain: " + debugChain);
+//                    }
+//                    System.out.println("==================================");
+//                }
+//            }
+//        }
     }
 
     /**
@@ -990,7 +990,7 @@ public class TablingSolver extends AbstractSolver {
                 // found a verity -> candidate(s) can be deleted
                 for (int k = 0; k < tmpOffSets[j].size(); k++) {
                     if (DEBUG && k > 0) {
-                        System.out.println("More than one chein/net found 2");
+                        System.out.println("More than one chain/net found 2");
                     }
                     globalStep.reset();
                     globalStep.setType(SolutionType.FORCING_CHAIN_VERITY);
@@ -1061,10 +1061,9 @@ public class TablingSolver extends AbstractSolver {
     }
 
     /**
-     * Replace
-     * <code>dest</code> with
-     * <code>src</code>. Used to overwrite a longer chain/net already found
-     * with a shorter one that provides the same outcome.<br><br>
+     * Replace <code>dest</code> with <code>src</code>. Used to overwrite a 
+     * longer chain/net already found with a shorter one that provides the 
+     * same outcome.<br><br>
      *
      * Note: Doesn't clone chains, so src must be an already cloned step.
      *
@@ -1084,7 +1083,8 @@ public class TablingSolver extends AbstractSolver {
         } else {
             dest.getCandidatesToDelete().clear();
             for (int i = 0; i < src.getCandidatesToDelete().size(); i++) {
-                dest.getCandidatesToDelete().set(i, src.getCandidatesToDelete().get(i));
+//                dest.getCandidatesToDelete().set(i, src.getCandidatesToDelete().get(i));
+                dest.getCandidatesToDelete().add(src.getCandidatesToDelete().get(i));
             }
         }
         // copy all ALS
@@ -3126,16 +3126,16 @@ public class TablingSolver extends AbstractSolver {
                 for (int cand = 1; cand <= 9; cand++) {
                     // all candidates deleted
                     if (src.offSets[cand].contains(gn.indices)) {
-                        // all candidates are eliminated, the group node is turned on!
+                        // all candidates are eliminated, the group node is turned off!
                         makeNetEntry(src, srcIndex, srcCand, isOn, gn.index1, gn.index2,
-                                gn.index3, cand, null, (short) 0, true,
+                                gn.index3, cand, null, (short) 0, false,
                                 Chain.GROUP_NODE, gn, null);
                     }
                     // all candidates set
                     if (src.onSets[cand].contains(gn.indices)) {
-                        // all candidates are eliminated, the group node is turned on!
+                        // all candidates are set, the group node is turned on!
                         makeNetEntry(src, srcIndex, srcCand, isOn, gn.index1, gn.index2,
-                                gn.index3, cand, null, (short) 0, false,
+                                gn.index3, cand, null, (short) 0, true,
                                 Chain.GROUP_NODE, gn, null);
                     }
                 }
@@ -3143,28 +3143,28 @@ public class TablingSolver extends AbstractSolver {
         }
         // ALS: If all instances of a candidate are eliminated from the ALS,
         // the ALS becomes a locked set
-        if (withAlsNodes) {
-            alses = finder.getAlses(true);
-            for (int i = 0; i < alses.size(); i++) {
-                Als als = alses.get(i);
-                for (int cand = 1; cand <= 9; cand++) {
-                    if ((als.candidates & cand) == 0) {
-                        // candidate not in ALS -> nothing to do
-                        continue;
-                    }
-                    if (src.offSets[cand] == null || als.indicesPerCandidat[cand] == null) {
-                        // cant do anything
-                        continue;
-                    }
-                    if (src.offSets[cand].contains(als.indicesPerCandidat[cand])) {
-                        // all candidates are eliminated, the als becomes a locked set!
-                        makeNetEntry(src, srcIndex, srcCand, isOn, als.indices.get(0),
-                                i, -1, cand, null, (short) 0, false,
-                                Chain.ALS_NODE, null, als);
-                    }
-                }
-            }
-        }
+//        if (withAlsNodes) {
+//            alses = finder.getAlses(true);
+//            for (int i = 0; i < alses.size(); i++) {
+//                Als als = alses.get(i);
+//                for (int cand = 1; cand <= 9; cand++) {
+//                    if ((als.candidates & cand) == 0) {
+//                        // candidate not in ALS -> nothing to do
+//                        continue;
+//                    }
+//                    if (src.offSets[cand] == null || als.indicesPerCandidat[cand] == null) {
+//                        // cant do anything
+//                        continue;
+//                    }
+//                    if (src.offSets[cand].contains(als.indicesPerCandidat[cand])) {
+//                        // all candidates are eliminated, the als becomes a locked set!
+//                        makeNetEntry(src, srcIndex, srcCand, isOn, als.indices.get(0),
+//                                i, -1, cand, null, (short) 0, false,
+//                                Chain.ALS_NODE, null, als);
+//                    }
+//                }
+//            }
+//        }
         // finally expand the new entries
         expandTable(src, srcIndex, srcCand, isOn, currentTableIndex, -1);
     }
@@ -3298,7 +3298,7 @@ public class TablingSolver extends AbstractSolver {
                 tmpSet1.setAnd(onOffSet, Sudoku2.buddies[actIndex]);
                 if (tmpSet1.isEmpty()) {
                     if (DEBUG) {
-                        System.out.println("makeNetEntry: No buddies found for groupNode (" + actIndex + ")");
+                        System.out.println("makeNetEntry: No buddies found for alsNode (" + actIndex + ")");
                     }
                     return;
                 }
@@ -3307,14 +3307,14 @@ public class TablingSolver extends AbstractSolver {
                     entry = Chain.makeSEntry(tmpSet1.get(j), cand, true);
                     if (!src.indices.containsKey(entry)) {
                         if (DEBUG) {
-                            System.out.println("makeNetEntry: Entry for net not in table (group node - " + index + "/" + cand);
+                            System.out.println("makeNetEntry: Entry for net not in table (als node - " + index + "/" + cand);
                         }
                         // cant do anything!
                         return;
                     }
                     int ri = src.getEntryIndex(entry);
                     int actDistance = src.getDistance(ri);
-                    if (actDistance < checkDistance) {
+                    if (actDistance < checkDistance && retIndex < retIndices[0].length) {
                         if (checkDistance == 1000) {
                             // first time around -> new ret index
                             retIndices[0][retIndex++] = ri;
@@ -3760,7 +3760,12 @@ public class TablingSolver extends AbstractSolver {
         if (Chain.getSNodeType(entry) == Chain.GROUP_NODE) {
             cell = SolutionStep.getCompactCellPrint(index, Chain.getSCellIndex2(entry), Chain.getSCellIndex3(entry));
         } else if (Chain.getSNodeType(entry) == Chain.ALS_NODE) {
-            cell = "ALS:" + SolutionStep.getAls(alses.get(Chain.getSAlsIndex(entry)));
+            int index2 = Chain.getSAlsIndex(entry);
+            if (alses.size() < index2) {
+                cell = "UNKNOWN ALS!";
+            } else {
+                cell = "ALS:" + SolutionStep.getAls(alses.get(index2));
+            }
         }
         if (set) {
             return cell + "=" + candidate;
@@ -3961,9 +3966,9 @@ public class TablingSolver extends AbstractSolver {
         long ticks = System.currentTimeMillis();
         int anzLoops = 1;
         for (int i = 0; i < anzLoops; i++) {
-            //steps = finder.getAllForcingChains(sudoku);
+            steps = finder.getAllForcingChains(sudoku);
             //steps = finder.getAllForcingNets(sudoku);
-            steps = finder.getAllGroupedNiceLoops(sudoku);
+            //steps = finder.getAllGroupedNiceLoops(sudoku);
             TablingSolver ts = finder.getTablingSolver();
             for (int c = 1; c < 10; c++) {
                 System.out.println("==== Eliminations for candidate " + c + " ==============");
