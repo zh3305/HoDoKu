@@ -794,7 +794,9 @@ public class TablingSolver extends AbstractSolver {
             //printTable("after fillTables() r4c3=5", onTable[285]);
         }
         printTableAnz();
-        //printTable("r6c8=1 fill", onTable[521]);
+        printTable("r7c1=8 fill", onTable[548], alses);
+        //printTable("r3c8=7 fill", onTable[257], alses);
+        printTable("r8c3=6 fill", onTable[656], alses);
         //printTable("r6c8<>1 fill", offTable[521]);
 
         // expand tables
@@ -804,7 +806,9 @@ public class TablingSolver extends AbstractSolver {
         if (DEBUG) {
             System.out.println("expandTables(): " + (nanos / 1000000l) + "ms");
             //printTables("after expandTables()");
-            printTable("after expandTables() r4c3=5", onTable[285], alses);
+            printTable("r7c1=8 expand", onTable[548], alses);
+            //printTable("r3c8=7 expand", onTable[257], alses);
+            printTable("r8c3=6 expand", onTable[656], alses);
         }
         printTableAnz();
         //printTable("r6c8=1 expand", onTable[521]);
@@ -828,6 +832,9 @@ public class TablingSolver extends AbstractSolver {
             if (DEBUG) {
                 System.out.println("createAllNets(): " + (nanos / 1000000l) + "ms");
                 //printTable("after createNets() r4c3=5", onTable[285]);
+                printTable("r7c1=8 nets", onTable[548], alses);
+                //printTable("r3c8=7 nets", onTable[257], alses);
+                printTable("r8c3=6 nets", onTable[656], alses);
             }
             printTableAnz();
 
@@ -837,6 +844,19 @@ public class TablingSolver extends AbstractSolver {
             nanos = System.nanoTime() - nanos;
             if (DEBUG) {
                 System.out.println("checkChainsFN(): " + (nanos / 1000000l) + "ms");
+                int se = Chain.makeSEntry(54, 8, true);
+                int ee = Chain.makeSEntry(20, 7, true);
+                for (SolutionStep step : steps) {
+                    List<Chain> cs = step.getChains();
+                    for (Chain c : cs) {
+                        int sta = c.getStart();
+                        int end = c.getEnd();
+                        if (c.getCellIndex(sta) == 54 && c.getCandidate(sta) == 8 && c.isStrong(sta)
+                                && c.getCellIndex(end) == 20 && c.getCandidate(end) == 7 && c.isStrong(end)) {
+                            System.out.println("chain: " + step.getForcingChainString(c));
+                        }
+                    }
+                }
             }
 
             //TODO: DEBUG
@@ -1315,7 +1335,7 @@ public class TablingSolver extends AbstractSolver {
         if ((entry.isStrong(0) && entry.offSets[entry.getCandidate(0)].contains(entry.getCellIndex(0)))
                 || (!entry.isStrong(0) && entry.onSets[entry.getCandidate(0)].contains(entry.getCellIndex(0)))) {
             if (DEBUG) {
-                System.out.println("  1");
+//                System.out.println("  1");
             }
             globalStep.reset();
             globalStep.setType(SolutionType.FORCING_CHAIN_CONTRADICTION);
@@ -1334,7 +1354,7 @@ public class TablingSolver extends AbstractSolver {
         // same candidate set in and deleted from a cell -> assumption is false
         for (int i = 0; i < entry.onSets.length; i++) {
             if (DEBUG) {
-                System.out.println("  2");
+//                System.out.println("  2");
             }
             // check all candidates
             tmpSet.set(entry.onSets[i]);
@@ -1360,7 +1380,7 @@ public class TablingSolver extends AbstractSolver {
         for (int i = 1; i < entry.onSets.length; i++) {
             for (int j = i + 1; j < entry.onSets.length; j++) {
                 if (DEBUG) {
-                    System.out.println("  3");
+//                    System.out.println("  3");
                 }
                 tmpSet.set(entry.onSets[i]);
                 tmpSet.and(entry.onSets[j]);
@@ -1384,15 +1404,15 @@ public class TablingSolver extends AbstractSolver {
         }
         // one value set twice in one house
         if (DEBUG) {
-            System.out.println("  4");
+//            System.out.println("  4");
         }
         checkHouseSet(entry, Sudoku2.LINE_TEMPLATES, Sudoku2.LINE);
         if (DEBUG) {
-            System.out.println("  5");
+//            System.out.println("  5");
         }
         checkHouseSet(entry, Sudoku2.COL_TEMPLATES, Sudoku2.COL);
         if (DEBUG) {
-            System.out.println("  6");
+//            System.out.println("  6");
         }
         checkHouseSet(entry, Sudoku2.BLOCK_TEMPLATES, Sudoku2.BLOCK);
 
@@ -1668,13 +1688,13 @@ public class TablingSolver extends AbstractSolver {
         if (entry.getDistance(entryIndex) <= 2) {
             // Chain too short -> no eliminations possible
             if (DEBUG) {
-                System.out.println("Chain too short: " + printTableEntry(entry.entries[0], alses) + "/"
-                        + printTableEntry(entry.entries[entryIndex], alses) + "/" + entry.getDistance(entryIndex));
+//                System.out.println("Chain too short: " + printTableEntry(entry.entries[0], alses) + "/"
+//                        + printTableEntry(entry.entries[entryIndex], alses) + "/" + entry.getDistance(entryIndex));
             }
             return;
         }
         if (DEBUG) {
-            System.out.println("Longer chain found");
+//            System.out.println("Longer chain found");
         }
 
         // check loop type
@@ -1686,7 +1706,7 @@ public class TablingSolver extends AbstractSolver {
         if (globalStep.getChains().isEmpty()) {
             // invalid chain -> builds a lasso somewhere -> ignore it!
             if (DEBUG) {
-                System.out.println("Chain is a lasso -> ignored");
+//                System.out.println("Chain is a lasso -> ignored");
             }
             return;
         }
@@ -1971,7 +1991,7 @@ public class TablingSolver extends AbstractSolver {
         if (globalStep.getChains().isEmpty()) {
             // something is wrong with that chain
             if (DEBUG) {
-                System.out.println("checkAIC(): Found eliminations, but no suitable chain!");
+//                System.out.println("checkAIC(): Found eliminations, but no suitable chain!");
             }
             return;
         }
@@ -2121,11 +2141,6 @@ public class TablingSolver extends AbstractSolver {
 //            }
                 if (savedSudoku.getValue(i) != 0) {
                     // cell is already set -> ignore it
-                    if (DEBUG) {
-                        if (i == 55) {
-                            System.out.println("Cell 55 not empty!");
-                        }
-                    }
                     continue;
                 }
                 int[] cands = savedSudoku.getAllCandidates(i);
@@ -2999,12 +3014,12 @@ public class TablingSolver extends AbstractSolver {
                 src = extendedTable.get(srcTableIndex);
                 isFromExtendedTable = true;
             } else {
-                if (dest.isStrong(destIndex)) {
+                isFromOnTable = dest.isStrong(destIndex);
+                if (isFromOnTable) {
                     src = onTable[srcTableIndex];
                 } else {
                     src = offTable[srcTableIndex];
                 }
-                isFromOnTable = dest.isStrong(destIndex);
             }
             if (src.index == 0) {
                 // should not be possible
@@ -3102,6 +3117,10 @@ public class TablingSolver extends AbstractSolver {
      * {@link #createNet(solver.TableEntry)}.
      */
     private void createNets() {
+        if (DEBUG) {
+//            printTable("r3c4=3", onTable[213], alses);
+//            printTable("r7c1=8", onTable[548], alses);
+        }
         for (int i = 0; i < onTable.length; i++) {
             if (onTable[i].index == 0) {
                 continue;
@@ -3291,6 +3310,12 @@ public class TablingSolver extends AbstractSolver {
         }
         // finally expand the new entries
         expandTable(src, srcIndex, srcCand, isOn, currentTableIndex, -1);
+        if (DEBUG) {
+            if (srcIndex == 54 && srcCand == 8 && isOn == true) {
+//                System.out.println("expanding table:");
+//                printTable("r7c1=8", onTable[548], alses);
+            }
+        }
     }
 
     /**
@@ -3321,7 +3346,7 @@ public class TablingSolver extends AbstractSolver {
             int index, int index2, int index3, int cand, SudokuSet entries,
             short cands, boolean newOnOff, int nodeType, GroupNode gn, Als als) {
         if (DEBUG) {
-            if (nodeType == Chain.GROUP_NODE && index == 13 && index2 == 22 && index3 == -1 && cand == 3) {
+            if (nodeType == Chain.NORMAL_NODE && index == 11 && index2 == -1 && index3 == -1 && cand == 7 && newOnOff == false) {
                 System.out.println("      Creating entry for " + gn + " " + newOnOff + " (Entry: " + Chain.toString(src.entries[0]) + ")");
             }
         }
@@ -3335,7 +3360,7 @@ public class TablingSolver extends AbstractSolver {
         } else {
             entry = Chain.makeSEntry(index, index2, index3, cand, newOnOff, nodeType);
             if (DEBUG) {
-                if (nodeType == Chain.GROUP_NODE && index == 13 && index2 == 22 && index3 == -1 && cand == 3) {
+                if (nodeType == Chain.NORMAL_NODE && index == 11 && index2 == -1 && index3 == -1 && cand == 7 && newOnOff == false) {
                     System.out.println("       entry: " + Chain.toString(entry));
                 }
             }
@@ -3345,13 +3370,13 @@ public class TablingSolver extends AbstractSolver {
             atIndex = src.getEntryIndex(entry);
             oldDistance = src.getDistance(atIndex);
             if (DEBUG) {
-                if (nodeType == Chain.GROUP_NODE && index == 13 && index2 == 22 && index3 == -1 && cand == 3) {
+                if (nodeType == Chain.NORMAL_NODE && index == 11 && index2 == -1 && index3 == -1 && cand == 7 && newOnOff == false) {
                     System.out.println("       already there: distance = " + oldDistance + " (" + atIndex + ")");
                 }
             }
         } else {
             if (DEBUG) {
-                if (nodeType == Chain.GROUP_NODE && index == 13 && index2 == 22 && index3 == -1 && cand == 3) {
+                if (nodeType == Chain.NORMAL_NODE && index == 11 && index2 == -1 && index3 == -1 && cand == 7 && newOnOff == false) {
                     System.out.println("       new entry");
                 }
             }
@@ -3386,7 +3411,7 @@ public class TablingSolver extends AbstractSolver {
                 distance += (src.getDistance(ri) + 1);
             }
             if (DEBUG) {
-                if (nodeType == Chain.GROUP_NODE && index == 13 && index2 == 22 && index3 == -1 && cand == 3) {
+                if (nodeType == Chain.NORMAL_NODE && index == 11 && index2 == -1 && index3 == -1 && cand == 7 && newOnOff == false) {
                     System.out.println("       new distance = " + distance);
                 }
             }
@@ -3516,20 +3541,21 @@ public class TablingSolver extends AbstractSolver {
                 src.retIndices[atIndex] = newRetIndices;
                 src.setDistance(atIndex, distance);
                 if (DEBUG) {
-                    if (nodeType == Chain.GROUP_NODE && index == 13 && index2 == 22 && index3 == -1 && cand == 3) {
+                    if (nodeType == Chain.NORMAL_NODE && index == 11 && index2 == -1 && index3 == -1 && cand == 7 && newOnOff == false) {
                         System.out.println("       set new distance: " + distance);
                     }
                 }
                 // expand the single entry: recalculates distances of all depending entries
                 expandTable(src, srcIndex, srcCand, isOn, 0, atIndex);
                 if (DEBUG) {
-                    if (nodeType == Chain.GROUP_NODE && index == 13 && index2 == 22 && index3 == -1 && cand == 3) {
+                    if (nodeType == Chain.NORMAL_NODE && index == 11 && index2 == -1 && index3 == -1 && cand == 7 && newOnOff == false) {
                         System.out.println("       expanding...");
+                        printTable("??", onTable[548], alses);
                     }
                 }
             } else {
                 // do nothing
-                if (nodeType == Chain.GROUP_NODE && index == 13 && index2 == 22 && index3 == -1 && cand == 3) {
+                if (nodeType == Chain.NORMAL_NODE && index == 11 && index2 == -1 && index3 == -1 && cand == 7 && newOnOff == false) {
                     System.out.println("       ignored: " + distance + "/" + oldDistance);
                 }
             }
@@ -3547,9 +3573,11 @@ public class TablingSolver extends AbstractSolver {
             }
             src.setDistance(src.index - 1, distance);
             if (DEBUG) {
-                if (nodeType == Chain.GROUP_NODE && index == 13 && index2 == 22 && index3 == -1 && cand == 3) {
-                    System.out.println("       entry added: " + Chain.toString(src.entries[src.index - 1]));
+//                if (nodeType == Chain.NORMAL_NODE && index == 11 && index2 == -1 && index3 == -1 && cand == 7 && newOnOff == false) {
+                if (nodeType == Chain.GROUP_NODE) {
+                    System.out.println("       entry added: " + Chain.toString(src.entries[src.index - 1]) + " to " + Chain.toString(src.entries[0]));
                     System.out.println("       distance: " + distance);
+//                    printTable("??", onTable[548], alses);
                 }
             }
         }
@@ -3810,7 +3838,15 @@ public class TablingSolver extends AbstractSolver {
      * from the main chain is reached.
      *
      * <b>CAUTION:</b> The chain is stored in
-     * <code>actChain</code> in reverse order!
+     * <code>actChain</code> in reverse order!<br><br>
+     * 
+     * 20130902: In normal chains expanded entries are not expanded again. If an
+     * expanded entry is met, we jump to the table holding the original and 
+     * follow it back to entry 0. Then we jump back to the original table and
+     * go on. In Forcing Nets entries are added <i>after the expansion</i>. That
+     * means, that an expanded entry in the original table could have an expanded
+     * predecessor. If that is the case, we have to take that expanded predecessor
+     * from the original table or all goes wrong.
      *
      * @param entry The table entry that holds the premise of the chain at index 0.
      * @param entryIndex The index of the implication in <code>entry</code>.
@@ -3822,9 +3858,9 @@ public class TablingSolver extends AbstractSolver {
     private int buildChain(TableEntry entry, int entryIndex, int[] actChain, boolean isMin, SudokuSet chainSet) {
         boolean doDebug = false;
         if (DEBUG) {
+            doDebugCounter++;
             if (Chain.getSCellIndex(entry.entries[0]) == 54 && Chain.getSCandidate(entry.entries[0]) == 8) {
-                doDebug = true;
-                doDebugCounter++;
+                doDebug = false;
                 System.out.println("  doDebugCounter == " + doDebugCounter);
             }
         }
@@ -3836,19 +3872,43 @@ public class TablingSolver extends AbstractSolver {
         while (firstEntryIndex != 0 && actChainIndex < actChain.length) {
             if (entry.isExpanded(firstEntryIndex)) {
                 // current entry comes from a different table -> jump to it!
+                // an entry can only be expanded, when it comes from the original table orgEntry
                 // first ret index contains the table where the node came from
                 // or the index in extendedTable if the entry is a group or als node
-                if (entry.isExtendedTable(firstEntryIndex)) {
-                    entry = extendedTable.get(orgEntry.getRetIndex(firstEntryIndex, 0));
-                } else if (entry.isOnTable(firstEntryIndex)) {
-                    entry = onTable[orgEntry.getRetIndex(firstEntryIndex, 0)];
+                if (DEBUG) {
+                    if (expanded) {
+                        System.out.println("buildChain(): expanded node in expanded entry (should not be possible)!");
+                        System.out.println("doDebugCounter = " + doDebugCounter);
+                        doDebug = true;
+                    }
+                }
+                if (DEBUG) {
+                    if (doDebug) {
+                        System.out.println("   3aa: " + entry.isExtendedTable(firstEntryIndex) + "/" + entry.isOnTable(firstEntryIndex) + "/" + Chain.toString(entry.entries[firstEntryIndex]));
+                        if (chainIndex > 0) {
+                            System.out.println("        " + Chain.toString(chain[chainIndex - 1]));
+                        }
+                        if (chainIndex > 1) {
+                            System.out.println("        " + Chain.toString(chain[chainIndex - 2]));
+                        }
+                        //printTable("0", orgEntry, alses);
+                        //printTable("1", entry, alses);
+                    }
+                }
+                // must be taken from orgEntry, because entry contains the real ret index
+                int newEntryIndex = orgEntry.getRetIndex(firstEntryIndex, 0);
+                if (orgEntry.isExtendedTable(firstEntryIndex)) {
+                    entry = extendedTable.get(newEntryIndex);
+                } else if (orgEntry.isOnTable(firstEntryIndex)) {
+                    entry = onTable[newEntryIndex];
                 } else {
-                    entry = offTable[orgEntry.getRetIndex(firstEntryIndex, 0)];
+                    entry = offTable[newEntryIndex];
                 }
                 expanded = true;
                 if (DEBUG) {
                     if (doDebug) {
                         System.out.println("   3a: xxx: " + Chain.toString(orgEntry.entries[firstEntryIndex]));
+                        //printTable("2", entry, alses);
                     }
                 }
                 firstEntryIndex = entry.getEntryIndex(orgEntry.entries[firstEntryIndex]);
@@ -3866,6 +3926,12 @@ public class TablingSolver extends AbstractSolver {
                     // and set it in the chainSet if isMin is false.
                     firstEntryIndex = entryIndex;
                     actChain[actChainIndex++] = entry.entries[entryIndex];
+                    if (DEBUG) {
+                        int e = entry.entries[entryIndex];
+                        if (Chain.getSNodeType(e) == Chain.GROUP_NODE) {
+                            System.out.println("added gn to chain: " + Chain.toString(e) + " - " + isMin);
+                        }
+                    }
                     if (!isMin) {
                         // record all cells of the main chain
                         chainSet.add(entry.getCellIndex(entryIndex));
@@ -3893,6 +3959,12 @@ public class TablingSolver extends AbstractSolver {
                             for (int j = 0; j < chainIndex; j++) {
                                 if (chain[j] == entry.entries[entryIndex]) {
                                     // done!
+                                    if (DEBUG) {
+                                        int e = entry.entries[entryIndex];
+                                        if (Chain.getSNodeType(e) == Chain.GROUP_NODE) {
+                                            System.out.println("  min ended in GN: " + Chain.toString(e) + " - " + Chain.toString(orgEntry.entries[0]) + " - " + Chain.toString(chain[0]));
+                                        }
+                                    }
                                     return actChainIndex;
                                 }
                             }
@@ -3910,10 +3982,14 @@ public class TablingSolver extends AbstractSolver {
                     }
                 }
             }
-            if (expanded && firstEntryIndex == 0) {
-                // we jumped to another TableEntry and have reached its start ->
+            // CAUTION 20130902: In Forcing Nets the predecessor of an
+            // expanded node can be an expanded node itself. In that case we
+            // have to jump back to the original table as well
+            if (expanded && (firstEntryIndex == 0 || entry.isExpanded(firstEntryIndex))) {
+                // we jumped to another TableEntry and have reached its start
+                // or the new entry was expanded itself ->
                 // jump back to the original
-                int retEntry = entry.entries[0];
+                int retEntry = entry.entries[firstEntryIndex];
                 entry = orgEntry;
                 firstEntryIndex = entry.getEntryIndex(retEntry);
                 if (DEBUG) {
@@ -3984,7 +4060,7 @@ public class TablingSolver extends AbstractSolver {
                 int retIndex = entry.getRetIndex(i, j);
                 tmp.append(" (");
                 if (entry.isExpanded(i)) {
-                    tmp.append("EX:").append(retIndex).append(":").append(entry.isExtendedTable(i)).append("/").append(entry.isOnTable(i)).append("/");
+                    tmp.append("EX:").append(retIndex).append(":").append(entry.isExtendedTable(i)).append("/").append(entry.isOnTable(i)).append(")");
                 } else {
                     tmp.append(retIndex).append("/").append(printTableEntry(entry.entries[retIndex], alses)).append(")");
                 }

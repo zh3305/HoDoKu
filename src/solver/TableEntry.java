@@ -20,8 +20,6 @@ package solver;
 
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import sudoku.Chain;
 import sudoku.Options;
 import sudoku.SudokuSet;
@@ -344,8 +342,8 @@ public class TableEntry {
             if (DEBUG) {
                 System.out.println("TableEntry.getEntryIndex() - tmp == null: " + Chain.toString(entry) + " (" + entry + ") (" + Chain.getSCellIndex(entry) + "/" + Chain.getSCellIndex2(entry) + "/" + Chain.getSCellIndex3(entry) + ")");
                 TablingSolver.printTable("tmp == null", this, null);
-                return 0;
             }
+            return 0;
             //Logger.getLogger(getClass().getName()).log(Level.SEVERE, "tmp == null: {0}", entry);
         }
         return indices.get(entry);
