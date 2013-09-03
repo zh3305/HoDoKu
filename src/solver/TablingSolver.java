@@ -118,6 +118,7 @@ public class TablingSolver extends AbstractSolver {
      */
     // TODO DEBUG
     private static boolean DEBUG = true;
+    private static boolean doDebug = false;
     /**
      * Maximum recursion depth in buildung the tables.
      */
@@ -280,9 +281,14 @@ public class TablingSolver extends AbstractSolver {
      */
     private int[][] mins = new int[200][Options.getInstance().getMaxTableEntryLength()];
     /**
-     * For every {@link #min} theindex of the next free element.
+     * For every {@link #min} the index of the next free element.
      */
     private int[] minIndexes = new int[mins.length];
+    /**
+     * For every {@link #min} the entry of the first element in the min (the first element
+     * in the min is the last element in the resulting subchain).
+     */
+    private TableEntry[] minEntries = new TableEntry[mins.length];
     /**
      * the {@link #min}that is currently built.
      */
@@ -794,10 +800,11 @@ public class TablingSolver extends AbstractSolver {
             //printTable("after fillTables() r4c3=5", onTable[285]);
         }
         printTableAnz();
-        printTable("r7c1=8 fill", onTable[548], alses);
+        //printTable("r7c1=8 fill", onTable[548], alses);
         //printTable("r3c8=7 fill", onTable[257], alses);
-        printTable("r8c3=6 fill", onTable[656], alses);
-        //printTable("r6c8<>1 fill", offTable[521]);
+        //printTable("r8c3=6 fill", onTable[656], alses);
+        printTable("r7c5=4 fill", onTable[584], alses);
+        printTable("r2c1=8 fill", onTable[98], alses);
 
         // expand tables
         nanos = System.nanoTime();
@@ -806,9 +813,10 @@ public class TablingSolver extends AbstractSolver {
         if (DEBUG) {
             System.out.println("expandTables(): " + (nanos / 1000000l) + "ms");
             //printTables("after expandTables()");
-            printTable("r7c1=8 expand", onTable[548], alses);
+            //printTable("r7c1=8 expand", onTable[548], alses);
             //printTable("r3c8=7 expand", onTable[257], alses);
-            printTable("r8c3=6 expand", onTable[656], alses);
+            printTable("r7c5=4 expand", onTable[584], alses);
+            printTable("r2c1=8 expand", onTable[98], alses);
         }
         printTableAnz();
         //printTable("r6c8=1 expand", onTable[521]);
@@ -832,9 +840,10 @@ public class TablingSolver extends AbstractSolver {
             if (DEBUG) {
                 System.out.println("createAllNets(): " + (nanos / 1000000l) + "ms");
                 //printTable("after createNets() r4c3=5", onTable[285]);
-                printTable("r7c1=8 nets", onTable[548], alses);
+                //printTable("r7c1=8 nets", onTable[548], alses);
                 //printTable("r3c8=7 nets", onTable[257], alses);
-                printTable("r8c3=6 nets", onTable[656], alses);
+                printTable("r7c5=4 nets", onTable[584], alses);
+                printTable("r2c1=8 nets", onTable[98], alses);
             }
             printTableAnz();
 
@@ -844,19 +853,6 @@ public class TablingSolver extends AbstractSolver {
             nanos = System.nanoTime() - nanos;
             if (DEBUG) {
                 System.out.println("checkChainsFN(): " + (nanos / 1000000l) + "ms");
-                int se = Chain.makeSEntry(54, 8, true);
-                int ee = Chain.makeSEntry(20, 7, true);
-                for (SolutionStep step : steps) {
-                    List<Chain> cs = step.getChains();
-                    for (Chain c : cs) {
-                        int sta = c.getStart();
-                        int end = c.getEnd();
-                        if (c.getCellIndex(sta) == 54 && c.getCandidate(sta) == 8 && c.isStrong(sta)
-                                && c.getCellIndex(end) == 20 && c.getCandidate(end) == 7 && c.isStrong(end)) {
-                            System.out.println("chain: " + step.getForcingChainString(c));
-                        }
-                    }
-                }
             }
 
             //TODO: DEBUG
@@ -2444,7 +2440,7 @@ public class TablingSolver extends AbstractSolver {
                 tmpSet.setAnd(finder.getCandidates()[entryCand], als.buddiesPerCandidat[entryCand]);
                 if (tmpSet.isEmpty()) {
                     // there is no possible entry candidate outside the ALS ->
-                    // the ALS cant be triggeredby that candidate
+                    // the ALS cant be triggered by that candidate
                     continue;
                 }
 
@@ -2488,7 +2484,7 @@ public class TablingSolver extends AbstractSolver {
                     // the following "true" would be that the ALS becomes a LS
                     tmp.addEntry(entryIndex, alsIndex, Chain.ALS_NODE, entryCand, false, 0);
                 }
-                // every group node that doesnt overlap witz the ALS and contains
+                // every group node that doesnt overlap with the ALS and contains
                 // at least two possible entry candidates, is a valid entry into
                 for (int i = 0; i < groupNodes.size(); i++) {
                     GroupNode gAct = groupNodes.get(i);
@@ -3291,7 +3287,7 @@ public class TablingSolver extends AbstractSolver {
             for (int i = 0; i < alses.size(); i++) {
                 Als als = alses.get(i);
                 for (int cand = 1; cand <= 9; cand++) {
-                    if ((als.candidates & cand) == 0) {
+                    if ((als.candidates & Sudoku2.MASKS[cand]) == 0) {
                         // candidate not in ALS -> nothing to do
                         continue;
                     }
@@ -3387,7 +3383,7 @@ public class TablingSolver extends AbstractSolver {
         // entries is set for normal nodes and group nodes
 //        if (entries != null && nodeType == Chain.NORMAL_NODE) {
         if (entries != null) {
-            // normal node, entries contains all the cells, that
+            // normal node  or group node, entries contains all the cells, that
             // can be set by a net
             for (int i = 0; i < entries.size(); i++) {
                 int actIndex = entries.get(i);
@@ -3415,61 +3411,19 @@ public class TablingSolver extends AbstractSolver {
                     System.out.println("       new distance = " + distance);
                 }
             }
-//        } else if (nodeType == Chain.GROUP_NODE) {
-//            // entry for group node: collect the ret indices
-//            // the group node is triggered by onSets/offSets of the source,
-//            // that can see the group node cells.
-//            // collect the on buddies
-//            tmpSet.clear();
-//            for (int i = 0; i < entries.size(); i++) {
-//                SudokuSet onOffSet = newOnOff ? src.offSets[cand] : src.onSets[cand];
-//                int actIndex = gn.indices.get(i);
-//                tmpSet1.setAnd(onOffSet, Sudoku2.buddies[actIndex]);
-//                if (tmpSet1.isEmpty()) {
-//                    if (DEBUG) {
-//                        System.out.println("makeNetEntry: No buddies found for groupNode (" + actIndex + ")");
-//                    }
-//                    return;
-//                }
-//                int checkDistance = 1000;
-//                for (int j = 0; j < tmpSet1.size(); j++) {
-//                    entry = Chain.makeSEntry(tmpSet1.get(j), cand, !newOnOff);
-//                    if (!src.indices.containsKey(entry)) {
-//                        if (DEBUG) {
-//                            System.out.println("makeNetEntry: Entry for net not in table (group node - " + index + "/" + cand);
-//                        }
-//                        // cant do anything!
-//                        return;
-//                    }
-//                    int ri = src.getEntryIndex(entry);
-//                    int actDistance = src.getDistance(ri);
-//                    if (actDistance < checkDistance) {
-//                        if (checkDistance == 1000) {
-//                            // first time around -> new ret index
-//                            retIndices[0][retIndex++] = ri;
-//                        } else {
-//                            // replace it
-//                            retIndices[0][retIndex - 1] = ri;
-//                        }
-//                        checkDistance = actDistance;
-//                    }
-//                }
-//                distance += (checkDistance + 1);
-//            }
         } else if (nodeType == Chain.ALS_NODE) {
             // entry for als: collect the ret indices
-            // the als is triggered by offSets of the source,
+            // the als is triggered by onSets of the source,
             // that can see the candidates in the als.
             tmpSet.clear();
             for (int i = 0; i < als.indicesPerCandidat[cand].size(); i++) {
                 // candidates have to be eliminated to trigger the als,
                 // therefore onSets has to be used
-                SudokuSet onOffSet = src.onSets[cand];
                 int actIndex = als.indicesPerCandidat[cand].get(i);
-                tmpSet1.setAnd(onOffSet, Sudoku2.buddies[actIndex]);
+                tmpSet1.setAnd(src.onSets[cand], Sudoku2.buddies[actIndex]);
                 if (tmpSet1.isEmpty()) {
                     if (DEBUG) {
-                        System.out.println("makeNetEntry: No buddies found for groupNode (" + actIndex + ")");
+                        System.out.println("makeNetEntry: No buddies found for als node (" + als + "/" + cand + ")");
                     }
                     return;
                 }
@@ -3478,7 +3432,7 @@ public class TablingSolver extends AbstractSolver {
                     entry = Chain.makeSEntry(tmpSet1.get(j), cand, true);
                     if (!src.indices.containsKey(entry)) {
                         if (DEBUG) {
-                            System.out.println("makeNetEntry: Entry for net not in table (group node - " + index + "/" + cand);
+                            System.out.println("makeNetEntry: Entry for net not in table (als node - " + als + "/" + cand);
                         }
                         // cant do anything!
                         return;
@@ -3535,9 +3489,19 @@ public class TablingSolver extends AbstractSolver {
             if (distance < oldDistance) {
 //                System.out.println("   overwrite old entry");
                 // shorter distance when reached as net -> recode it
-                long newRetIndices = TableEntry.makeSRetIndex(retIndices[0][0],
-                        retIndices[0][1], retIndices[0][2], retIndices[0][3],
-                        retIndices[0][4]);
+                // in expanded nodes the first ret index points to the
+                // other Table -> must be retained
+                long newRetIndices;
+                if (src.isExpanded(atIndex)) {
+                    int oldRetIndex = src.getRetIndex(atIndex, 0);
+                    newRetIndices = TableEntry.makeSRetIndex(oldRetIndex,
+                            retIndices[0][0], retIndices[0][1], retIndices[0][2],
+                            retIndices[0][3]);
+                } else {
+                    newRetIndices = TableEntry.makeSRetIndex(retIndices[0][0],
+                            retIndices[0][1], retIndices[0][2], retIndices[0][3],
+                            retIndices[0][4]);
+                }
                 src.retIndices[atIndex] = newRetIndices;
                 src.setDistance(atIndex, distance);
                 if (DEBUG) {
@@ -3563,9 +3527,10 @@ public class TablingSolver extends AbstractSolver {
 //            System.out.println("   add new entry");
             if (nodeType == Chain.ALS_NODE) {
                 // index2 contains the ALS index
-                src.addEntry(index, index2, nodeType, cand, true,
+                src.addEntry(index, Chain.getSLowerAlsIndex(index2),
+                        Chain.getSHigherAlsIndex(index2), nodeType, cand, newOnOff,
                         retIndices[0][0], retIndices[0][1], retIndices[0][2],
-                        retIndices[0][3], retIndices[0][4], 0);
+                        retIndices[0][3], retIndices[0][4], als.getChainPenalty());
             } else {
                 src.addEntry(index, index2, index3, nodeType, cand, true,
                         retIndices[0][0], retIndices[0][1], retIndices[0][2],
@@ -3769,8 +3734,11 @@ public class TablingSolver extends AbstractSolver {
      */
     private void buildChain(TableEntry entry, int cellIndex, int cand, boolean set) {
         if (DEBUG) {
-            if (Chain.getSCellIndex(entry.entries[0]) == 54 && Chain.getSCandidate(entry.entries[0]) == 8) {
-                System.out.println("buildChain() START (" + Chain.toString(entry.entries[0]) + "/" + cellIndex + "/" + cand + "/" + set);
+            if (Chain.getSCellIndex(entry.entries[0]) == 58 && Chain.getSCandidate(entry.entries[0]) == 4 && Chain.isSStrong(entry.entries[0])
+                    && cellIndex == 54 && cand == 6 && !set) {
+                int eEntry = Chain.makeSEntry(cellIndex, cand, set);
+                System.out.println("buildChain() START (" + Chain.toString(entry.entries[0]) + " - " + Chain.toString(eEntry) + ")");
+                doDebug = true;
             }
         }
         // find the entry for the implication in the TableEntry
@@ -3785,8 +3753,9 @@ public class TablingSolver extends AbstractSolver {
         }
         int index = entry.getEntryIndex(chainEntry);
         if (DEBUG) {
-            if (Chain.getSCellIndex(entry.entries[0]) == 54 && Chain.getSCandidate(entry.entries[0]) == 8) {
-                System.out.println("   1: " + index + ": " + Chain.toString(chainEntry));
+            if (Chain.getSCellIndex(entry.entries[0]) == 58 && Chain.getSCandidate(entry.entries[0]) == 4 && Chain.isSStrong(entry.entries[0])
+                    && cellIndex == 54 && cand == 6 && !set) {
+                //System.out.println("   1: " + index + ": " + Chain.toString(chainEntry));
             }
         }
 
@@ -3797,21 +3766,25 @@ public class TablingSolver extends AbstractSolver {
         }
         // construct the main chain
         tmpSetC.clear();
-        chainIndex = buildChain(entry, index, chain, false, tmpSetC);
+        chainIndex = buildChain(entry, index, chain, false, null, tmpSetC);
         // now build the net parts
         int minIndex = 0;
         while (minIndex < actMin) {
             if (DEBUG) {
-                if (Chain.getSCellIndex(entry.entries[0]) == 54 && Chain.getSCandidate(entry.entries[0]) == 8) {
-                    System.out.println("   2: " + entry.getEntryIndex(mins[minIndex][0]) + ": " + Chain.toString(mins[minIndex][0]));
+                if (Chain.getSCellIndex(entry.entries[0]) == 58 && Chain.getSCandidate(entry.entries[0]) == 4 && Chain.isSStrong(entry.entries[0])
+                        && cellIndex == 54 && cand == 6 && !set) {
+                    System.out.println("buildChain() start new min: " + minIndex + ": " + Chain.toString(mins[minIndex][0]));
                 }
             }
-            minIndexes[minIndex] = buildChain(entry, entry.getEntryIndex(mins[minIndex][0]), mins[minIndex], true, tmpSetC);
+            minIndexes[minIndex] = buildChain(entry, entry.getEntryIndex(mins[minIndex][0]), mins[minIndex], true, minEntries[minIndex], tmpSetC);
             minIndex++;
         }
         if (DEBUG) {
-            if (Chain.getSCellIndex(entry.entries[0]) == 54 && Chain.getSCandidate(entry.entries[0]) == 8) {
-                System.out.println("buildChain() END (" + Chain.toString(entry.entries[0]) + "/" + cellIndex + "/" + cand + "/" + set);
+            if (Chain.getSCellIndex(entry.entries[0]) == 58 && Chain.getSCandidate(entry.entries[0]) == 4 && Chain.isSStrong(entry.entries[0])
+                    && cellIndex == 54 && cand == 6 && !set) {
+                int eEntry = Chain.makeSEntry(cellIndex, cand, set);
+                System.out.println("buildChain() END (" + Chain.toString(entry.entries[0]) + " - " + Chain.toString(eEntry) + ")");
+                doDebug = false;
             }
         }
     }
@@ -3852,25 +3825,36 @@ public class TablingSolver extends AbstractSolver {
      * @param entryIndex The index of the implication in <code>entry</code>.
      * @param actChain The array in which the current chain or min is stored.
      * @param isMin <code>true</code> if we are constructing part of a net.
+     * @param minEntry If <code>isMin</code> is <code>true</code>, the 
+     *          {@link TableEntry} where the first element (implication) of 
+     *          the min came from.
      * @param chainSet A set that holds all cells of the main chain.
      * @return
      */
-    private int buildChain(TableEntry entry, int entryIndex, int[] actChain, boolean isMin, SudokuSet chainSet) {
-        boolean doDebug = false;
+    private int buildChain(TableEntry entry, int entryIndex, int[] actChain, boolean isMin,
+            TableEntry minEntry, SudokuSet chainSet) {
         if (DEBUG) {
             doDebugCounter++;
-            if (Chain.getSCellIndex(entry.entries[0]) == 54 && Chain.getSCandidate(entry.entries[0]) == 8) {
-                doDebug = false;
+            int dEntry = entry.entries[entryIndex];
+            if (Chain.getSCellIndex(entry.entries[0]) == 58 && Chain.getSCandidate(entry.entries[0]) == 4 && Chain.isSStrong(entry.entries[0])
+                    && Chain.getSCellIndex(dEntry) == 54 && Chain.getSCandidate(dEntry) == 6 && !Chain.isSStrong(dEntry)) {
                 System.out.println("  doDebugCounter == " + doDebugCounter);
             }
         }
         int actChainIndex = 0;
         actChain[actChainIndex++] = entry.entries[entryIndex];
+        if (DEBUG) {
+            if (doDebug) {
+                int e = entry.entries[entryIndex];
+                System.out.println("added to chain: " + Chain.toString(e) + " - " + isMin + " (Table: " + Chain.toString(entry.entries[0]) + ")");
+            }
+        }
         int firstEntryIndex = entryIndex;
         boolean expanded = false;
         TableEntry orgEntry = entry;
         while (firstEntryIndex != 0 && actChainIndex < actChain.length) {
-            if (entry.isExpanded(firstEntryIndex)) {
+            if (entry.isExpanded(firstEntryIndex) || (isMin && minEntry
+                    != null && orgEntry != minEntry)) {
                 // current entry comes from a different table -> jump to it!
                 // an entry can only be expanded, when it comes from the original table orgEntry
                 // first ret index contains the table where the node came from
@@ -3879,42 +3863,47 @@ public class TablingSolver extends AbstractSolver {
                     if (expanded) {
                         System.out.println("buildChain(): expanded node in expanded entry (should not be possible)!");
                         System.out.println("doDebugCounter = " + doDebugCounter);
-                        doDebug = true;
                     }
                 }
                 if (DEBUG) {
                     if (doDebug) {
-                        System.out.println("   3aa: " + entry.isExtendedTable(firstEntryIndex) + "/" + entry.isOnTable(firstEntryIndex) + "/" + Chain.toString(entry.entries[firstEntryIndex]));
-                        if (chainIndex > 0) {
-                            System.out.println("        " + Chain.toString(chain[chainIndex - 1]));
-                        }
-                        if (chainIndex > 1) {
-                            System.out.println("        " + Chain.toString(chain[chainIndex - 2]));
-                        }
+//                        System.out.println("   3aa: " + entry.isExtendedTable(firstEntryIndex) + "/" + entry.isOnTable(firstEntryIndex) + "/" + Chain.toString(entry.entries[firstEntryIndex]));
+//                        if (chainIndex > 0) {
+//                            System.out.println("        " + Chain.toString(chain[chainIndex - 1]));
+//                        }
+//                        if (chainIndex > 1) {
+//                            System.out.println("        " + Chain.toString(chain[chainIndex - 2]));
+//                        }
                         //printTable("0", orgEntry, alses);
                         //printTable("1", entry, alses);
                     }
                 }
-                // must be taken from orgEntry, because entry contains the real ret index
-                int newEntryIndex = orgEntry.getRetIndex(firstEntryIndex, 0);
-                if (orgEntry.isExtendedTable(firstEntryIndex)) {
-                    entry = extendedTable.get(newEntryIndex);
-                } else if (orgEntry.isOnTable(firstEntryIndex)) {
-                    entry = onTable[newEntryIndex];
+                if (isMin && minEntry != null && orgEntry != minEntry) {
+                    // first entry in a min comes from a different table!
+                    entry = minEntry;
+                    minEntry = null;
                 } else {
-                    entry = offTable[newEntryIndex];
+                    // must be taken from orgEntry, because entry contains the real ret index
+                    int newEntryIndex = orgEntry.getRetIndex(firstEntryIndex, 0);
+                    if (orgEntry.isExtendedTable(firstEntryIndex)) {
+                        entry = extendedTable.get(newEntryIndex);
+                    } else if (orgEntry.isOnTable(firstEntryIndex)) {
+                        entry = onTable[newEntryIndex];
+                    } else {
+                        entry = offTable[newEntryIndex];
+                    }
                 }
                 expanded = true;
                 if (DEBUG) {
                     if (doDebug) {
-                        System.out.println("   3a: xxx: " + Chain.toString(orgEntry.entries[firstEntryIndex]));
+                        //System.out.println("   3a: xxx: " + Chain.toString(orgEntry.entries[firstEntryIndex]));
                         //printTable("2", entry, alses);
                     }
                 }
                 firstEntryIndex = entry.getEntryIndex(orgEntry.entries[firstEntryIndex]);
                 if (DEBUG) {
                     if (doDebug) {
-                        System.out.println("   3: " + firstEntryIndex + ": " + Chain.toString(entry.entries[firstEntryIndex]));
+                        //System.out.println("   3: " + firstEntryIndex + ": " + Chain.toString(entry.entries[firstEntryIndex]));
                     }
                 }
             }
@@ -3927,9 +3916,9 @@ public class TablingSolver extends AbstractSolver {
                     firstEntryIndex = entryIndex;
                     actChain[actChainIndex++] = entry.entries[entryIndex];
                     if (DEBUG) {
-                        int e = entry.entries[entryIndex];
-                        if (Chain.getSNodeType(e) == Chain.GROUP_NODE) {
-                            System.out.println("added gn to chain: " + Chain.toString(e) + " - " + isMin);
+                        if (doDebug) {
+                            int e = entry.entries[entryIndex];
+                            System.out.println("added to chain: " + Chain.toString(e) + " - " + isMin + " (Table: " + Chain.toString(entry.entries[0]) + ")");
                         }
                     }
                     if (!isMin) {
@@ -3961,8 +3950,8 @@ public class TablingSolver extends AbstractSolver {
                                     // done!
                                     if (DEBUG) {
                                         int e = entry.entries[entryIndex];
-                                        if (Chain.getSNodeType(e) == Chain.GROUP_NODE) {
-                                            System.out.println("  min ended in GN: " + Chain.toString(e) + " - " + Chain.toString(orgEntry.entries[0]) + " - " + Chain.toString(chain[0]));
+                                        if (doDebug) {
+                                            System.out.println("  min ended in: " + Chain.toString(e) + " - " + Chain.toString(orgEntry.entries[0]) + " - " + Chain.toString(chain[0]) + " (Table: " + Chain.toString(entry.entries[0]) + ")");
                                         }
                                     }
                                     return actChainIndex;
@@ -3977,7 +3966,13 @@ public class TablingSolver extends AbstractSolver {
                         // 0 is not allowed, only possible for first retIndex!
                         if (actMin < mins.length) {
                             mins[actMin][0] = entry.entries[entryIndex];
+                            minEntries[actMin] = entry;
                             minIndexes[actMin++] = 1;
+                            if (DEBUG) {
+                                if (doDebug) {
+                                    System.out.println("   added min start: " + Chain.toString(entry.entries[entryIndex]) + " (" + (actMin - 1) + ")");
+                                }
+                            }
                         }
                     }
                 }
@@ -3994,13 +3989,12 @@ public class TablingSolver extends AbstractSolver {
                 firstEntryIndex = entry.getEntryIndex(retEntry);
                 if (DEBUG) {
                     if (doDebug) {
-                        System.out.println("   4: " + firstEntryIndex + ": " + Chain.toString(retEntry));
+                        //System.out.println("   4: " + firstEntryIndex + ": " + Chain.toString(retEntry));
                     }
                 }
                 expanded = false;
             }
         }
-        doDebug = false;
         return actChainIndex;
     }
 
@@ -4056,13 +4050,14 @@ public class TablingSolver extends AbstractSolver {
         StringBuilder tmp = new StringBuilder();
         for (int i = 0; i < entry.index; i++) {
             tmp.append(printTableEntry(entry.entries[i], alses));
+            tmp.append("/").append(entry.getDistance(i));
             for (int j = 0; j < entry.getRetIndexAnz(i); j++) {
                 int retIndex = entry.getRetIndex(i, j);
                 tmp.append(" (");
                 if (entry.isExpanded(i)) {
                     tmp.append("EX:").append(retIndex).append(":").append(entry.isExtendedTable(i)).append("/").append(entry.isOnTable(i)).append(")");
                 } else {
-                    tmp.append(retIndex).append("/").append(printTableEntry(entry.entries[retIndex], alses)).append(")");
+                    tmp.append(retIndex).append("/").append(printTableEntry(entry.entries[retIndex], alses)).append("/").append(entry.getDistance(retIndex)).append(")");
                 }
             }
             tmp.append(" ");
@@ -4154,6 +4149,10 @@ public class TablingSolver extends AbstractSolver {
         }
         System.out.println("Tables: " + onAnz + " onTableEntries, " + offAnz + " offTableEntries, "
                 + entryAnz + " Implikationen (" + maxEntryAnz + " max)");
+
+
+
+
 
 
 
