@@ -40,6 +40,8 @@ import solver.RestrictedCommon;
  */
 public class SolutionStep implements Comparable<SolutionStep>, Cloneable, Serializable {
 
+    // TODO Debug
+    private static final boolean DEBUG = true;
     private static final String[] entityNames = {
         java.util.ResourceBundle.getBundle("intl/SolutionStep").getString("SolutionStep.block"),
         java.util.ResourceBundle.getBundle("intl/SolutionStep").getString("SolutionStep.line"),
@@ -212,12 +214,16 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable, Serial
                 buf.append(getCompactCellPrint(Chain.getSCellIndex(entry), Chain.getSCellIndex2(entry), Chain.getSCellIndex3(entry)));
                 break;
             case Chain.ALS_NODE:
-                int alsIndex = Chain.getSCellIndex2(entry);
+//                int alsIndex = Chain.getSCellIndex2(entry);
+                int alsIndex = Chain.getSAlsIndex(entry);
                 if (alsIndex >= 0 && alsIndex < alses.size()) {
                     buf.append("ALS:");
                     getAls(buf, alsIndex, false);
                 } else {
                     buf.append("UNKNOWN ALS");
+                    if (DEBUG) {
+                        System.out.println("SolutionStep.appendForcingChainEntry: UNKNOWN (" + alsIndex + "/" + alses.size() + ")");
+                    }
                 }
                 break;
         }
@@ -284,12 +290,16 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable, Serial
                             tmp.append(getCompactCellPrint(Chain.getSCellIndex(chain[i]), Chain.getSCellIndex2(chain[i]), Chain.getSCellIndex3(chain[i])));
                             break;
                         case Chain.ALS_NODE:
-                            int alsIndex = Chain.getSCellIndex2(chain[i]);
+//                            int alsIndex = Chain.getSCellIndex2(chain[i]);
+                            int alsIndex = Chain.getSAlsIndex(chain[i]);
                             if (alsIndex < alses.size()) {
                                 tmp.append("ALS:");
                                 getAls(tmp, alsIndex, false);
                             } else {
                                 tmp.append("UNKNOWN ALS");
+                                if (DEBUG) {
+                                    System.out.println("SolutionStep.getChainString: UNKNOWN (" + alsIndex + "/" + alses.size() + ")");
+                                }
                             }
                             break;
                         default:
@@ -335,12 +345,16 @@ public class SolutionStep implements Comparable<SolutionStep>, Cloneable, Serial
                             tmp.append(getCompactCellPrint(Chain.getSCellIndex(chain[i]), Chain.getSCellIndex2(chain[i]), Chain.getSCellIndex3(chain[i])));
                             break;
                         case Chain.ALS_NODE:
-                            int alsIndex = Chain.getSCellIndex2(chain[i]);
+//                            int alsIndex = Chain.getSCellIndex2(chain[i]);
+                            int alsIndex = Chain.getSAlsIndex(chain[i]);
                             if (alsIndex < alses.size()) {
                                 tmp.append("ALS:");
                                 getAls(tmp, alsIndex, false);
                             } else {
                                 tmp.append("UNKNOWN ALS");
+                                if (DEBUG) {
+                                    System.out.println("SolutionStep.getChainString: UNKNOWN (" + alsIndex + "/" + alses.size() + ")");
+                                }
                             }
                             break;
                     }

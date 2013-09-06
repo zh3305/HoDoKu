@@ -290,6 +290,11 @@ public class TablingSolver extends AbstractSolver {
      */
     private TableEntry[] minEntries = new TableEntry[mins.length];
     /**
+     * For every {@link #min} the index of the last entry in the
+     * original chain (needed for check, if the chain has been reached)
+     */
+    private int[] minEndIndices = new int[mins.length];
+    /**
      * the {@link #min}that is currently built.
      */
     private int actMin = 0;
@@ -3282,28 +3287,28 @@ public class TablingSolver extends AbstractSolver {
         }
         // ALS: If all instances of a candidate are eliminated from the ALS,
         // the ALS becomes a locked set
-        if (withAlsNodes) {
-            alses = finder.getAlses(true);
-            for (int i = 0; i < alses.size(); i++) {
-                Als als = alses.get(i);
-                for (int cand = 1; cand <= 9; cand++) {
-                    if ((als.candidates & Sudoku2.MASKS[cand]) == 0) {
-                        // candidate not in ALS -> nothing to do
-                        continue;
-                    }
-                    if (src.offSets[cand] == null || als.indicesPerCandidat[cand] == null) {
-                        // cant do anything
-                        continue;
-                    }
-                    if (src.offSets[cand].contains(als.indicesPerCandidat[cand])) {
-                        // all candidates are eliminated, the als becomes a locked set!
-                        makeNetEntry(src, srcIndex, srcCand, isOn, als.indices.get(0),
-                                i, -1, cand, null, (short) 0, false,
-                                Chain.ALS_NODE, null, als);
-                    }
-                }
-            }
-        }
+//        if (withAlsNodes) {
+//            alses = finder.getAlses(true);
+//            for (int i = 0; i < alses.size(); i++) {
+//                Als als = alses.get(i);
+//                for (int cand = 1; cand <= 9; cand++) {
+//                    if ((als.candidates & Sudoku2.MASKS[cand]) == 0) {
+//                        // candidate not in ALS -> nothing to do
+//                        continue;
+//                    }
+//                    if (src.offSets[cand] == null || als.indicesPerCandidat[cand] == null) {
+//                        // cant do anything
+//                        continue;
+//                    }
+//                    if (src.offSets[cand].contains(als.indicesPerCandidat[cand])) {
+//                        // all candidates are eliminated, the als becomes a locked set!
+//                        makeNetEntry(src, srcIndex, srcCand, isOn, als.indices.get(0),
+//                                i, -1, cand, null, (short) 0, false,
+//                                Chain.ALS_NODE, null, als);
+//                    }
+//                }
+//            }
+//        }
         // finally expand the new entries
         expandTable(src, srcIndex, srcCand, isOn, currentTableIndex, -1);
         if (DEBUG) {
@@ -3734,8 +3739,8 @@ public class TablingSolver extends AbstractSolver {
      */
     private void buildChain(TableEntry entry, int cellIndex, int cand, boolean set) {
         if (DEBUG) {
-            if (Chain.getSCellIndex(entry.entries[0]) == 58 && Chain.getSCandidate(entry.entries[0]) == 4 && Chain.isSStrong(entry.entries[0])
-                    && cellIndex == 54 && cand == 6 && !set) {
+            if (Chain.getSCellIndex(entry.entries[0]) == 54 && Chain.getSCandidate(entry.entries[0]) == 8 && Chain.isSStrong(entry.entries[0])
+                    && cellIndex == 54 && cand == 8 && !set) {
                 int eEntry = Chain.makeSEntry(cellIndex, cand, set);
                 System.out.println("buildChain() START (" + Chain.toString(entry.entries[0]) + " - " + Chain.toString(eEntry) + ")");
                 doDebug = true;
@@ -3753,8 +3758,8 @@ public class TablingSolver extends AbstractSolver {
         }
         int index = entry.getEntryIndex(chainEntry);
         if (DEBUG) {
-            if (Chain.getSCellIndex(entry.entries[0]) == 58 && Chain.getSCandidate(entry.entries[0]) == 4 && Chain.isSStrong(entry.entries[0])
-                    && cellIndex == 54 && cand == 6 && !set) {
+            if (Chain.getSCellIndex(entry.entries[0]) == 54 && Chain.getSCandidate(entry.entries[0]) == 8 && Chain.isSStrong(entry.entries[0])
+                    && cellIndex == 54 && cand == 8 && !set) {
                 //System.out.println("   1: " + index + ": " + Chain.toString(chainEntry));
             }
         }
@@ -3766,22 +3771,22 @@ public class TablingSolver extends AbstractSolver {
         }
         // construct the main chain
         tmpSetC.clear();
-        chainIndex = buildChain(entry, index, chain, false, null, tmpSetC);
+        chainIndex = buildChain(entry, index, chain, false, null, -1, tmpSetC);
         // now build the net parts
         int minIndex = 0;
         while (minIndex < actMin) {
             if (DEBUG) {
-                if (Chain.getSCellIndex(entry.entries[0]) == 58 && Chain.getSCandidate(entry.entries[0]) == 4 && Chain.isSStrong(entry.entries[0])
-                        && cellIndex == 54 && cand == 6 && !set) {
+                if (Chain.getSCellIndex(entry.entries[0]) == 54 && Chain.getSCandidate(entry.entries[0]) == 8 && Chain.isSStrong(entry.entries[0])
+                        && cellIndex == 54 && cand == 8 && !set) {
                     System.out.println("buildChain() start new min: " + minIndex + ": " + Chain.toString(mins[minIndex][0]));
                 }
             }
-            minIndexes[minIndex] = buildChain(entry, entry.getEntryIndex(mins[minIndex][0]), mins[minIndex], true, minEntries[minIndex], tmpSetC);
+            minIndexes[minIndex] = buildChain(entry, entry.getEntryIndex(mins[minIndex][0]), mins[minIndex], true, minEntries[minIndex], minIndex, tmpSetC);
             minIndex++;
         }
         if (DEBUG) {
-            if (Chain.getSCellIndex(entry.entries[0]) == 58 && Chain.getSCandidate(entry.entries[0]) == 4 && Chain.isSStrong(entry.entries[0])
-                    && cellIndex == 54 && cand == 6 && !set) {
+            if (Chain.getSCellIndex(entry.entries[0]) == 54 && Chain.getSCandidate(entry.entries[0]) == 8 && Chain.isSStrong(entry.entries[0])
+                    && cellIndex == 54 && cand == 8 && !set) {
                 int eEntry = Chain.makeSEntry(cellIndex, cand, set);
                 System.out.println("buildChain() END (" + Chain.toString(entry.entries[0]) + " - " + Chain.toString(eEntry) + ")");
                 doDebug = false;
@@ -3828,11 +3833,13 @@ public class TablingSolver extends AbstractSolver {
      * @param minEntry If <code>isMin</code> is <code>true</code>, the 
      *          {@link TableEntry} where the first element (implication) of 
      *          the min came from.
+     * @param minIndex The index into {@link #mins} or <code>-1</code>, if the current
+     *          chain is not a min.
      * @param chainSet A set that holds all cells of the main chain.
      * @return
      */
     private int buildChain(TableEntry entry, int entryIndex, int[] actChain, boolean isMin,
-            TableEntry minEntry, SudokuSet chainSet) {
+            TableEntry minEntry, int minIndex, SudokuSet chainSet) {
         if (DEBUG) {
             doDebugCounter++;
             int dEntry = entry.entries[entryIndex];
@@ -3943,9 +3950,15 @@ public class TablingSolver extends AbstractSolver {
                         }
                     } else {
                         // if the current chain is a min, check if we have reached the main chain
+                        // 20130906: We cant search the entire chain, or we could find a start point,
+                        // that has not been reached yet. Therefore the index in the main chain, where the min
+                        // ends, is recorded in minEndIndices. The search has to start there.
                         if (chainSet.contains(entry.getCellIndex(entryIndex))) {
                             // preselection: the current cell is part of the main chain -> search the main chain
-                            for (int j = 0; j < chainIndex; j++) {
+                            // the entry might be later in the chain (smaller index - chain is reversed) than the end
+                            // of the min, which is invalid
+                            for (int j = minEndIndices[minIndex]; j < chainIndex; j++) {
+                                //for (int j = 0; j < chainIndex; j++) {
                                 if (chain[j] == entry.entries[entryIndex]) {
                                     // done!
                                     if (DEBUG) {
@@ -3967,6 +3980,8 @@ public class TablingSolver extends AbstractSolver {
                         if (actMin < mins.length) {
                             mins[actMin][0] = entry.entries[entryIndex];
                             minEntries[actMin] = entry;
+                            // the current chain index has to be stored
+                            minEndIndices[actMin] = actChainIndex;
                             minIndexes[actMin++] = 1;
                             if (DEBUG) {
                                 if (doDebug) {
@@ -3980,11 +3995,23 @@ public class TablingSolver extends AbstractSolver {
             // CAUTION 20130902: In Forcing Nets the predecessor of an
             // expanded node can be an expanded node itself. In that case we
             // have to jump back to the original table as well
-            if (expanded && (firstEntryIndex == 0 || entry.isExpanded(firstEntryIndex))) {
+            // 20130906: The predecessor of an expaned node can have a larger
+            // distance than a possible corresponding (not expanded) node in
+            // the original table -> in that case, jump back
+            boolean orgIsShorter = false;
+            int retEntry = entry.entries[firstEntryIndex];
+            if (expanded && orgEntry.containsEntry(retEntry)) {
+                // check, if there is a shorter path in the original table
+                int actDistance = entry.getDistance(firstEntryIndex);
+                if (actDistance > orgEntry.getDistance(orgEntry.getEntryIndex(retEntry))) {
+                    orgIsShorter = true;
+                }
+            }
+            if (expanded && (firstEntryIndex == 0 || entry.isExpanded(firstEntryIndex) || orgIsShorter)) {
                 // we jumped to another TableEntry and have reached its start
                 // or the new entry was expanded itself ->
                 // jump back to the original
-                int retEntry = entry.entries[firstEntryIndex];
+//                int retEntry = entry.entries[firstEntryIndex];
                 entry = orgEntry;
                 firstEntryIndex = entry.getEntryIndex(retEntry);
                 if (DEBUG) {

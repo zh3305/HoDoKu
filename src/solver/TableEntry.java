@@ -20,6 +20,8 @@ package solver;
 
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import sudoku.Chain;
 import sudoku.Options;
 import sudoku.SudokuSet;
@@ -246,7 +248,7 @@ public class TableEntry {
                         + cellIndex3 + ", " + nodeType + ", " + cand + ", " + set + ", " + ri1 + ", " + ri2 + ", "
                         + ri3 + ", " + ri4 + ", " + ri5 + ", " + penalty);
             }
-            //Logger.getLogger(getClass().getName()).log(Level.WARNING, "addEntry(): TableEntry is already full!");
+//            Logger.getLogger(getClass().getName()).log(Level.WARNING, "addEntry(): TableEntry is already full!");
             return;
         }
         // check only for single cells -> group nodes, ALS etc. can not be start or end point
@@ -306,6 +308,21 @@ public class TableEntry {
     }
 
     /**
+     * Checks, if the entry is in the table.
+     * 
+     * @param entry
+     * @return <code>true</code>: table contains <code>entry</code>, else <code>false</code>.
+     */
+    boolean containsEntry(int entry) {
+        Integer ret = indices.get(entry);
+        if (ret == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
      * Tries to find an entry for cell <code>cellIndex</code>, candidate
      * <code>cand</code> and type <code>set</code>. If it can be found,
      * the index is returned. Used to construct net dependencies.<br><br>
@@ -323,7 +340,7 @@ public class TableEntry {
             if (DEBUG) {
                 System.out.println("TableEntry.getEntryIndex() - entry not found: " + cellIndex + ", " + cand + ", " + set);
             }
-            //Logger.getLogger(getClass().getName()).log(Level.SEVERE, "entry not found: {0}, {1}, {2}", new Object[]{cellIndex, cand, set});
+//            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "entry not found: {0}, {1}, {2}", new Object[]{cellIndex, cand, set});
             return 0;
         } else {
             return ret.intValue();
@@ -343,8 +360,8 @@ public class TableEntry {
                 System.out.println("TableEntry.getEntryIndex() - tmp == null: " + Chain.toString(entry) + " (" + entry + ") (" + Chain.getSCellIndex(entry) + "/" + Chain.getSCellIndex2(entry) + "/" + Chain.getSCellIndex3(entry) + ")");
                 TablingSolver.printTable("tmp == null", this, null);
             }
+//            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "tmp == null: {0}", entry);
             return 0;
-            //Logger.getLogger(getClass().getName()).log(Level.SEVERE, "tmp == null: {0}", entry);
         }
         return indices.get(entry);
     }

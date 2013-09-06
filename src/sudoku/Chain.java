@@ -512,10 +512,18 @@ public class Chain implements Cloneable, Serializable {
      * @return
      */
     public static int replaceSAlsIndex(int entry, int newAlsIndex) {
+        boolean isMin = false;
+        if (entry < 0) {
+            isMin = true;
+            entry = -entry;
+        }
         entry &= ~ALS_INDEX_MASK;
         newAlsIndex <<= ALS_INDEX_OFFSET;
         newAlsIndex &= ALS_INDEX_MASK;
         entry |= newAlsIndex;
+        if (isMin) {
+            entry = -entry;
+        }
         return entry;
     }
 
