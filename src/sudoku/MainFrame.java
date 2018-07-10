@@ -206,7 +206,7 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
      */
     static {
         String[] dummy = REV.split(" ");
-        BUILD = "Build " + dummy[1];
+        BUILD = "Build " ;// dummy[1];
     }
   
     
@@ -229,32 +229,32 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
         outerSplitPane.getActionMap().getParent().remove("toggleFocus");
 
         // change hintTextArea font to a proportional font
-        String fontName = "Arial";
-        if (!Options.getInstance().checkFont(fontName)) {
-            fontName = Font.SANS_SERIF;
-        }
-        Font font = hinweisTextArea.getFont();
-//        System.out.println("fontSize: " + font.getSize() + "/" + getFont().getSize() + "/" + bearbeitenMenu.getFont().getSize());
-//        font = new Font(fontName, font.getStyle(), font.getSize());
-        font = new Font(fontName, font.getStyle(), bearbeitenMenu.getFont().getSize());
-        hinweisTextArea.setFont(font);
+//        String fontName = "Arial";
+//        if (!Options.getInstance().checkFont(fontName)) {
+//            fontName = Font.SANS_SERIF;
+//        }
+//        Font font = hinweisTextArea.getFont();
+////        System.out.println("fontSize: " + font.getSize() + "/" + getFont().getSize() + "/" + bearbeitenMenu.getFont().getSize());
+////        font = new Font(fontName, font.getStyle(), font.getSize());
+//        font = new Font(fontName, font.getStyle(), bearbeitenMenu.getFont().getSize());
+//        hinweisTextArea.setFont(font);
 
         // status line fonts are a bit larger than default in Windows LAF
         // allow adjustments
-        font = statusLinePanel.getFont();
-        fontName = "Tahoma";
-        if (!Options.getInstance().checkFont(fontName)) {
-            fontName = font.getName();
-        }
-        int fontSize = 12;
-        if (font.getSize() > fontSize) {
-            fontSize = font.getSize();
-        }
-        font = new Font(fontName, getFont().getStyle(), fontSize);
-        statusLabelCellCandidate.setFont(font);
-        statusLabelLevel.setFont(font);
-        statusLabelModus.setFont(font);
-        progressLabel.setFont(font);
+//        font = statusLinePanel.getFont();
+//        fontName = "Tahoma";
+//        if (!Options.getInstance().checkFont(fontName)) {
+//            fontName = font.getName();
+//        }
+//        int fontSize = 12;
+//        if (font.getSize() > fontSize) {
+//            fontSize = font.getSize();
+//        }
+//        font = new Font(fontName, getFont().getStyle(), fontSize);
+//        statusLabelCellCandidate.setFont(font);
+//        statusLabelLevel.setFont(font);
+//        statusLabelModus.setFont(font);
+//        progressLabel.setFont(font);
 
         // get the current difficulty level (is overriden when levels are added
         //to the combo box)
@@ -816,11 +816,13 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             }
         });
         statusLinePanel.add(statusLabelCellCandidate);
+        statusLabelCellCandidate.getAccessibleContext().setAccessibleName(bundle.getString("MainFrame.statusLabelCellCandidate.AccessibleContext.accessibleName")); // NOI18N
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
         jSeparator1.setPreferredSize(new java.awt.Dimension(2, 17));
         statusLinePanel.add(jSeparator1);
 
+        statusLabelLevel.setFont(statusLabelLevel.getFont());
         statusLabelLevel.setText(bundle.getString("MainFrame.statusLabelLevel.text")); // NOI18N
         statusLabelLevel.setToolTipText(bundle.getString("MainFrame.statusLabelLevel.toolTipText")); // NOI18N
         statusLinePanel.add(statusLabelLevel);
@@ -1061,10 +1063,12 @@ public class MainFrame extends javax.swing.JFrame implements FlavorListener {
             }
         });
 
-        hinweisTextArea.setColumns(20);
         hinweisTextArea.setEditable(false);
+        hinweisTextArea.setColumns(20);
         hinweisTextArea.setLineWrap(true);
         hinweisTextArea.setRows(5);
+        hinweisTextArea.setText(bundle.getString("MainFrame.hinweisTextArea.text")); // NOI18N
+        hinweisTextArea.setToolTipText(bundle.getString("MainFrame.hinweisTextArea.toolTipText")); // NOI18N
         hinweisTextArea.setWrapStyleWord(true);
         jScrollPane1.setViewportView(hinweisTextArea);
 
@@ -3574,6 +3578,7 @@ private void extendedPrintMenuItemActionPerformed(java.awt.event.ActionEvent evt
             } else {
                 colorCandidatesMenuItem.setSelected(true);
                 statusLabelCellCandidate.setText(ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.statusLabelCellCandidate.text.candidate"));
+//                System.out.print((ResourceBundle.getBundle("intl/MainFrame").getString("MainFrame.statusLabelCellCandidate.text.candidate")));
             }
             fixFocus();
         }

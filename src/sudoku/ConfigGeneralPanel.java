@@ -510,6 +510,9 @@ public class ConfigGeneralPanel extends javax.swing.JPanel {
         availableLocales.add(null);
         availableIsoLanguages.add("en");
         availableLocales.add(Locale.ENGLISH);
+        availableIsoLanguages.add("zh_CN");
+        availableLocales.add(Locale.SIMPLIFIED_CHINESE);
+
 
         // try to load bundles for all existing languages, log those, for which an actual bundle exists
         Locale oldDefault = Locale.getDefault();

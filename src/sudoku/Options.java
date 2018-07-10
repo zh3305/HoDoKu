@@ -616,10 +616,7 @@ public final class Options {
         if (availableFontNames == null) {
             availableFontNames = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
         }
-        if (Arrays.binarySearch(availableFontNames, fontName) >= 0) {
-            return true;
-        }
-        return false;
+        return Arrays.binarySearch(availableFontNames, fontName) >= 0;
     }
 
     /**
